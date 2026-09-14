@@ -11,6 +11,7 @@ var hud: CanvasLayer
 var logbook_ui: CanvasLayer
 var sensor_ui: CanvasLayer
 var fade: CanvasLayer
+var pause_menu: CanvasLayer
 var world_env: WorldEnvironment
 var post_material: ShaderMaterial
 
@@ -66,6 +67,7 @@ func _setup_ui() -> void:
 	logbook_ui = _add_layer("Bitacora", "res://scripts/ui/logbook_ui.gd")
 	sensor_ui = _add_layer("PanelSensores", "res://scripts/ui/sensor_ui.gd")
 	fade = _add_layer("Fundido", "res://scripts/ui/screen_fade.gd")
+	pause_menu = _add_layer("Pausa", "res://scripts/ui/pause_menu.gd")
 
 
 func _add_layer(name: String, script_path: String) -> CanvasLayer:
@@ -100,6 +102,13 @@ func _setup_post_process() -> void:
 	layer.add_child(rect)
 
 	GameState.night_started.connect(_on_night_started_post)
+	Settings.changed.connect(_apply_post_settings.bind(rect))
+	_apply_post_settings(rect)
+
+
+func _apply_post_settings(rect: ColorRect) -> void:
+	if is_instance_valid(rect):
+		rect.visible = Settings.ps1_effects
 
 
 func _on_night_started_post(night: int) -> void:
@@ -121,7 +130,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			logbook_ui.close()
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("pause"):
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			pause_menu.toggle()
 			get_viewport().set_input_as_handled()
 
 

@@ -49,6 +49,8 @@ func start_night(night: int) -> void:
 		var node: Node = station.points[key]
 		if node is TriggerZone:
 			(node as TriggerZone).active = true
+	for bat in station.pickups:
+		bat.restock()
 	station.doors["almacen"].locked = data["world"].get("door_storage_locked", false)
 	station.doors["almacen"].locked_text = "Trabada. La llave figura en el inventario del turno anterior."
 

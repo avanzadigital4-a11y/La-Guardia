@@ -181,6 +181,41 @@ func play_cue(id: String, pos: Vector3, volume_db := -6.0) -> void:
 	p.finished.connect(p.queue_free)
 
 
+## Voz de radio: no es habla, es la cadencia del habla. Silabas de ruido
+## filtrado sobre un zumbido bajo, para que los registros suenen a alguien
+## hablando atras de la portadora mientras se leen los subtitulos.
+func voice(seconds: float, pos: Vector3, pitch := 1.0) -> AudioStreamPlayer3D:
+	var n := int(RATE * seconds)
+	var out := PackedFloat32Array()
+	out.resize(n)
+	var syllable := maxi(int(RATE * 0.15), 1)
+	var base := 98.0 * pitch
+	var freq := base
+	var phase := 0.0
+	var lp := 0.0
+	for i in n:
+		var index := i / syllable
+		if i % syllable == 0:
+			freq = base * _rng.randf_range(0.82, 1.28)
+		var t := float(i % syllable) / float(syllable)
+		var env := sin(PI * t)
+		var gap := 0.15 if index % 5 == 4 else 1.0   # respiraciones
+		phase += TAU * freq / RATE
+		lp += (_rng.randf_range(-1.0, 1.0) - lp) * 0.3
+		var body := sin(phase) * 0.45 + sin(phase * 2.0) * 0.18 + lp * 0.4
+		out[i] = body * env * gap * 0.55
+	var p := AudioStreamPlayer3D.new()
+	p.stream = _wav(out)
+	p.unit_size = 5.0
+	p.max_distance = 20.0
+	p.volume_db = -13.0
+	p.position = pos
+	add_child(p)
+	p.play()
+	p.finished.connect(p.queue_free)
+	return p
+
+
 func start_hiss(pos: Vector3) -> AudioStreamPlayer3D:
 	var p := AudioStreamPlayer3D.new()
 	p.stream = _cues["hiss"]

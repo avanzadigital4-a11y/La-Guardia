@@ -5,9 +5,9 @@ extends CharacterBody3D
 const WALK_SPEED := 2.4
 const SPRINT_SPEED := 4.0
 const ACCEL := 9.0
-const MOUSE_SENS := 0.0022
+const MOUSE_SENS := 0.0022   # base, escalada por Settings.mouse_sensitivity
 const PITCH_LIMIT := deg_to_rad(85.0)
-const BATTERY_DRAIN := 0.0042      # ~4 minutos de linterna encendida
+const BATTERY_DRAIN := 0.0025      # ~6:40 de linterna encendida por carga
 const STEP_DISTANCE := 1.9
 
 @onready var head: Node3D = $Head
@@ -36,8 +36,9 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mm := event as InputEventMouseMotion
-		rotate_y(-mm.relative.x * MOUSE_SENS)
-		head.rotation.x = clampf(head.rotation.x - mm.relative.y * MOUSE_SENS, -PITCH_LIMIT, PITCH_LIMIT)
+		var sens := MOUSE_SENS * Settings.mouse_sensitivity
+		rotate_y(-mm.relative.x * sens)
+		head.rotation.x = clampf(head.rotation.x - mm.relative.y * sens, -PITCH_LIMIT, PITCH_LIMIT)
 	if not can_move:
 		return
 	if event.is_action_pressed("flashlight"):

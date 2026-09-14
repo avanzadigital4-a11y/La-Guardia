@@ -24,6 +24,7 @@ var points := {}
 var watchers := {}
 var routes := {}
 var variants := {}
+var pickups: Array[BatteryPickup] = []
 var lights: Array[OmniLight3D] = []
 var wall_meshes: Array[MeshInstance3D] = []
 var south_section: Node3D
@@ -90,6 +91,8 @@ func _build_corridor() -> void:
 
 	# Lockers contra la pared.
 	Build.box(self, "Lockers", Vector3(0.45, 1.9, 2.4), Vector3(-1.2, 0.95, -7.0), _mat_metal)
+	Build.box(self, "Camilla", Vector3(0.7, 0.7, 2.0), Vector3(1.1, 0.35, 0.5), _mat_metal)
+	Build.box(self, "Extintor", Vector3(0.22, 0.6, 0.22), Vector3(1.28, 1.1, -9.0), Build.surface(Color(0.45, 0.16, 0.12)))
 	Build.label3d(self, "NIVEL 1  ->  ESCLUSA", Vector3(-1.35, 2.3, -6.0), PI * 0.5, 0.22)
 	Build.label3d(self, "<-  B2", Vector3(1.35, 2.3, -14.5), -PI * 0.5, 0.22, Color(0.5, 0.52, 0.55))
 
@@ -110,6 +113,10 @@ func _build_control() -> void:
 	Build.box(console, "Pantalla", Vector3(0.08, 0.7, 1.6), Vector3(0.5, 1.5, 0.0), _mat_screen, false)
 	Build.light(console, Vector3(0.9, 1.5, 0.0), Color(0.35, 0.8, 0.6), 0.8, 3.5)
 	points["sensores"] = console
+
+	Build.box(self, "Pizarra", Vector3(2.0, 1.2, 0.06), Vector3(-5.5, 1.7, -13.9), Build.surface(Color(0.18, 0.20, 0.19)))
+	Build.label3d(self, "DIAS PARA EL CIERRE", Vector3(-5.5, 2.05, -13.85), 0.0, 0.18, Color(0.7, 0.72, 0.68))
+	Build.label3d(self, "|||||", Vector3(-5.5, 1.55, -13.85), 0.0, 0.32, Color(0.75, 0.7, 0.55))
 
 	var chair := _add_prop("control_chair", Vector3(-6.4, 0.0, -11.0), 0.0, Vector3(0.55, 0.9, 0.55))
 	chair.register("control_chair", Vector3(0.6, 0.0, 0.8), 145.0)
@@ -140,11 +147,7 @@ func _build_generator() -> void:
 	Build.light(gen, Vector3(0.0, 2.0, 0.0), Color(0.9, 0.5, 0.25), 0.7, 4.0)
 	Build.label3d(self, "GEN-A", Vector3(4.7, 1.9, -11.0), -PI * 0.5, 0.2, Color(0.8, 0.6, 0.4))
 
-	var bat := BatteryPickup.new()
-	bat.name = "PilaGenerador"
-	add_child(bat)
-	bat.position = Vector3(2.6, 0.9, -9.0)
-	bat.setup_box(Vector3(0.18, 0.3, 0.18), Build.surface(Color(0.7, 0.66, 0.2)))
+	_add_battery("PilaGenerador", Vector3(2.6, 0.9, -9.0))
 	Build.box(self, "BancoTaller", Vector3(1.4, 0.85, 1.0), Vector3(2.6, 0.42, -9.0), _mat_metal)
 
 
@@ -190,8 +193,10 @@ func _build_storage() -> void:
 	_add_door("almacen", Vector3(1.5, 0.0, -2.5 - Build.DOOR_W * 0.5), -PI * 0.5, Build.DOOR_W)
 
 	Build.box(self, "Estante1", Vector3(0.6, 2.2, 3.0), Vector3(8.8, 1.1, -3.0), _mat_metal)
+	Build.box(self, "Estante2", Vector3(2.6, 2.0, 0.5), Vector3(5.0, 1.0, -4.6), _mat_metal)
 	Build.box(self, "Cajas", Vector3(1.2, 1.2, 1.2), Vector3(6.5, 0.6, -1.4), Build.surface(Color(0.35, 0.30, 0.22)))
 	_add_radio_log("rl_03", Vector3(6.5, 1.3, -1.4), 2)
+	_add_battery("PilaAlmacen", Vector3(5.0, 2.1, -4.6))
 
 
 func _build_airlock() -> void:
@@ -212,6 +217,7 @@ func _build_airlock() -> void:
 		Build.box(suit, "Tela", Vector3(0.5, 1.3, 0.22), Vector3(0.0, 1.3, 0.0), suit_mat)
 		variants["traje_%d" % (i + 1)] = suit
 	Build.box(self, "BancoEsclusa", Vector3(2.2, 0.45, 0.6), Vector3(1.6, 0.22, 9.6), _mat_metal)
+	_add_battery("PilaEsclusa", Vector3(0.9, 0.5, 9.6))
 	_add_radio_log("rl_05", Vector3(1.6, 0.5, 9.6), 4)
 
 
@@ -377,6 +383,16 @@ func _add_prop(id: String, pos: Vector3, rot_y: float, size: Vector3) -> Prop:
 	Build.box(p, "Pata", Vector3(0.08, size.y * 0.5, 0.08), Vector3(0.0, size.y * 0.25, 0.0), _mat_metal)
 	props[id] = p
 	return p
+
+
+func _add_battery(name: String, pos: Vector3) -> BatteryPickup:
+	var bat := BatteryPickup.new()
+	bat.name = name
+	add_child(bat)
+	bat.position = pos
+	bat.setup_box(Vector3(0.18, 0.3, 0.18), Build.surface(Color(0.7, 0.66, 0.2)))
+	pickups.append(bat)
+	return bat
 
 
 func _add_radio_log(id: String, pos: Vector3, from_night: int) -> RadioLog:

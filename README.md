@@ -51,6 +51,10 @@ Lo que ya funciona:
   el proyecto no depende de ningun asset externo.
 - Post-proceso PS1: cuantizacion de color, grano, scanlines, vineta y
   aberracion cromatica, mas temblor de vertices en la geometria.
+- Menu de inicio con continuar partida, menu de pausa, y opciones de
+  sensibilidad, volumen, pixelado y efectos PS1 que persisten entre sesiones.
+- Voz de radio sintetizada: no dice palabras, imita la cadencia del habla
+  detras de la portadora mientras corren los subtitulos.
 
 ## Correr el juego
 
@@ -74,19 +78,21 @@ hardware de gama baja.
 | `E` | interactuar |
 | `F` | linterna |
 | `TAB` | bitacora |
-| `ESC` | soltar el mouse |
+| `ESC` | pausa / cerrar lo que este abierto |
 
-## Prueba automatica
+## Pruebas automaticas
 
-Hay una prueba de integracion que juega la Noche 1 sola, verifica la anomalia
-fuera de camara, el cierre de noche, las variaciones de la Noche 3 y el final
-de la Noche 5:
+Una prueba de integracion juega la Noche 1 sola y verifica la anomalia fuera
+de camara, el cierre de noche, el desvio de rutas de la Noche 3, las tareas
+que no se resuelven con `[E]`, la decision de la Noche 5 y el final:
 
 ```bash
-godot --headless --path . res://tests/playthrough.tscn
+godot --headless --path . res://tests/playthrough.tscn   # PLAYTHROUGH OK
+godot --headless --path . res://tests/ui_smoke.tscn      # UI SMOKE OK
 ```
 
-Imprime `PLAYTHROUGH OK` y sale con codigo 0 si todo pasa.
+Las dos salen con codigo 0 si todo pasa. La segunda cubre el menu, las
+opciones, la pausa y la autonomia de la linterna.
 
 Para revisar la estetica sin jugar, `godot --path . -- --capture` guarda una
 captura de cada ambiente en el directorio `user://` del proyecto.
@@ -135,8 +141,9 @@ nueva no implica tocar codigo.
    ruido de portadora y es lo que mas le falta al juego.
 2. Densidad ambiental: props y detalle sala por sala (el maximo de diseno son
    2-3 por ambiente) y trabajo en el patio, que es el espacio mas vacio.
-3. Pulir el ritmo de las noches 2 y 4, que hoy dependen mas del texto que de
-   lo que pasa en el espacio.
-4. Una pasada de balance de la linterna: cuanta bateria dura una noche
-   completa y donde conviene dejar las pilas.
-5. Menu de inicio, continuar partida (el guardado ya existe) y opciones.
+3. Playtest real de punta a punta para medir cuanto dura una noche y ajustar
+   el ritmo con eso en la mano (hoy el balance esta calculado, no jugado).
+4. Un pase de sonido posicional: que los crujidos y las puertas vengan de
+   salas concretas y no del entorno general.
+5. Traduccion/acentuacion: el texto esta escrito sin acentos para no depender
+   de una fuente propia; conviene incluir una y escribirlo bien.

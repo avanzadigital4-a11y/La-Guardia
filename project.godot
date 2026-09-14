@@ -7,13 +7,14 @@ config_version=5
 
 config/name="La Guardia"
 config/description="Terror psicologico en una estacion antartica a punto de cerrar."
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/menu.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameState="*res://scripts/autoload/game_state.gd"
+Settings="*res://scripts/autoload/settings.gd"
 AudioDirector="*res://scripts/audio/audio_director.gd"
 Subtitles="*res://scripts/ui/subtitles.gd"
 

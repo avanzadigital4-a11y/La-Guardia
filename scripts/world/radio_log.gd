@@ -28,6 +28,7 @@ func _on_interact(_who: Node) -> void:
 	var hiss := AudioDirector.start_hiss(global_position)
 	for line in data["lines"]:
 		Subtitles.show_line("%s: %s" % [data["label"], line], 3.4)
+		AudioDirector.voice(3.0, global_position, 1.0 if log_id != "rl_05" else 0.92)
 		await get_tree().create_timer(3.6).timeout
 		if not is_inside_tree():
 			return
