@@ -22,7 +22,7 @@ func _run() -> void:
 	var player = main.player
 
 	_check(GameState.current_night == 1, "arranca en la noche 1")
-	_check(GameState.tasks.size() == 3, "la noche 1 tiene 3 tareas (%d)" % GameState.tasks.size())
+	_check(GameState.tasks.size() == 4, "la noche 1 tiene 4 tareas (%d)" % GameState.tasks.size())
 	_check(not station.south_section.visible, "el pasillo sur no existe la noche 1")
 
 	# Tareas: se completan usando los propios objetos del mundo.
@@ -42,6 +42,10 @@ func _run() -> void:
 	await _wait(0.3)
 	_check(GameState.is_task_done("sensors"), "sensores del nivel 1")
 	main.sensor_ui.close()
+
+	station.points["valvula"].interact(player)
+	await _wait(0.2)
+	_check(GameState.is_task_done("valvula"), "purgar la válvula")
 
 	_check(GameState.has_task("sleep"), "aparece la tarea final de la noche")
 
@@ -99,6 +103,21 @@ func _run() -> void:
 	player.teleport(Vector3(0.0, -0.4, -28.0), 0.0)
 	await _wait(0.6)
 	_check(GameState.is_task_done("subnivel"), "bajar al subnivel se resuelve caminando")
+
+	station.points["antena"].interact(player)
+	await _wait(0.2)
+	_check(GameState.is_task_done("antena"), "orientar la antena")
+
+	# "Dejar todas las puertas cerradas" no se resuelve con [E]: se resuelve
+	# dejando la estacion como tiene que quedar.
+	var door: Door = station.doors["almacen"]
+	door.set_open(true, true)
+	await _wait(1.2)
+	_check(not GameState.is_task_done("puertas"), "con una puerta abierta la tarea no se cierra")
+	door.set_open(false, true)
+	await _wait(1.5)
+	_check(GameState.is_task_done("puertas"), "cerrar todo completa la tarea por condición")
+
 	_check(GameState.has_task("decidir"), "la noche 5 pide una decision")
 	await _wait(6.0)
 	station.points["salir"].interact(player)

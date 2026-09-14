@@ -29,6 +29,7 @@ const NIGHTS := {
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "round", "text": "Hacer la ronda exterior", "steps": 3},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
+			{"id": "valvula", "text": "Purgar la válvula del almacén"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
@@ -59,6 +60,10 @@ const NIGHTS := {
 				{"aviso": "El panel marcó una lectura de más y la borró solo."},
 				{"armar": "dorm_chair", "sala": "dormitorio"},
 			],
+			"valvula": [
+				{"esperar": 2.0},
+				{"subtitulo": "(el agua sigue corriendo un rato después de cerrar)", "tiempo": 3.0},
+			],
 		},
 		"logbook": [
 			{"time": "23:04", "text": "Cuarto turno solo. Faltan cinco días para la evacuación."},
@@ -75,6 +80,7 @@ const NIGHTS := {
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 			{"id": "radio_unknown", "text": "Rastrear la señal que no figura en el registro"},
+			{"id": "antena", "text": "Realinear la antena"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
@@ -103,6 +109,11 @@ const NIGHTS := {
 			"sensors": [
 				{"aviso": "Ocupación registrada: 1. El sensor tardó en decidirlo."},
 			],
+			"antena": [
+				{"esperar": 1.5},
+				{"subtitulo": "(la portadora se escucha desde el patio, sin equipo)", "tiempo": 3.2},
+				{"armar": "gen_herramienta", "sala": "sala de generador"},
+			],
 			"radio_unknown": [
 				{"esperar": 1.0},
 				{"parpadeo": 2.2},
@@ -128,6 +139,8 @@ const NIGHTS := {
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 			{"id": "subnivel", "text": "Bajar al nivel que apareció en el mapa"},
+			{"id": "trajes", "text": "Contar los trajes de la esclusa"},
+			{"id": "puertas", "text": "Dejar todas las puertas cerradas"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
@@ -154,6 +167,16 @@ const NIGHTS := {
 				{"aviso": "El mapa suma un SUBNIVEL B2 que no está en los planos."},
 				{"armar": "control_chair", "sala": "sala de control"},
 			],
+			"trajes": [
+				{"esperar": 1.0},
+				{"subtitulo": "(ayer eran tres)", "tiempo": 2.6},
+			],
+			"puertas": [
+				{"esperar": 3.0},
+				{"sonido": "door", "db": -9.0},
+				{"anomalia": "gen_puerta"},
+				{"subtitulo": "(una acaba de abrirse de nuevo)", "tiempo": 3.0},
+			],
 			"subnivel": [
 				{"parpadeo": 3.0},
 				{"subtitulo": "Hay marcas en la pared. Son de esta semana.", "tiempo": 3.6},
@@ -178,6 +201,8 @@ const NIGHTS := {
 			{"id": "logbook_check", "text": "Releer la bitácora de las noches anteriores"},
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
+			{"id": "trajes", "text": "Contar los trajes de la esclusa"},
+			{"id": "puertas", "text": "Dejar todas las puertas cerradas"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
@@ -215,6 +240,10 @@ const NIGHTS := {
 				{"armar": "dorm_bed", "sala": "dormitorio"},
 				{"sonido": "door", "db": -8.0},
 			],
+			"trajes": [
+				{"esperar": 1.0},
+				{"bitacora": "Conté los trajes otra vez. El número no coincide con ayer.", "hora": "02:14", "falsa": true},
+			],
 			"sensors": [
 				{"aviso": "OCUPACIÓN REGISTRADA: 0 personas."},
 				{"parpadeo": 2.0},
@@ -236,6 +265,8 @@ const NIGHTS := {
 		"tasks": [
 			{"id": "generator", "text": "Dejar los generadores en modo de cierre", "steps": 2},
 			{"id": "subnivel", "text": "Bajar al subnivel por última vez"},
+			{"id": "antena", "text": "Orientar la antena para el retiro"},
+			{"id": "puertas", "text": "Dejar todas las puertas cerradas"},
 		],
 		"final_task": {"id": "decidir", "text": "Decidir: esperar el vehículo en el patio o quedarte abajo"},
 		"world": {
@@ -257,6 +288,10 @@ const NIGHTS := {
 				{"esperar": 2.0},
 				{"subtitulo": "El generador queda en mínimo. La estación se enfría rápido.", "tiempo": 3.2},
 				{"armar": "dorm_bed", "sala": "dormitorio"},
+			],
+			"antena": [
+				{"esperar": 1.0},
+				{"subtitulo": "La antena engancha al vehículo. Está a dos horas.", "tiempo": 3.4},
 			],
 			"subnivel": [
 				{"parpadeo": 2.6},

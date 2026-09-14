@@ -219,6 +219,19 @@ func _build_storage() -> void:
 	objects["cajas"] = Build.box(self, "Cajas", Vector3(1.2, 1.2, 1.2), Vector3(6.5, 0.6, -1.4), Build.surface(Color(0.35, 0.30, 0.22)))
 	_add_battery("PilaAlmacen", Vector3(5.0, 2.1, -4.6))
 
+	var valve := TaskPoint.new()
+	valve.name = "Valvula"
+	add_child(valve)
+	valve.position = Vector3(8.7, 0.0, -0.6)
+	valve.setup_box(Vector3(0.5, 0.7, 0.7), Build.surface(Color(0.40, 0.42, 0.30)), Vector3(0.0, 1.0, 0.0))
+	valve.task_id = "valvula"
+	valve.active_prompt = "Purgar la válvula"
+	valve.done_prompt = "Válvula purgada"
+	valve.notice_on_done = "Sale agua marrón un rato y después clara."
+	valve.log_text = "Válvula purgada. El agua salió marrón otra vez."
+	points["valvula"] = valve
+	Build.box(self, "Canio", Vector3(0.2, 2.2, 0.2), Vector3(8.7, 1.1, -0.6), _mat_metal)
+
 
 func _build_airlock() -> void:
 	var r: Rect2 = ROOMS["esclusa"]
@@ -241,6 +254,13 @@ func _build_airlock() -> void:
 		objects["traje_%d" % (i + 1)] = suit
 	Build.box(self, "BancoEsclusa", Vector3(2.2, 0.45, 0.6), Vector3(1.6, 0.22, 9.6), _mat_metal)
 	_add_battery("PilaEsclusa", Vector3(0.9, 0.5, 9.6))
+
+	var counter := SuitCounter.new()
+	counter.name = "Perchero"
+	add_child(counter)
+	counter.position = Vector3(0.0, 0.0, 7.9)
+	counter.setup_box(Vector3(4.2, 0.4, 0.5), _mat_metal, Vector3(0.0, 2.1, 0.0))
+	points["trajes"] = counter
 
 
 func _build_exterior() -> void:
@@ -282,6 +302,19 @@ func _build_exterior() -> void:
 
 	objects["tambores"] = Build.box(self, "Tambores", Vector3(0.8, 1.1, 0.8), Vector3(10.0, 0.55, 14.0), _mat_metal)
 	Build.box(self, "Tambores2", Vector3(0.8, 1.1, 0.8), Vector3(10.9, 0.55, 14.6), _mat_metal)
+
+	var antenna := TaskPoint.new()
+	antenna.name = "ControlAntena"
+	add_child(antenna)
+	antenna.position = Vector3(-9.6, 0.0, 22.0)
+	antenna.setup_box(Vector3(0.6, 1.3, 0.5), Build.surface(Color(0.35, 0.38, 0.40)), Vector3(0.0, 0.65, 0.0))
+	antenna.task_id = "antena"
+	antenna.active_prompt = "Realinear la antena"
+	antenna.done_prompt = "Antena alineada"
+	antenna.notice_on_done = "Alineada al norte. La portadora de la banda 4 sube."
+	antenna.log_text = "Realineé la antena. La banda 4 se escucha más fuerte."
+	points["antena"] = antenna
+	Build.label3d(self, "ANT-1", Vector3(-9.6, 1.5, 21.7), PI, 0.18, Color(0.7, 0.72, 0.68))
 
 	# Decision de la ultima noche: esperar el vehiculo.
 	var leave := ChoicePoint.new()

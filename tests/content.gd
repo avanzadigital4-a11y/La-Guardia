@@ -67,7 +67,12 @@ func _run() -> void:
 		"" if missing.is_empty() else ": " + ", ".join(missing)])
 
 	# --- Tareas: todas se pueden completar con algo del mundo ---
-	var resolvable := {"sleep": true, "decidir": true, "logbook_check": true}
+	var resolvable := {
+		"sleep": true,          # la cucheta
+		"decidir": true,        # los dos puntos de decision
+		"logbook_check": true,  # el escritorio
+		"puertas": true,        # condicion: todas las puertas cerradas
+	}
 	for key in station.points.keys():
 		var node: Node = station.points[key]
 		if node is TaskPoint:
@@ -76,6 +81,8 @@ func _run() -> void:
 			resolvable[(node as TriggerZone).task_id] = true
 		elif node is SensorPanel:
 			resolvable[(node as SensorPanel).task_id] = true
+		elif node is SuitCounter:
+			resolvable[(node as SuitCounter).task_id] = true
 	resolvable["radio_unknown"] = true   # se completa escuchando el registro
 	var unreachable: Array[String] = []
 	for n in range(1, GameState.MAX_NIGHT + 1):

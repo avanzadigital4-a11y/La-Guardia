@@ -64,7 +64,14 @@ func _run() -> void:
 	await _pause(PANEL_COST)
 	main.sensor_ui.close()
 
-	await _walk([Vector3(0.0, 0.1, -11.0), Vector3(0.0, 0.1, -2.5), Vector3(-1.5, 0.1, -2.5)])
+	# Purga de la valvula, en el almacen.
+	await _walk([Vector3(0.0, 0.1, -11.0), Vector3(0.0, 0.1, -2.5), Vector3(1.5, 0.1, -2.5)])
+	await _pause(DOOR_COST)
+	await _walk([Vector3(7.8, 0.1, -0.6)])
+	station.points["valvula"].interact(player)
+	await _pause(USE_COST)
+
+	await _walk([Vector3(1.5, 0.1, -2.5), Vector3(0.0, 0.1, -2.5), Vector3(-1.5, 0.1, -2.5)])
 	await _pause(DOOR_COST)
 	await _walk([Vector3(-6.0, 0.1, -3.4), Vector3(-7.4, 0.1, -3.4)])
 	station.points["cama"].interact(player)

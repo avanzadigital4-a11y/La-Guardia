@@ -14,6 +14,8 @@ var env: WorldEnvironment
 var _armed: Array = []      # anomalias esperando que el jugador salga de una sala
 var _busy := false
 var anomalies: AnomalyKit
+var _door_check := 0.0
+var _doors_touched := false
 
 
 func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_env: WorldEnvironment) -> void:
@@ -36,6 +38,7 @@ func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_e
 
 func start_night(night: int) -> void:
 	_armed.clear()
+	_doors_touched = false
 	anomalies.reset_all()
 	var data := NightData.get_night(night)
 	_apply_world(data["world"], night)
@@ -112,6 +115,30 @@ func _apply_world(world: Dictionary, night: int) -> void:
 		env.environment.fog_density = world.get("fog_density", 0.04)
 		var dread := clampf((night - 1) / 4.0, 0.0, 1.0)
 		env.environment.fog_light_color = Color(0.10, 0.11, 0.13).lerp(Color(0.05, 0.05, 0.07), dread)
+
+
+## Tarea por condicion: no se resuelve con [E] sobre nada, se resuelve
+## dejando la estacion como tiene que quedar. Y las anomalias abren puertas.
+func _process(delta: float) -> void:
+	_door_check -= delta
+	if _door_check > 0.0:
+		return
+	_door_check = 0.5
+	if not GameState.is_task_active("puertas"):
+		return
+	var any_open := false
+	for id in station.doors.keys():
+		if (station.doors[id] as Door).is_open:
+			any_open = true
+			break
+	if any_open:
+		# Recien cuenta cuando el jugador efectivamente anduvo abriendo cosas.
+		_doors_touched = true
+		return
+	if not _doors_touched:
+		return
+	GameState.complete_task("puertas")
+	GameState.add_log("", "Todo cerrado. Revisé una por una.", false)
 
 
 func _on_task_completed(id: String) -> void:

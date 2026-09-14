@@ -13,10 +13,10 @@ beats y variaciones de la estacion, y con dos finales. La Noche 1 es la que
 esta mas pulida; las demas ya no son un esqueleto, pero les falta densidad de
 props y detalle ambiental.
 
-Cada noche pide un verbo distinto para que el loop no se sienta ejecutado
-cinco veces: la 1 se resuelve recorriendo y apretando, la 2 escuchando una
-senal entera, la 3 caminando hasta un lugar que se mueve, la 4 leyendo la
-bitacora, y la 5 decidiendo.
+Cada noche tiene cuatro o cinco tareas y ninguna se resuelve toda de la misma
+forma: apretar `[E]`, recorrer varios puntos, escuchar una senal entera,
+llegar caminando a un lugar que se mueve, contar objetos, releer la bitacora,
+dejar la estacion en cierto estado, y decidir.
 
 Lo que ya funciona:
 
@@ -45,6 +45,11 @@ Lo que ya funciona:
   escuchar un registro entero, releer la bitacora.
 - Tareas de varios pasos: los dos generadores, los tres puntos de la ronda
   exterior. El HUD muestra el progreso (`2/3`).
+- Tareas por condicion: "dejar todas las puertas cerradas" no se aprieta en
+  ningun lado, se cumple dejando la estacion como tiene que quedar — y las
+  anomalias abren puertas.
+- Contar los trajes de la esclusa como tarea del turno: el numero cambia solo
+  y la bitacora lo anota.
 - Variaciones de la estacion por noche: un pasillo sur que no esta en los
   planos, el subnivel B2, la iluminacion, la niebla y el tinte de las
   paredes.
@@ -102,6 +107,17 @@ godot --headless --path . res://tests/ui_smoke.tscn      # UI SMOKE OK
 godot --headless --path . res://tests/pacing.tscn        # medicion de ritmo
 ```
 
+O todas juntas, con el runner que usa tambien el CI:
+
+```bash
+./tools/test.sh              # content + playthrough + ui_smoke
+./tools/test.sh playthrough  # una sola
+```
+
+Busca el binario en `$GODOT`, en `~/godot` o en el `PATH`, y falla si alguna
+suite devuelve error o imprime `FALLA`. Cada push las corre en GitHub Actions
+(`.github/workflows/pruebas.yml`).
+
 Las tres primeras salen con codigo 0 si todo pasa. `content` es la red de
 seguridad para seguir agregando contenido: verifica que cada anomalia apunte
 a un objeto, puerta o luz que exista, que las cinco noches no nombren nada
@@ -134,6 +150,18 @@ recalcularlo cuando las noches crezcan.
 
 Para revisar la estetica sin jugar, `godot --path . -- --capture` guarda una
 captura de cada ambiente en el directorio `user://` del proyecto.
+
+## Exportar
+
+Hay presets para Linux y Windows en `export_presets.cfg` (excluyen `tests/`,
+`docs/` y `tools/` del build):
+
+```bash
+godot --headless --path . --export-release "Linux"   build/linux/la-guardia.x86_64
+godot --headless --path . --export-release "Windows" build/windows/la-guardia.exe
+```
+
+Requiere tener instaladas las export templates de Godot 4.3.
 
 ## Como esta armado
 
@@ -186,5 +214,5 @@ nueva no implica tocar codigo.
 5. Seguir subiendo el contenido por noche hasta acercarse a las 2-3 horas del
    diseno, midiendo con `tests/pacing.tscn` cada vez: mas tareas por noche y
    mas para encontrar, no mas texto.
-6. Export presets (Windows/Linux), icono de aplicacion y un CI que corra las
-   tres suites en cada push.
+6. Definir la licencia del proyecto: todavia no hay archivo `LICENSE`, y esa
+   decision es del autor.
