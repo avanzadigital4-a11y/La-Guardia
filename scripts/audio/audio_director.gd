@@ -15,13 +15,46 @@ var _gust_target := 0.35
 var _creak_timer := 9.0
 var _dread := 0.0
 var _ambient_points: Array[Vector3] = []
+var _external := {}       # id -> AudioStream grabado que reemplaza al sintetizado
+var _wind_stream: AudioStream = null
 var _rng := RandomNumberGenerator.new()
+
+
+const VOICE_DIR := "res://audio/voz"
+const FX_DIR := "res://audio/efectos"
+const AMBIENT_DIR := "res://audio/ambiente"
 
 
 func _ready() -> void:
 	_rng.randomize()
 	_build_cues()
+	_load_external()
 	_start_wind()
+
+
+## Si hay grabaciones en audio/, mandan ellas. La sintesis queda de respaldo,
+## asi se puede ir grabando de a poco sin romper nada.
+func _load_external() -> void:
+	for id in _cues.keys():
+		var stream := _load_audio("%s/%s" % [FX_DIR, id])
+		if stream != null:
+			_external[id] = stream
+	_wind_stream = _load_audio("%s/viento" % AMBIENT_DIR)
+
+
+func _load_audio(path_without_ext: String) -> AudioStream:
+	for ext in [".ogg", ".wav", ".mp3"]:
+		var path: String = path_without_ext + String(ext)
+		if ResourceLoader.exists(path):
+			var res := load(path)
+			if res is AudioStream:
+				return res
+	return null
+
+
+## Linea grabada de un registro de radio, si existe.
+func voice_clip(log_id: String, line_index: int) -> AudioStream:
+	return _load_audio("%s/%s_%d" % [VOICE_DIR, log_id, line_index + 1])
 
 
 func _build_cues() -> void:
@@ -123,6 +156,16 @@ func _silence(dur: float) -> PackedFloat32Array:
 
 
 func _start_wind() -> void:
+	if _wind_stream != null:
+		# Viento grabado: nada de generador.
+		_wind = AudioStreamPlayer.new()
+		_wind.name = "Viento"
+		_wind.stream = _wind_stream
+		_wind.volume_db = -10.0
+		_wind.finished.connect(func(): _wind.play())
+		add_child(_wind)
+		_wind.play()
+		return
 	var gen := AudioStreamGenerator.new()
 	gen.mix_rate = RATE
 	gen.buffer_length = 0.35
@@ -194,10 +237,10 @@ func set_dread(value: float) -> void:
 
 
 func play_cue(id: String, pos: Vector3, volume_db := -6.0) -> void:
-	if not _cues.has(id):
+	if not _cues.has(id) and not _external.has(id):
 		return
 	var p := AudioStreamPlayer3D.new()
-	p.stream = _cues[id]
+	p.stream = _external.get(id, _cues.get(id))
 	p.unit_size = 6.0
 	p.max_distance = 30.0
 	p.volume_db = volume_db
@@ -242,9 +285,28 @@ func voice(seconds: float, pos: Vector3, pitch := 1.0) -> AudioStreamPlayer3D:
 	return p
 
 
+## Reproduce una linea de registro: la grabada si esta, la sintetizada si no.
+## Devuelve cuanto dura, para que el subtitulo acompane.
+func play_line(log_id: String, line_index: int, pos: Vector3, fallback_seconds := 3.0) -> float:
+	var clip := voice_clip(log_id, line_index)
+	if clip == null:
+		voice(fallback_seconds, pos, 1.0 if log_id != "rl_05" else 0.92)
+		return fallback_seconds
+	var p := AudioStreamPlayer3D.new()
+	p.stream = clip
+	p.unit_size = 5.0
+	p.max_distance = 20.0
+	p.volume_db = -6.0
+	p.position = pos
+	add_child(p)
+	p.play()
+	p.finished.connect(p.queue_free)
+	return maxf(clip.get_length(), 1.0)
+
+
 func start_hiss(pos: Vector3) -> AudioStreamPlayer3D:
 	var p := AudioStreamPlayer3D.new()
-	p.stream = _cues["hiss"]
+	p.stream = _external.get("hiss", _cues["hiss"])
 	p.unit_size = 5.0
 	p.max_distance = 18.0
 	p.volume_db = -14.0

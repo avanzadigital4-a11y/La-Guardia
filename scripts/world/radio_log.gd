@@ -26,10 +26,11 @@ func _on_interact(_who: Node) -> void:
 	GameState.found_radio_log(log_id)
 	AudioDirector.play_cue("radio_on", global_position)
 	var hiss := AudioDirector.start_hiss(global_position)
-	for line in data["lines"]:
-		Subtitles.show_line("%s: %s" % [data["label"], line], 3.4)
-		AudioDirector.voice(3.0, global_position, 1.0 if log_id != "rl_05" else 0.92)
-		await get_tree().create_timer(3.6).timeout
+	var lines: Array = data["lines"]
+	for i in lines.size():
+		var seconds := AudioDirector.play_line(log_id, i, global_position, 3.0)
+		Subtitles.show_line("%s: %s" % [data["label"], lines[i]], seconds + 0.4)
+		await get_tree().create_timer(seconds + 0.6).timeout
 		if not is_inside_tree():
 			return
 	AudioDirector.stop_hiss(hiss)

@@ -1,3 +1,4 @@
 build/
 .godot/
 *.translation
+scenes/estacion_horneable.tscn
