@@ -11,6 +11,6 @@ func get_prompt() -> String:
 func _on_interact(who: Node) -> void:
 	if not GameState.is_task_active("sleep"):
 		if who and who.has_method("show_notice"):
-			who.show_notice("Todavia queda trabajo.")
+			who.show_notice("Todavía queda trabajo.")
 		return
 	GameState.complete_task("sleep")

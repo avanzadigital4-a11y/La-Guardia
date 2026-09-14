@@ -14,6 +14,7 @@ var _gust := 0.35
 var _gust_target := 0.35
 var _creak_timer := 9.0
 var _dread := 0.0
+var _ambient_points: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
 
 
@@ -33,6 +34,7 @@ func _build_cues() -> void:
 	_cues["pickup"] = _wav(_beeps([880.0], 0.07))
 	_cues["creak"] = _wav(_creak_sound(1.8, 55.0, 95.0))
 	_cues["radio_on"] = _wav(_noise_hit(0.35, 0.4, 0.9))
+	_cues["step_snow"] = _wav(_noise_hit(0.22, 0.12, 0.2))
 	_cues["hiss"] = _wav(_noise_loop(1.0), true)
 
 
@@ -156,11 +158,35 @@ func _fill_wind() -> void:
 		_wind_playback.push_frame(Vector2(s, s))
 
 
+## Las salas de la estacion, para que los ruidos ambiente vengan de un lugar
+## concreto y no del aire. Las carga el NightDirector al construir el mundo.
+func set_ambient_points(points: Array[Vector3]) -> void:
+	_ambient_points = points
+
+
 func _ambient_creaks(delta: float) -> void:
 	_creak_timer -= delta * (1.0 + _dread)
-	if _creak_timer <= 0.0:
-		_creak_timer = _rng.randf_range(14.0, 38.0)
-		play_cue("creak", Vector3.ZERO, -18.0)
+	if _creak_timer > 0.0:
+		return
+	_creak_timer = _rng.randf_range(14.0, 38.0)
+	var pos := _distant_point()
+	# Cuanto mas lejos, mas apagado: el crujido llega de otra habitacion.
+	play_cue("creak" if _rng.randf() > 0.25 else "door", pos, -16.0)
+
+
+func _distant_point() -> Vector3:
+	if _ambient_points.is_empty():
+		return Vector3.ZERO
+	var player := get_tree().get_first_node_in_group("player") if is_inside_tree() else null
+	var candidates: Array[Vector3] = []
+	if player is Node3D:
+		var here: Vector3 = (player as Node3D).global_position
+		for p in _ambient_points:
+			if p.distance_to(here) > 7.0:
+				candidates.append(p)
+	if candidates.is_empty():
+		candidates = _ambient_points
+	return candidates[_rng.randi() % candidates.size()]
 
 
 func set_dread(value: float) -> void:

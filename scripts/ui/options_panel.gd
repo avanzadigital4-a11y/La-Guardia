@@ -13,9 +13,9 @@ func _ready() -> void:
 		func(v): Settings.mouse_sensitivity = v)
 	_slider("Volumen", 0.0, 1.0, Settings.master_volume, 0.05,
 		func(v): Settings.master_volume = v)
-	_slider("Pixelado (resolucion interna)", 0.25, 1.0, Settings.pixelation, 0.05,
+	_slider("Pixelado (resolución interna)", 0.25, 1.0, Settings.pixelation, 0.05,
 		func(v): Settings.pixelation = v)
-	_check("Efectos PS1 (grano, scanlines, vineta)", Settings.ps1_effects,
+	_check("Efectos PS1 (grano, scanlines, viñeta)", Settings.ps1_effects,
 		func(v): Settings.ps1_effects = v)
 
 	var back := Button.new()

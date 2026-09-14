@@ -27,8 +27,8 @@ func _ready() -> void:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 10)
 	margin.add_child(col)
-	col.add_child(UIUtils.label("BITACORA DE GUARDIA", 20, UIUtils.FG))
-	col.add_child(UIUtils.label("Estacion Cabo Hueso  ---  registro personal", 13, UIUtils.DIM))
+	col.add_child(UIUtils.label("BITÁCORA DE GUARDIA", 20, UIUtils.FG))
+	col.add_child(UIUtils.label("Estación Cabo Hueso  ---  registro personal", 13, UIUtils.DIM))
 
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL

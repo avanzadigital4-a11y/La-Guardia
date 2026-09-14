@@ -21,7 +21,7 @@ var flags := {}                    # banderas arbitrarias de progreso
 var logbook: Array = []            # [{night, time, text, wrong}]
 var radio_logs_found: Array = []
 var battery := 1.0
-var spare_batteries := 1
+var spare_batteries := 0   # las de repuesto se buscan en la estacion
 var night_active := false
 
 
@@ -30,7 +30,13 @@ func start_night(n: int) -> void:
 	var data := NightData.get_night(current_night)
 	tasks.clear()
 	for t in data["tasks"]:
-		tasks.append({"id": t["id"], "text": t["text"], "done": false})
+		tasks.append({
+			"id": t["id"],
+			"text": t["text"],
+			"done": false,
+			"steps": int(t.get("steps", 1)),
+			"done_steps": 0,
+		})
 	for e in data["logbook"]:
 		_push_log(e["time"], e["text"], false)
 	battery = 1.0
@@ -58,9 +64,30 @@ func _maybe_add_final_task() -> void:
 	if final.is_empty() or has_task(final["id"]):
 		all_tasks_done.emit()
 		return
-	tasks.append({"id": final["id"], "text": final["text"], "done": false})
+	tasks.append({"id": final["id"], "text": final["text"], "done": false, "steps": 1, "done_steps": 0})
 	tasks_changed.emit()
 	notice.emit("Tarea nueva: %s" % final["text"])
+
+
+## Avanza una tarea de varios pasos (la ronda exterior, el generador). La
+## completa recien cuando se cubrieron todos.
+func advance_task(id: String) -> bool:
+	for t in tasks:
+		if t["id"] == id and not t["done"]:
+			t["done_steps"] = int(t["done_steps"]) + 1
+			if int(t["done_steps"]) >= int(t["steps"]):
+				return complete_task(id)
+			tasks_changed.emit()
+			notice.emit("%s (%d/%d)" % [t["text"], t["done_steps"], t["steps"]])
+			return true
+	return false
+
+
+func task_progress(id: String) -> String:
+	for t in tasks:
+		if t["id"] == id and int(t["steps"]) > 1 and not t["done"]:
+			return " (%d/%d)" % [t["done_steps"], t["steps"]]
+	return ""
 
 
 func has_task(id: String) -> bool:
@@ -146,7 +173,7 @@ func reset() -> void:
 	logbook.clear()
 	radio_logs_found.clear()
 	battery = 1.0
-	spare_batteries = 1
+	spare_batteries = 0
 
 
 func save_game() -> void:

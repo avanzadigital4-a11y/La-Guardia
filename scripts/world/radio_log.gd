@@ -12,7 +12,7 @@ func get_prompt() -> String:
 	if _playing:
 		return "Reproduciendo"
 	if task_id != "" and GameState.is_task_active(task_id):
-		return "Escuchar la senal entera"
+		return "Escuchar la señal entera"
 	return "Escuchar registro"
 
 

@@ -42,7 +42,7 @@ func _ready() -> void:
 	_button("Opciones", func():
 		_col.visible = false
 		_options.visible = true)
-	_button("Guardar y volver al menu", func():
+	_button("Guardar y volver al menú", func():
 		GameState.save_game()
 		close()
 		get_tree().change_scene_to_file("res://scenes/menu.tscn"))

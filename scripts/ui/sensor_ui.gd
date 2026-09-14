@@ -78,9 +78,9 @@ func _refresh() -> void:
 	var rows := [
 		["TEMPERATURA EXT.", "%.1f C" % (-41.0 - night * 1.3 + randf_range(-0.4, 0.4)), false],
 		["VIENTO", "%.0f nudos" % (38.0 + night * 2.0 + randf_range(-3.0, 3.0)), false],
-		["PRESION", "%.1f hPa" % (978.0 - night * 2.0 + randf_range(-0.6, 0.6)), false],
-		["RADIACION", "%.2f uSv/h" % (0.11 + randf_range(-0.01, 0.01)), false],
-		["OCUPACION REGISTRADA", "1 persona", night >= 3],
+		["PRESIÓN", "%.1f hPa" % (978.0 - night * 2.0 + randf_range(-0.6, 0.6)), false],
+		["RADIACIÓN", "%.2f uSv/h" % (0.11 + randf_range(-0.01, 0.01)), false],
+		["OCUPACIÓN REGISTRADA", "1 persona", night >= 3],
 	]
 	if night >= 4:
 		rows[4][1] = "0 personas"

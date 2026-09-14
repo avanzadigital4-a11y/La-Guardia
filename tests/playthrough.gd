@@ -27,12 +27,16 @@ func _run() -> void:
 
 	# Tareas: se completan usando los propios objetos del mundo.
 	station.points["generador"].interact(player)
-	await _wait(0.3)
-	_check(GameState.is_task_done("generator"), "revisar el generador")
+	await _wait(0.2)
+	_check(not GameState.is_task_done("generator"), "un solo generador no alcanza")
+	station.points["generador_b"].interact(player)
+	await _wait(0.2)
+	_check(GameState.is_task_done("generator"), "revisar los dos generadores")
 
-	station.points["ronda"].interact(player)
-	await _wait(0.3)
-	_check(GameState.is_task_done("round"), "ronda exterior")
+	for key in ["ronda", "ronda_2", "ronda_3"]:
+		station.points[key].interact(player)
+		await _wait(0.2)
+	_check(GameState.is_task_done("round"), "ronda exterior de tres puntos")
 
 	station.points["sensores"].interact(player)
 	await _wait(0.3)
@@ -88,7 +92,9 @@ func _run() -> void:
 	await director.start_night(5)
 	await _wait(0.5)
 	station.points["generador"].interact(player)
-	await _wait(0.3)
+	await _wait(0.2)
+	station.points["generador_b"].interact(player)
+	await _wait(0.2)
 	# El subnivel se completa llegando caminando, no apretando [E].
 	player.teleport(Vector3(0.0, -0.4, -28.0), 0.0)
 	await _wait(0.6)

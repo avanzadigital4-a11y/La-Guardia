@@ -3,7 +3,7 @@ extends Interactable
 ## La bitacora fisica sobre el escritorio.
 
 func get_prompt() -> String:
-	return "Leer la bitacora"
+	return "Leer la bitácora"
 
 
 func _on_interact(_who: Node) -> void:

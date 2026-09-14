@@ -26,8 +26,8 @@ const NIGHTS := {
 		"subtitle": "Rutina",
 		"clock": "23:04",
 		"tasks": [
-			{"id": "generator", "text": "Revisar el generador"},
-			{"id": "round", "text": "Hacer la ronda exterior"},
+			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
+			{"id": "round", "text": "Hacer la ronda exterior", "steps": 3},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
@@ -42,7 +42,7 @@ const NIGHTS := {
 		},
 		"beats": {
 			"inicio": [
-				{"subtitulo": "Cuarto turno solo. Faltan cinco dias.", "tiempo": 3.0},
+				{"subtitulo": "Cuarto turno solo. Faltan cinco días.", "tiempo": 3.0},
 			],
 			"generator": [
 				{"esperar": 4.0},
@@ -55,12 +55,12 @@ const NIGHTS := {
 				{"subtitulo": "(el viento se corta un segundo y vuelve)", "tiempo": 2.6},
 			],
 			"sensors": [
-				{"aviso": "El panel marco una lectura de mas y la borro solo."},
+				{"aviso": "El panel marcó una lectura de más y la borró solo."},
 				{"armar": "dorm_chair", "sala": "dormitorio"},
 			],
 		},
 		"logbook": [
-			{"time": "23:04", "text": "Cuarto turno solo. Faltan cinco dias para la evacuacion."},
+			{"time": "23:04", "text": "Cuarto turno solo. Faltan cinco días para la evacuación."},
 		],
 		"logbook_end": [
 			{"time": "04:12", "text": "Ronda completa. Sin novedades que valga la pena anotar."},
@@ -68,12 +68,12 @@ const NIGHTS := {
 	},
 	2: {
 		"title": "NOCHE 2",
-		"subtitle": "Primera desviacion",
+		"subtitle": "Primera desviación",
 		"clock": "22:51",
 		"tasks": [
-			{"id": "generator", "text": "Revisar el generador"},
+			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
-			{"id": "radio_unknown", "text": "Rastrear la senal que no figura en el registro"},
+			{"id": "radio_unknown", "text": "Rastrear la señal que no figura en el registro"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
@@ -87,7 +87,7 @@ const NIGHTS := {
 		},
 		"beats": {
 			"inicio": [
-				{"subtitulo": "El almacen esta abierto. Juraria que ayer estaba trabado.", "tiempo": 3.4},
+				{"subtitulo": "El almacén está abierto. Juraría que ayer estaba trabado.", "tiempo": 3.4},
 				{"aviso": "Hay una portadora en la banda 4. No figura en el registro."},
 			],
 			"generator": [
@@ -99,7 +99,7 @@ const NIGHTS := {
 				{"sonido": "creak", "db": -9.0},
 			],
 			"sensors": [
-				{"aviso": "Ocupacion registrada: 1. El sensor tardo en decidirlo."},
+				{"aviso": "Ocupación registrada: 1. El sensor tardó en decidirlo."},
 			],
 			"radio_unknown": [
 				{"esperar": 1.0},
@@ -107,15 +107,15 @@ const NIGHTS := {
 				{"subtitulo": "(la portadora sigue sonando con el equipo apagado)", "tiempo": 3.2},
 				{"armar": "corridor_door", "sala": "almacen"},
 				{"armar": "dorm_chair", "sala": "dormitorio"},
-				{"bitacora": "La senal estaba grabada hoy, a una hora que todavia no paso.", "hora": "01:58"},
+				{"bitacora": "La señal estaba grabada hoy, a una hora que todavía no pasó.", "hora": "01:58"},
 			],
 		},
 		"logbook": [
-			{"time": "22:51", "text": "El almacen esta abierto. Juraria que ayer estaba trabado."},
+			{"time": "22:51", "text": "El almacén está abierto. Juraría que ayer estaba trabado."},
 		],
 		"logbook_end": [
-			{"time": "03:38", "text": "Segui una senal hasta el almacen."},
-			{"time": "03:44", "text": "No debi seguirla."},
+			{"time": "03:38", "text": "Seguí una señal hasta el almacén."},
+			{"time": "03:44", "text": "No debí seguirla."},
 		],
 	},
 	3: {
@@ -123,9 +123,9 @@ const NIGHTS := {
 		"subtitle": "El espacio interfiere",
 		"clock": "23:19",
 		"tasks": [
-			{"id": "generator", "text": "Revisar el generador"},
+			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
-			{"id": "subnivel", "text": "Bajar al nivel que aparecio en el mapa"},
+			{"id": "subnivel", "text": "Bajar al nivel que apareció en el mapa"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
@@ -139,7 +139,7 @@ const NIGHTS := {
 		},
 		"beats": {
 			"inicio": [
-				{"subtitulo": "El pasillo sigue mas alla de donde terminaba.", "tiempo": 3.2},
+				{"subtitulo": "El pasillo sigue más allá de donde terminaba.", "tiempo": 3.2},
 				{"ruta": "pasillo_sur", "activa": true},
 			],
 			"generator": [
@@ -148,32 +148,32 @@ const NIGHTS := {
 				{"sonido": "creak", "db": -6.0},
 			],
 			"sensors": [
-				{"aviso": "El mapa suma un SUBNIVEL B2 que no esta en los planos."},
+				{"aviso": "El mapa suma un SUBNIVEL B2 que no está en los planos."},
 				{"armar": "control_chair", "sala": "sala de control"},
 			],
 			"subnivel": [
 				{"parpadeo": 3.0},
 				{"subtitulo": "Hay marcas en la pared. Son de esta semana.", "tiempo": 3.6},
 				{"subtitulo": "Es tu letra.", "tiempo": 3.0},
-				{"bitacora": "Las marcas del B2 son mias. No me acuerdo de haberlas hecho.", "hora": "03:07", "falsa": true},
+				{"bitacora": "Las marcas del B2 son mías. No me acuerdo de haberlas hecho.", "hora": "03:07", "falsa": true},
 			],
 		},
 		"logbook": [
-			{"time": "23:19", "text": "El pasillo sur es mas largo que ayer. Lo camine dos veces para contarlo."},
+			{"time": "23:19", "text": "El pasillo sur es más largo que ayer. Lo caminé dos veces para contarlo."},
 		],
 		"logbook_end": [
-			{"time": "02:56", "text": "Baje al B2."},
+			{"time": "02:56", "text": "Bajé al B2."},
 			{"time": "03:01", "text": "No hay B2 en los planos."},
-			{"time": "03:07", "text": "Igual baje."},
+			{"time": "03:07", "text": "Igual bajé."},
 		],
 	},
 	4: {
 		"title": "NOCHE 4",
-		"subtitle": "Perdida de confianza",
+		"subtitle": "Pérdida de confianza",
 		"clock": "00:02",
 		"tasks": [
-			{"id": "logbook_check", "text": "Releer la bitacora de las noches anteriores"},
-			{"id": "generator", "text": "Revisar el generador"},
+			{"id": "logbook_check", "text": "Releer la bitácora de las noches anteriores"},
+			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
@@ -188,17 +188,17 @@ const NIGHTS := {
 		},
 		"beats": {
 			"inicio": [
-				{"subtitulo": "Hoy el B2 no esta. El mapa dice que nunca estuvo.", "tiempo": 3.4},
+				{"subtitulo": "Hoy el B2 no está. El mapa dice que nunca estuvo.", "tiempo": 3.4},
 				{"ocultar": ["traje_2", "traje_3"]},
 			],
 			"logbook_check": [
 				{"esperar": 0.8},
 				{"sonido": "click", "db": -10.0},
-				{"bitacora": "Abri la puerta del generador.", "hora": "23:41", "falsa": true},
+				{"bitacora": "Abrí la puerta del generador.", "hora": "23:41", "falsa": true},
 				{"esperar": 1.2},
-				{"bitacora": "No debi abrirla.", "hora": "23:43", "falsa": true},
+				{"bitacora": "No debí abrirla.", "hora": "23:43", "falsa": true},
 				{"esperar": 1.2},
-				{"bitacora": "El todavia no sabe que fui yo.", "hora": "23:47", "falsa": true},
+				{"bitacora": "Él todavía no sabe que fui yo.", "hora": "23:47", "falsa": true},
 				{"aviso": "Tres entradas nuevas. Con tu letra. De hace una hora."},
 				{"parpadeo": 1.8},
 				{"anomalia": "dorm_chair"},
@@ -212,17 +212,17 @@ const NIGHTS := {
 				{"sonido": "door", "db": -8.0},
 			],
 			"sensors": [
-				{"aviso": "OCUPACION REGISTRADA: 0 personas."},
+				{"aviso": "OCUPACIÓN REGISTRADA: 0 personas."},
 				{"parpadeo": 2.0},
 				{"armar": "control_chair", "sala": "sala de control"},
 			],
 		},
 		"logbook": [
-			{"time": "00:02", "text": "Hoy el B2 no esta. El mapa dice que nunca estuvo."},
+			{"time": "00:02", "text": "Hoy el B2 no está. El mapa dice que nunca estuvo."},
 		],
 		"logbook_end": [
-			{"time": "04:30", "text": "Revise las tres firmas de la bitacora."},
-			{"time": "04:31", "text": "Las tres son mias."},
+			{"time": "04:30", "text": "Revisé las tres firmas de la bitácora."},
+			{"time": "04:31", "text": "Las tres son mías."},
 		],
 	},
 	5: {
@@ -230,10 +230,10 @@ const NIGHTS := {
 		"subtitle": "Cierre",
 		"clock": "21:40",
 		"tasks": [
-			{"id": "generator", "text": "Dejar el generador en modo de cierre"},
-			{"id": "subnivel", "text": "Bajar al subnivel por ultima vez"},
+			{"id": "generator", "text": "Dejar los generadores en modo de cierre", "steps": 2},
+			{"id": "subnivel", "text": "Bajar al subnivel por última vez"},
 		],
-		"final_task": {"id": "decidir", "text": "Decidir: esperar el vehiculo en el patio o quedarte abajo"},
+		"final_task": {"id": "decidir", "text": "Decidir: esperar el vehículo en el patio o quedarte abajo"},
 		"world": {
 			"subnivel_b2": true,
 			"corridor_south": true,
@@ -245,23 +245,23 @@ const NIGHTS := {
 		},
 		"beats": {
 			"inicio": [
-				{"subtitulo": "Ultima guardia. Manana a esta hora esto es hielo vacio.", "tiempo": 3.4},
+				{"subtitulo": "Última guardia. Mañana a esta hora esto es hielo vacío.", "tiempo": 3.4},
 				{"ocultar": ["traje_1", "traje_2", "traje_3"]},
 			],
 			"generator": [
 				{"esperar": 2.0},
-				{"subtitulo": "El generador queda en minimo. La estacion se enfria rapido.", "tiempo": 3.2},
+				{"subtitulo": "El generador queda en mínimo. La estación se enfría rápido.", "tiempo": 3.2},
 				{"armar": "dorm_bed", "sala": "dormitorio"},
 			],
 			"subnivel": [
 				{"parpadeo": 2.6},
 				{"subtitulo": "Las marcas de la pared ahora son una lista de fechas.", "tiempo": 3.6},
-				{"subtitulo": "La ultima es la de manana.", "tiempo": 3.0},
-				{"aviso": "El vehiculo llega al amanecer. Hay que decidir."},
+				{"subtitulo": "La última es la de mañana.", "tiempo": 3.0},
+				{"aviso": "El vehículo llega al amanecer. Hay que decidir."},
 			],
 		},
 		"logbook": [
-			{"time": "21:40", "text": "Ultima guardia. Manana a esta hora esto es hielo vacio."},
+			{"time": "21:40", "text": "Última guardia. Mañana a esta hora esto es hielo vacío."},
 		],
 		"logbook_end": [
 			{"time": "05:50", "text": "Escucho el motor."},
@@ -276,18 +276,18 @@ const RADIO_LOGS := {
 		"label": "REG-014 / Jefe de base",
 		"night": 1,
 		"lines": [
-			"Registro catorce. El relevo se confirmo para el dia cinco.",
+			"Registro catorce. El relevo se confirmó para el día cinco.",
 			"Queda una sola persona de guardia hasta entonces.",
-			"Si escuchan esto en el inventario final: el generador B pierde presion. No lo fuercen.",
+			"Si escuchan esto en el inventario final: el generador B pierde presión. No lo fuercen.",
 		],
 	},
 	"rl_02": {
 		"label": "REG-021 / Sin firmar",
 		"night": 1,
 		"lines": [
-			"...no se quien dejo esto grabando.",
+			"...no sé quién dejó esto grabando.",
 			"Hay alguien haciendo la ronda. Lo escucho caminar arriba.",
-			"Yo soy el unico que hace la ronda.",
+			"Yo soy el único que hace la ronda.",
 		],
 	},
 	"rl_03": {
@@ -296,7 +296,7 @@ const RADIO_LOGS := {
 		"lines": [
 			"[ruido de portadora, doce segundos]",
 			"...repetir el recorrido. Repetir el recorrido.",
-			"La grabacion figura hecha hoy, a las 23:47.",
+			"La grabación figura hecha hoy, a las 23:47.",
 			"Son las 23:12.",
 		],
 	},
@@ -304,7 +304,7 @@ const RADIO_LOGS := {
 		"label": "REG-030 / Nivel B2",
 		"night": 3,
 		"lines": [
-			"Prueba de eco en el subnivel. Dia doscientos once.",
+			"Prueba de eco en el subnivel. Día doscientos once.",
 			"El pasillo mide catorce metros de ida y diecinueve de vuelta.",
 			"Lo medimos cuatro veces. Dejamos de medirlo.",
 		],
@@ -313,10 +313,10 @@ const RADIO_LOGS := {
 		"label": "REG-041 / Tu voz",
 		"night": 4,
 		"lines": [
-			"Registro cuarenta y uno. Estacion Cabo Hueso.",
-			"Si estas escuchando esto, ya hiciste la ronda tres veces esta noche.",
+			"Registro cuarenta y uno. Estación Cabo Hueso.",
+			"Si estás escuchando esto, ya hiciste la ronda tres veces esta noche.",
 			"No la hagas de nuevo.",
-			"[la grabacion tiene tu voz y no la reconoces]",
+			"[la grabación tiene tu voz y no la reconoces]",
 		],
 	},
 }

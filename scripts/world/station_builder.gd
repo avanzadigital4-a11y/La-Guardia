@@ -115,7 +115,7 @@ func _build_control() -> void:
 	points["sensores"] = console
 
 	Build.box(self, "Pizarra", Vector3(2.0, 1.2, 0.06), Vector3(-5.5, 1.7, -13.9), Build.surface(Color(0.18, 0.20, 0.19)))
-	Build.label3d(self, "DIAS PARA EL CIERRE", Vector3(-5.5, 2.05, -13.85), 0.0, 0.18, Color(0.7, 0.72, 0.68))
+	Build.label3d(self, "DÍAS PARA EL CIERRE", Vector3(-5.5, 2.05, -13.85), 0.0, 0.18, Color(0.7, 0.72, 0.68))
 	Build.label3d(self, "|||||", Vector3(-5.5, 1.55, -13.85), 0.0, 0.32, Color(0.75, 0.7, 0.55))
 
 	var chair := _add_prop("control_chair", Vector3(-6.4, 0.0, -11.0), 0.0, Vector3(0.55, 0.9, 0.55))
@@ -138,12 +138,25 @@ func _build_generator() -> void:
 	gen.position = Vector3(6.0, 0.0, -11.0)
 	gen.setup_box(Vector3(2.4, 1.8, 3.2), _mat_metal, Vector3(0.0, 0.9, 0.0))
 	gen.task_id = "generator"
-	gen.active_prompt = "Revisar el generador"
-	gen.done_prompt = "Generador estable"
-	gen.notice_on_done = "Presion en verde. Generador B sigue perdiendo."
+	gen.multi_step = true
+	gen.active_prompt = "Revisar GEN-A"
+	gen.done_prompt = "GEN-A estable"
 	gen.log_time = ""
-	gen.log_text = "Generador revisado. El B pierde presion, como siempre."
 	points["generador"] = gen
+
+	var gen_b := TaskPoint.new()
+	gen_b.name = "GeneradorB"
+	add_child(gen_b)
+	gen_b.position = Vector3(8.4, 0.0, -12.6)
+	gen_b.setup_box(Vector3(1.6, 1.6, 2.0), _mat_metal, Vector3(0.0, 0.8, 0.0))
+	gen_b.task_id = "generator"
+	gen_b.multi_step = true
+	gen_b.active_prompt = "Revisar GEN-B"
+	gen_b.done_prompt = "GEN-B revisado"
+	gen_b.notice_on_done = "Presión en verde. El B sigue perdiendo."
+	gen_b.log_text = "Generadores revisados. El B pierde presión, como siempre."
+	points["generador_b"] = gen_b
+	Build.label3d(self, "GEN-B", Vector3(8.4, 1.8, -13.65), 0.0, 0.2, Color(0.8, 0.6, 0.4))
 	Build.light(gen, Vector3(0.0, 2.0, 0.0), Color(0.9, 0.5, 0.25), 0.7, 4.0)
 	Build.label3d(self, "GEN-A", Vector3(4.7, 1.9, -11.0), -PI * 0.5, 0.2, Color(0.8, 0.6, 0.4))
 
@@ -236,18 +249,26 @@ func _build_exterior() -> void:
 	Build.box(self, "Contenedor", Vector3(5.0, 2.4, 2.4), Vector3(8.0, 1.2, 18.0), Build.surface(Color(0.32, 0.26, 0.24)))
 	lights.append(Build.light(self, Vector3(0.0, 4.0, 13.0), Color(0.55, 0.62, 0.75), 1.1, 12.0))
 
-	var marker := TaskPoint.new()
-	marker.name = "MarcaRonda"
-	add_child(marker)
-	marker.position = Vector3(-8.0, 0.0, 20.0)
-	marker.setup_box(Vector3(0.7, 1.2, 0.7), Build.surface(Color(0.75, 0.55, 0.15)), Vector3(0.0, 0.6, 0.0))
-	marker.task_id = "round"
-	marker.active_prompt = "Marcar la ronda exterior"
-	marker.done_prompt = "Ronda marcada"
-	marker.notice_on_done = "Viento 41 nudos. Sin novedad en el perimetro."
-	marker.log_text = "Ronda exterior hecha. Cuarenta y un nudos de viento."
-	points["ronda"] = marker
-	Build.label3d(self, "PTO. 3", Vector3(-8.0, 1.4, 19.6), PI, 0.18, Color(0.85, 0.7, 0.3))
+	# Tres puntos de control: la ronda es un recorrido, no un boton.
+	var spots := [
+		{"key": "ronda", "label": "PTO. 1", "pos": Vector3(9.5, 0.0, 15.0)},
+		{"key": "ronda_2", "label": "PTO. 2", "pos": Vector3(1.0, 0.0, 25.5)},
+		{"key": "ronda_3", "label": "PTO. 3", "pos": Vector3(-8.0, 0.0, 20.0)},
+	]
+	for spot in spots:
+		var marker := TaskPoint.new()
+		marker.name = "Marca_%s" % spot["key"]
+		add_child(marker)
+		marker.position = spot["pos"]
+		marker.setup_box(Vector3(0.7, 1.2, 0.7), Build.surface(Color(0.75, 0.55, 0.15)), Vector3(0.0, 0.6, 0.0))
+		marker.task_id = "round"
+		marker.multi_step = true
+		marker.active_prompt = "Marcar %s" % spot["label"]
+		marker.done_prompt = "%s marcado" % spot["label"]
+		points[spot["key"]] = marker
+		Build.label3d(self, spot["label"], spot["pos"] + Vector3(0.0, 1.4, -0.4), PI, 0.18, Color(0.85, 0.7, 0.3))
+	(points["ronda_3"] as TaskPoint).notice_on_done = "Viento 41 nudos. Sin novedad en el perímetro."
+	(points["ronda_3"] as TaskPoint).log_text = "Ronda exterior hecha. Cuarenta y un nudos de viento."
 
 	Build.box(self, "Tambores", Vector3(0.8, 1.1, 0.8), Vector3(10.0, 0.55, 14.0), _mat_metal)
 	Build.box(self, "Tambores2", Vector3(0.8, 1.1, 0.8), Vector3(10.9, 0.55, 14.6), _mat_metal)
@@ -258,7 +279,7 @@ func _build_exterior() -> void:
 	add_child(leave)
 	leave.position = Vector3(0.0, 0.0, 25.0)
 	leave.ending_id = "salir"
-	leave.choice_prompt = "Esperar el vehiculo aca"
+	leave.choice_prompt = "Esperar el vehículo acá"
 	leave.setup_box(Vector3(1.2, 1.0, 1.2), Build.surface(Color(0.5, 0.45, 0.2)), Vector3(0.0, 0.5, 0.0))
 	points["salir"] = leave
 	Build.label3d(self, "PUNTO DE RETIRO", Vector3(0.0, 1.5, 24.4), PI, 0.2, Color(0.8, 0.7, 0.4))
@@ -405,6 +426,16 @@ func _add_radio_log(id: String, pos: Vector3, from_night: int) -> RadioLog:
 	rl.set_meta("from_night", from_night)
 	points["log_%s" % id] = rl
 	return rl
+
+
+## Centros de las salas: de ahi salen los crujidos y los golpes ambiente.
+func ambient_points() -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	for id in ROOMS.keys():
+		var r: Rect2 = ROOMS[id]
+		var c := r.get_center()
+		out.append(Vector3(c.x, 1.6, c.y))
+	return out
 
 
 func recolor_walls(tint: Color) -> void:

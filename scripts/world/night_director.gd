@@ -29,6 +29,7 @@ func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_e
 		var r: RouteSwap = station.routes[id]
 		r.swapped.connect(_on_route_swapped.bind(id))
 		r.exhausted.connect(_on_route_exhausted.bind(id))
+	AudioDirector.set_ambient_points(station.ambient_points())
 
 
 func start_night(night: int) -> void:
@@ -51,6 +52,10 @@ func start_night(night: int) -> void:
 			(node as TriggerZone).active = true
 	for bat in station.pickups:
 		bat.restock()
+	for key in station.points.keys():
+		var pt: Node = station.points[key]
+		if pt is TaskPoint:
+			(pt as TaskPoint).reset_point()
 	station.doors["almacen"].locked = data["world"].get("door_storage_locked", false)
 	station.doors["almacen"].locked_text = "Trabada. La llave figura en el inventario del turno anterior."
 
@@ -167,22 +172,22 @@ func _apply_anomaly(id: String) -> void:
 			if station.doors.has("almacen"):
 				(station.doors["almacen"] as Door).set_open(true, true)
 		_:
-			push_warning("Anomalia desconocida: %s" % id)
+			push_warning("Anomalía desconocida: %s" % id)
 
 
 func _on_route_swapped(times: int, route_id: String) -> void:
 	if route_id == "pasillo_sur":
-		Subtitles.show_line("(estas de nuevo en la entrada del pasillo)", 2.8)
+		Subtitles.show_line("(estás de nuevo en la entrada del pasillo)", 2.8)
 		if times == 1:
-			GameState.add_log("", "Camine el pasillo sur hasta el fondo y sali de nuevo por la entrada.", true)
+			GameState.add_log("", "Caminé el pasillo sur hasta el fondo y salí de nuevo por la entrada.", true)
 	elif route_id == "puerta_dormitorio":
 		Subtitles.show_line("(esta no es tu pieza)", 3.0)
-		GameState.notice.emit("Entraste al dormitorio y saliste en el almacen.")
+		GameState.notice.emit("Entraste al dormitorio y saliste en el almacén.")
 
 
 func _on_route_exhausted(route_id: String) -> void:
 	if route_id == "pasillo_sur":
-		Subtitles.show_line("(esta vez el pasillo termina donde deberia)", 3.0)
+		Subtitles.show_line("(esta vez el pasillo termina donde debería)", 3.0)
 
 
 func _flicker_lights(duration: float) -> void:
@@ -214,7 +219,7 @@ func _finish_night() -> void:
 		night_finished.emit(night)
 		_busy = false
 		return
-	await fade.show_card("FIN DE LA NOCHE %d" % night, "Dormis con la ropa puesta.", 2.4)
+	await fade.show_card("FIN DE LA NOCHE %d" % night, "Dormís con la ropa puesta.", 2.4)
 	GameState.save_game()
 	player.set_frozen(false)
 	_busy = false
@@ -234,13 +239,13 @@ func _ending() -> void:
 func _ending_leave() -> void:
 	await fade.show_card("AMANECE", "Se escucha un motor sobre el hielo.", 3.0)
 	var lines := [
-		"Base movil a Cabo Hueso. Estamos a dos kilometros.",
+		"Base móvil a Cabo Hueso. Estamos a dos kilómetros.",
 		"Confirmen personal en superficie para el retiro.",
 		"...",
-		"No hay personal asignado a esa estacion desde hace once meses.",
+		"No hay personal asignado a esa estación desde hace once meses.",
 	]
 	if GameState.radio_logs_found.size() >= NightData.RADIO_LOGS.size():
-		lines.append("Y las grabaciones que dejaron ahi son todas de la misma voz.")
+		lines.append("Y las grabaciones que dejaron ahí son todas de la misma voz.")
 	await _speak(lines)
 
 
@@ -248,9 +253,9 @@ func _ending_leave() -> void:
 func _ending_stay() -> void:
 	await fade.show_card("ABAJO", "La escotilla cierra desde adentro.", 3.0)
 	await _speak([
-		"Base movil a Cabo Hueso. Estamos en el patio.",
+		"Base móvil a Cabo Hueso. Estamos en el patio.",
 		"No hay nadie en superficie. Repetimos: no hay nadie.",
-		"Dejen la puerta como esta.",
+		"Dejen la puerta como está.",
 	])
 
 

@@ -92,7 +92,7 @@ func _ready() -> void:
 	_battery_fill.size = Vector2(120, 10)
 	bat_bg.add_child(_battery_fill)
 
-	var hint := UIUtils.label("[E] usar   [F] linterna   [TAB] bitacora", 12, UIUtils.DIM)
+	var hint := UIUtils.label("[E] usar   [F] linterna   [TAB] bitácora", 12, UIUtils.DIM)
 	hint.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	hint.offset_left = -360.0
 	hint.offset_top = -46.0
@@ -120,7 +120,10 @@ func _refresh_tasks() -> void:
 	for t in GameState.tasks:
 		var mark := "[x]" if t["done"] else "[ ]"
 		var color: Color = UIUtils.DIM if t["done"] else UIUtils.FG
-		_tasks_box.add_child(UIUtils.label("%s %s" % [mark, t["text"]], 14, color))
+		var progress := ""
+		if int(t.get("steps", 1)) > 1 and not t["done"]:
+			progress = " (%d/%d)" % [t["done_steps"], t["steps"]]
+		_tasks_box.add_child(UIUtils.label("%s %s%s" % [mark, t["text"], progress], 14, color))
 
 
 func set_prompt(text: String) -> void:

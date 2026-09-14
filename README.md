@@ -39,6 +39,8 @@ Lo que ya funciona:
   el jugador.
 - Tareas que no se resuelven apretando `[E]`: llegar caminando a un lugar,
   escuchar un registro entero, releer la bitacora.
+- Tareas de varios pasos: los dos generadores, los tres puntos de la ronda
+  exterior. El HUD muestra el progreso (`2/3`).
 - Variaciones de la estacion por noche: un pasillo sur que no esta en los
   planos, el subnivel B2, la iluminacion, la niebla y el tinte de las
   paredes.
@@ -55,6 +57,9 @@ Lo que ya funciona:
   sensibilidad, volumen, pixelado y efectos PS1 que persisten entre sesiones.
 - Voz de radio sintetizada: no dice palabras, imita la cadencia del habla
   detras de la portadora mientras corren los subtitulos.
+- Sonido ambiente posicional: los crujidos y los golpes salen de una sala
+  concreta, siempre lejos de donde esta el jugador, y los pasos cambian
+  adentro (chapa) y afuera (nieve).
 
 ## Correr el juego
 
@@ -89,10 +94,32 @@ que no se resuelven con `[E]`, la decision de la Noche 5 y el final:
 ```bash
 godot --headless --path . res://tests/playthrough.tscn   # PLAYTHROUGH OK
 godot --headless --path . res://tests/ui_smoke.tscn      # UI SMOKE OK
+godot --headless --path . res://tests/pacing.tscn        # medicion de ritmo
 ```
 
-Las dos salen con codigo 0 si todo pasa. La segunda cubre el menu, las
-opciones, la pausa y la autonomia de la linterna.
+Las dos primeras salen con codigo 0 si todo pasa. La segunda cubre el menu,
+las opciones, la pausa y la autonomia de la linterna.
+
+## Ritmo medido
+
+`tests/pacing.tscn` camina la Noche 1 como la caminaria alguien que va derecho
+a cada tarea, acelerado con `Engine.time_scale`, y reporta duracion,
+distancia y bateria. La ultima medicion:
+
+```
+duracion         89 s  (1.5 min)
+distancia       155 m
+bateria usada    24 %
+```
+
+Un jugador que explora tarda entre dos y tres veces eso, o sea unos 4 minutos
+por noche: **20 minutos de juego contra las 2-3 horas que pide el diseno**.
+Esa diferencia es de contenido, no de ritmo — hace falta mas por noche
+(tareas, salas, cosas para encontrar), y el numero de arriba es la forma de
+medir si se esta acortando. Con la bateria pasa lo mismo: la autonomia
+alcanza de sobra porque las noches son cortas, asi que el balance actual
+(una carga por noche de exploracion, tres pilas repartidas) hay que
+recalcularlo cuando las noches crezcan.
 
 Para revisar la estetica sin jugar, `godot --path . -- --capture` guarda una
 captura de cada ambiente en el directorio `user://` del proyecto.
@@ -145,5 +172,5 @@ nueva no implica tocar codigo.
    el ritmo con eso en la mano (hoy el balance esta calculado, no jugado).
 4. Un pase de sonido posicional: que los crujidos y las puertas vengan de
    salas concretas y no del entorno general.
-5. Traduccion/acentuacion: el texto esta escrito sin acentos para no depender
-   de una fuente propia; conviene incluir una y escribirlo bien.
+5. Subir el volumen de contenido por noche hasta acercarse a las 2-3 horas
+   del diseno, midiendo con `tests/pacing.tscn` cada vez.

@@ -75,7 +75,9 @@ func _head_bob(delta: float, speed: float) -> void:
 		_step_accum += speed * delta
 		if _step_accum >= STEP_DISTANCE:
 			_step_accum = 0.0
-			AudioDirector.play_cue("step", global_position)
+			# Afuera se camina sobre nieve; adentro, sobre chapa.
+			var outside := global_position.z > 11.0
+			AudioDirector.play_cue("step_snow" if outside else "step", global_position, -8.0 if outside else -6.0)
 	else:
 		_bob_time = 0.0
 		head.position.y = lerpf(head.position.y, 1.55, delta * 6.0)
@@ -107,7 +109,7 @@ func _toggle_flashlight() -> void:
 		if GameState.use_spare_battery():
 			show_notice("Pila cambiada.")
 		else:
-			show_notice("La linterna esta muerta.")
+			show_notice("La linterna está muerta.")
 			return
 	flashlight_on = not flashlight_on
 	AudioDirector.play_cue("click", global_position)
@@ -120,7 +122,7 @@ func _update_battery(delta: float) -> void:
 	GameState.drain_battery(BATTERY_DRAIN * delta)
 	if GameState.battery <= 0.0:
 		flashlight_on = false
-		show_notice("La linterna se apago.")
+		show_notice("La linterna se apagó.")
 		_update_flashlight()
 		return
 	# Parpadeo cuando queda poca carga.
