@@ -40,6 +40,7 @@ const NIGHTS := {
 			"wall_tint": Color(0.30, 0.32, 0.34),
 			"hidden": [],
 		},
+		"anomalias": ["control_taza"],
 		"beats": {
 			"inicio": [
 				{"subtitulo": "Cuarto turno solo. Faltan cinco días.", "tiempo": 3.0},
@@ -85,6 +86,7 @@ const NIGHTS := {
 			"wall_tint": Color(0.29, 0.30, 0.33),
 			"hidden": [],
 		},
+		"anomalias": ["almacen_cajas", "gen_herramienta", "pasillo_locker_abierto"],
 		"beats": {
 			"inicio": [
 				{"subtitulo": "El almacén está abierto. Juraría que ayer estaba trabado.", "tiempo": 3.4},
@@ -137,6 +139,7 @@ const NIGHTS := {
 			"wall_tint": Color(0.27, 0.27, 0.30),
 			"hidden": ["traje_3"],
 		},
+		"anomalias": ["dorm_silla_mira_cama", "control_silla_al_pasillo", "gen_marca", "esclusa_traje_falta", "patio_huellas"],
 		"beats": {
 			"inicio": [
 				{"subtitulo": "El pasillo sigue más allá de donde terminaba.", "tiempo": 3.2},
@@ -186,6 +189,7 @@ const NIGHTS := {
 			"wall_tint": Color(0.25, 0.25, 0.27),
 			"hidden": ["traje_2", "traje_3"],
 		},
+		"anomalias": ["dorm_bulto", "dorm_marca", "control_pizarra", "control_silla_falta", "gen_puerta", "almacen_cajas_faltan", "pasillo_marca"],
 		"beats": {
 			"inicio": [
 				{"subtitulo": "Hoy el B2 no está. El mapa dice que nunca estuvo.", "tiempo": 3.4},
@@ -243,6 +247,7 @@ const NIGHTS := {
 			"wall_tint": Color(0.23, 0.22, 0.24),
 			"hidden": ["traje_1", "traje_2", "traje_3"],
 		},
+		"anomalias": ["dorm_silla_doble", "dorm_oscuro", "control_oscuro", "gen_banco_vacio", "almacen_pila_extra", "esclusa_traje_extra", "patio_figura", "patio_tambor"],
 		"beats": {
 			"inicio": [
 				{"subtitulo": "Última guardia. Mañana a esta hora esto es hielo vacío.", "tiempo": 3.4},
@@ -272,9 +277,11 @@ const NIGHTS := {
 ## Registros de radio encontrables en el mundo. Solo texto + ruido: baratos
 ## de producir, y son el principal vehiculo de historia.
 const RADIO_LOGS := {
+	# --- Lo que dejo el personal antes del cierre ---
 	"rl_01": {
 		"label": "REG-014 / Jefe de base",
 		"night": 1,
+		"pos": Vector3(-3.2, 0.9, -13.2),
 		"lines": [
 			"Registro catorce. El relevo se confirmó para el día cinco.",
 			"Queda una sola persona de guardia hasta entonces.",
@@ -284,15 +291,38 @@ const RADIO_LOGS := {
 	"rl_02": {
 		"label": "REG-021 / Sin firmar",
 		"night": 1,
+		"pos": Vector3(-4.2, 0.9, -1.0),
 		"lines": [
 			"...no sé quién dejó esto grabando.",
 			"Hay alguien haciendo la ronda. Lo escucho caminar arriba.",
 			"Yo soy el único que hace la ronda.",
 		],
 	},
+	"rl_06": {
+		"label": "REG-009 / Enfermería",
+		"night": 1,
+		"pos": Vector3(1.1, 0.75, 0.5),
+		"lines": [
+			"Control de sueño, semana treinta y uno.",
+			"Tres de los cinco reportan haber despertado de pie en el pasillo.",
+			"Ninguno recuerda haberse levantado. Lo anotamos como falta de luz solar.",
+		],
+	},
+	"rl_07": {
+		"label": "REG-016 / Cocina",
+		"night": 1,
+		"pos": Vector3(6.5, 1.3, -1.4),
+		"lines": [
+			"Inventario de víveres para el último turno.",
+			"Raciones para una persona por sesenta días.",
+			"Lo raro es que el consumo del mes pasado da para dos.",
+		],
+	},
+	# --- Noche 2: la señal ---
 	"rl_03": {
 		"label": "REG-??? / DESCONOCIDO",
 		"night": 2,
+		"pos": Vector3(5.6, 2.1, -4.6),
 		"lines": [
 			"[ruido de portadora, doce segundos]",
 			"...repetir el recorrido. Repetir el recorrido.",
@@ -300,23 +330,158 @@ const RADIO_LOGS := {
 			"Son las 23:12.",
 		],
 	},
+	"rl_08": {
+		"label": "REG-023 / Radiooperador",
+		"night": 2,
+		"pos": Vector3(-8.4, 1.2, -12.2),
+		"lines": [
+			"La banda cuatro tendría que estar muerta desde que se fue el equipo.",
+			"Hay una portadora ahí todas las noches, siempre a la misma hora.",
+			"Cuando transmito encima, se calla. Cuando dejo de transmitir, vuelve.",
+		],
+	},
+	"rl_09": {
+		"label": "REG-025 / Mantenimiento",
+		"night": 2,
+		"pos": Vector3(3.0, 0.9, -9.4),
+		"lines": [
+			"El consumo eléctrico de la estación no cierra.",
+			"Hay ocho kilovatios que se van a algún lado que no figura en el plano.",
+			"Pedí el plano original a continente. Me mandaron el mismo que tenemos.",
+		],
+	},
+	"rl_10": {
+		"label": "REG-027 / Sin firmar",
+		"night": 2,
+		"pos": Vector3(1.6, 0.5, 9.6),
+		"lines": [
+			"Dejé los trajes contados antes de dormir. Eran cuatro.",
+			"A la mañana había tres y uno estaba mojado por dentro.",
+			"Afuera no salió nadie. El registro de la esclusa está en cero.",
+		],
+	},
+	# --- Noche 3: el subnivel ---
 	"rl_04": {
 		"label": "REG-030 / Nivel B2",
 		"night": 3,
+		"pos": Vector3(2.2, -0.1, -27.0),
 		"lines": [
 			"Prueba de eco en el subnivel. Día doscientos once.",
 			"El pasillo mide catorce metros de ida y diecinueve de vuelta.",
 			"Lo medimos cuatro veces. Dejamos de medirlo.",
 		],
 	},
+	"rl_11": {
+		"label": "REG-031 / Nivel B2",
+		"night": 3,
+		"pos": Vector3(-2.4, -0.5, -29.5),
+		"lines": [
+			"Segunda prueba. Entramos dos, salimos dos.",
+			"El conteo está bien. El problema es que entramos a las cuatro y salimos a las cuatro.",
+			"No pasó tiempo acá abajo. Arriba pasaron seis horas.",
+		],
+	},
+	"rl_12": {
+		"label": "REG-033 / Sin firmar",
+		"night": 3,
+		"pos": Vector3(-1.2, 0.05, -19.0),
+		"lines": [
+			"El pasillo sur no está en los planos porque lo hicimos nosotros.",
+			"Lo que no sabemos es contra qué lo hicimos.",
+			"Tapialo si podés. Nosotros no pudimos.",
+		],
+	},
+	"rl_13": {
+		"label": "REG-034 / Glaciología",
+		"night": 3,
+		"pos": Vector3(8.0, 2.5, 18.0),
+		"lines": [
+			"Perforación a ciento veinte metros bajo la estación.",
+			"El hielo de ahí abajo tiene once mil años y una cavidad de aire.",
+			"La cavidad tiene la forma del pasillo que estamos parados.",
+		],
+	},
+	# --- Noche 4: la voz propia ---
 	"rl_05": {
 		"label": "REG-041 / Tu voz",
 		"night": 4,
+		"pos": Vector3(-8.2, 0.6, -2.2),
 		"lines": [
 			"Registro cuarenta y uno. Estación Cabo Hueso.",
 			"Si estás escuchando esto, ya hiciste la ronda tres veces esta noche.",
 			"No la hagas de nuevo.",
 			"[la grabación tiene tu voz y no la reconoces]",
+		],
+	},
+	"rl_14": {
+		"label": "REG-042 / Tu voz",
+		"night": 4,
+		"pos": Vector3(-6.4, 0.05, -9.0),
+		"lines": [
+			"Anoté todo lo que hice hoy, minuto por minuto.",
+			"Después comparé con la bitácora.",
+			"Hay cuarenta minutos que escribí yo y no viví yo.",
+		],
+	},
+	"rl_15": {
+		"label": "REG-044 / Tu voz",
+		"night": 4,
+		"pos": Vector3(5.0, 0.05, -8.6),
+		"lines": [
+			"Probé dejar la puerta del generador trabada desde afuera.",
+			"A la noche siguiente estaba abierta y la traba en mi bolsillo.",
+			"Dejé de trabarla. Prefiero verla abierta que encontrarla así.",
+		],
+	},
+	"rl_16": {
+		"label": "REG-045 / Sin firmar",
+		"night": 4,
+		"pos": Vector3(8.8, 1.6, -3.0),
+		"lines": [
+			"Al que venga después: la estación no te hace nada.",
+			"Vos hacés cosas y después no te acordás. Es distinto y es peor.",
+			"Contá los trajes. Es lo único que te va a avisar.",
+		],
+	},
+	# --- Noche 5: el cierre ---
+	"rl_17": {
+		"label": "REG-048 / Continente",
+		"night": 5,
+		"pos": Vector3(-8.0, 0.05, 20.6),
+		"lines": [
+			"Cabo Hueso, confirmamos retiro para mañana al amanecer.",
+			"Preparen el inventario final y dejen el generador en mínimo.",
+			"No hace falta que confirmen por voz. Sabemos cómo está la estación.",
+		],
+	},
+	"rl_18": {
+		"label": "REG-050 / Nivel B2",
+		"night": 5,
+		"pos": Vector3(0.0, -0.5, -25.0),
+		"lines": [
+			"Última entrada del subnivel.",
+			"Las marcas de la pared no son días. Son turnos.",
+			"Uno por cada vez que alguien se quedó a cerrar la estación.",
+		],
+	},
+	"rl_19": {
+		"label": "REG-051 / Tu voz",
+		"night": 5,
+		"pos": Vector3(-4.6, 0.05, -4.2),
+		"lines": [
+			"Si estás escuchando esto es porque llegaste a la última noche.",
+			"Yo también llegué.",
+			"Fijate la fecha de esta grabación antes de subir al vehículo.",
+		],
+	},
+	"rl_20": {
+		"label": "REG-052 / Sin firmar",
+		"night": 5,
+		"pos": Vector3(0.0, 0.05, 8.2),
+		"lines": [
+			"[la cinta está en blanco los primeros treinta segundos]",
+			"...está bien. Si te quedás, cerrá desde adentro.",
+			"Si te vas, no mires el patio por la ventanilla.",
 		],
 	},
 }

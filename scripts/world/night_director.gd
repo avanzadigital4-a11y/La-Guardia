@@ -13,10 +13,12 @@ var env: WorldEnvironment
 
 var _armed: Array = []      # anomalias esperando que el jugador salga de una sala
 var _busy := false
+var anomalies: AnomalyKit
 
 
 func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_env: WorldEnvironment) -> void:
 	station = p_station
+	anomalies = AnomalyKit.new(p_station)
 	player = p_player
 	fade = p_fade
 	env = p_env
@@ -34,6 +36,7 @@ func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_e
 
 func start_night(night: int) -> void:
 	_armed.clear()
+	anomalies.reset_all()
 	var data := NightData.get_night(night)
 	_apply_world(data["world"], night)
 
@@ -71,6 +74,12 @@ func start_night(night: int) -> void:
 	# La senal desconocida de la noche 2 se rastrea escuchandola entera.
 	if station.points.has("log_rl_03"):
 		(station.points["log_rl_03"] as RadioLog).task_id = "radio_unknown"
+
+	# Lote de anomalias de la noche: cada una espera a que el jugador salga de
+	# la sala que le toca.
+	for id in data.get("anomalias", []):
+		var entry := AnomalyData.get_anomaly(String(id))
+		_armed.append({"id": String(id), "room": String(entry.get("sala", ""))})
 
 	GameState.start_night(night)
 	player.teleport(StationBuilder.SPAWN, -PI * 0.5)
@@ -132,7 +141,9 @@ func _run_actions(actions: Array) -> void:
 		if action.has("anomalia"):
 			_apply_anomaly(String(action["anomalia"]))
 		if action.has("armar"):
-			_armed.append({"id": String(action["armar"]), "room": String(action.get("sala", ""))})
+			var aid := String(action["armar"])
+			var room := String(action.get("sala", AnomalyData.get_anomaly(aid).get("sala", "")))
+			_armed.append({"id": aid, "room": room})
 		if action.has("ruta") and station.routes.has(action["ruta"]):
 			var r: RouteSwap = station.routes[action["ruta"]]
 			r.active = bool(action.get("activa", true))
@@ -164,15 +175,7 @@ func _on_room_exited(room_id: String) -> void:
 
 
 func _apply_anomaly(id: String) -> void:
-	if station.props.has(id):
-		(station.props[id] as Prop).set_altered(true)
-		return
-	match id:
-		"corridor_door":
-			if station.doors.has("almacen"):
-				(station.doors["almacen"] as Door).set_open(true, true)
-		_:
-			push_warning("Anomalía desconocida: %s" % id)
+	anomalies.apply(id)
 
 
 func _on_route_swapped(times: int, route_id: String) -> void:

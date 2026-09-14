@@ -149,6 +149,8 @@ func _capture_debug() -> void:
 	var views_n3 := [
 		[Vector3(0.0, 0.1, -17.0), 0.0, "n3_pasillo_sur"],
 		[Vector3(0.0, -0.4, -26.0), 0.0, "n3_subnivel"],
+		[Vector3(-4.5, 0.1, -3.0), -PI * 0.5, "n3_dormitorio"],
+		[Vector3(0.0, 0.1, 14.0), PI, "n3_patio"],
 	]
 	await get_tree().create_timer(6.0).timeout
 	for v in views:
@@ -159,6 +161,9 @@ func _capture_debug() -> void:
 		var img := get_viewport().get_texture().get_image()
 		img.save_png("user://shot_%s.png" % v[2])
 	await director.start_night(3)
+	# Con las anomalias de la noche aplicadas, para ver los objetos extra.
+	for id in NightData.get_night(3).get("anomalias", []):
+		director.anomalies.apply(String(id))
 	for v in views_n3:
 		player.teleport(v[0], v[1])
 		await get_tree().create_timer(0.4).timeout

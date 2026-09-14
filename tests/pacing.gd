@@ -79,6 +79,15 @@ func _run() -> void:
 	print("  cargas por noche  %5.2f" % used)
 	var charges: float = 1.0 + float(GameState.spare_batteries) + float(main.station.pickups.size())
 	print("  cargas disponibles%5.1f  ->  alcanzan para %.1f noches asi" % [charges, charges / maxf(used, 0.001)])
+	# Contenido disponible esa noche: lo que suma un jugador que explora.
+	var logs := 0
+	var listening := 0.0
+	for id in NightData.RADIO_LOGS.keys():
+		if int(NightData.RADIO_LOGS[id]["night"]) <= GameState.current_night:
+			logs += 1
+			listening += NightData.RADIO_LOGS[id]["lines"].size() * 3.8
+	print("  registros escuchables %d  (%.1f min de audio)" % [logs, listening / 60.0])
+	print("  anomalias armadas     %d" % NightData.get_night(1).get("anomalias", []).size())
 	print("")
 	print("Un jugador que explora tarda entre dos y tres veces esto.")
 	get_tree().quit(0)

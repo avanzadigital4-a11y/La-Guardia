@@ -30,8 +30,12 @@ Lo que ya funciona:
   esa misma noche admitiendo cosas que el jugador nunca hizo (marcadas en
   rojo).
 - Registros de radio con subtitulos y ruido de portadora.
-- Anomalias **fuera de camara**: el estado de un objeto cambia mientras el
-  jugador no esta en la sala, sin animacion ni jumpscare.
+- **Catalogo de 33 anomalias** fuera de camara: el estado de un objeto cambia
+  mientras el jugador no esta en la sala, sin animacion ni jumpscare. Objetos
+  que se mueven, que faltan, que aparecen, puertas que quedan abiertas, salas
+  que se apagan. Cada noche arma su propio lote.
+- **20 registros de radio** repartidos por la estacion, el subnivel y el
+  patio, con su noche de aparicion escrita en la misma tabla.
 - **El recorrido deja de llevar a donde deberia**: el pasillo sur se muerde
   la cola (caminas hasta el fondo y salis por la entrada, dos veces, hasta
   que deja de pasar) y la puerta del dormitorio da al almacen. Sin cortes ni
@@ -93,12 +97,17 @@ que no se resuelven con `[E]`, la decision de la Noche 5 y el final:
 
 ```bash
 godot --headless --path . res://tests/playthrough.tscn   # PLAYTHROUGH OK
+godot --headless --path . res://tests/content.tscn       # CONTENIDO OK
 godot --headless --path . res://tests/ui_smoke.tscn      # UI SMOKE OK
 godot --headless --path . res://tests/pacing.tscn        # medicion de ritmo
 ```
 
-Las dos primeras salen con codigo 0 si todo pasa. La segunda cubre el menu,
-las opciones, la pausa y la autonomia de la linterna.
+Las tres primeras salen con codigo 0 si todo pasa. `content` es la red de
+seguridad para seguir agregando contenido: verifica que cada anomalia apunte
+a un objeto, puerta o luz que exista, que las cinco noches no nombren nada
+que no este, que toda tarea tenga como resolverse, que los registros esten
+colocados, y que aplicar las 33 anomalias juntas y revertirlas deje la
+estacion como estaba.
 
 ## Ritmo medido
 
@@ -112,11 +121,13 @@ distancia       155 m
 bateria usada    24 %
 ```
 
-Un jugador que explora tarda entre dos y tres veces eso, o sea unos 4 minutos
-por noche: **20 minutos de juego contra las 2-3 horas que pide el diseno**.
-Esa diferencia es de contenido, no de ritmo — hace falta mas por noche
-(tareas, salas, cosas para encontrar), y el numero de arriba es la forma de
-medir si se esta acortando. Con la bateria pasa lo mismo: la autonomia
+A eso se le suma lo que hay para encontrar: 33 anomalias repartidas entre las
+cinco noches y 20 registros de radio (casi 4 minutos de audio). Un jugador
+que explora tarda entre dos y tres veces el recorrido directo.
+
+Aun asi el total queda lejos: **alrededor de media hora de juego contra las
+2-3 horas que pide el diseno**. La diferencia es de contenido, no de ritmo, y
+el numero de arriba es la forma de medir si se esta acortando. Con la bateria pasa lo mismo: la autonomia
 alcanza de sobra porque las noches son cortas, asi que el balance actual
 (una carga por noche de exploracion, tres pilas repartidas) hay que
 recalcularlo cuando las noches crezcan.
@@ -130,8 +141,8 @@ captura de cada ambiente en el directorio `user://` del proyecto.
 scenes/          main.tscn (entrada) y player.tscn
 scripts/
   autoload/      GameState: noche actual, tareas, banderas, bitacora, guardado
-  data/          night_data.gd: TODO el contenido por noche vive aca
-                 (tareas, beats, variaciones, registros de radio)
+  data/          night_data.gd (tareas, beats, variaciones, registros) y
+                 anomaly_data.gd (catalogo de anomalias y objetos extra)
   player/        controlador en primera persona
   world/         construccion de la estacion, interactuables y NightDirector
   ui/            HUD, bitacora, panel de sensores, fundidos, subtitulos
@@ -172,5 +183,8 @@ nueva no implica tocar codigo.
    el ritmo con eso en la mano (hoy el balance esta calculado, no jugado).
 4. Un pase de sonido posicional: que los crujidos y las puertas vengan de
    salas concretas y no del entorno general.
-5. Subir el volumen de contenido por noche hasta acercarse a las 2-3 horas
-   del diseno, midiendo con `tests/pacing.tscn` cada vez.
+5. Seguir subiendo el contenido por noche hasta acercarse a las 2-3 horas del
+   diseno, midiendo con `tests/pacing.tscn` cada vez: mas tareas por noche y
+   mas para encontrar, no mas texto.
+6. Export presets (Windows/Linux), icono de aplicacion y un CI que corra las
+   tres suites en cada push.
