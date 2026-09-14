@@ -65,6 +65,23 @@ func _run() -> void:
 	var autonomy := (1.0 / Player.BATTERY_DRAIN) * (1 + GameState.spare_batteries + station.pickups.size())
 	_check(autonomy > 900.0, "la linterna da para mas de 15 minutos con todo (%d s)" % int(autonomy))
 
+	# --- Mirar un objeto de cerca ---
+	var placa: Inspectable = station.points["ver_placa"]
+	var padre_original := placa.get_parent()
+	var pose_original := placa.transform
+	placa.interact(main.player)
+	await get_tree().process_frame
+	_check(placa.get_parent() == main.player.camera, "el objeto queda en la mano, frente a la camara")
+	_check(not main.player.can_move and not main.player.look_enabled,
+		"mientras se mira un objeto no se camina ni se gira la camara")
+	var inspect_ui := get_tree().get_first_node_in_group("inspect_ui")
+	_check(inspect_ui != null and inspect_ui.visible, "se muestra el texto del objeto")
+	placa._drop()
+	await get_tree().process_frame
+	_check(placa.get_parent() == padre_original and placa.transform == pose_original,
+		"al soltarlo vuelve exactamente a donde estaba")
+	_check(main.player.can_move and main.player.look_enabled, "y devuelve el control al jugador")
+
 	# --- Guardado a mitad de noche ---
 	var director: NightDirector = main.director
 	await get_tree().create_timer(4.0).timeout

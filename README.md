@@ -40,7 +40,8 @@ Lo que ya funciona:
   en la misma tabla.
 - **Objetos para mirar de cerca**: se levantan, se giran con el mouse, y lo
   que dicen cambia noche a noche (la chapa con tu numero de turno, la foto del
-  equipo a la que le van faltando personas).
+  equipo a la que le van faltando personas). Verificado por la suite: al
+  soltarlos vuelven exactamente a donde estaban.
 - **El recorrido deja de llevar a donde deberia**: el pasillo sur se muerde
   la cola (caminas hasta el fondo y salis por la entrada, dos veces, hasta
   que deja de pasar) y la puerta del dormitorio da al almacen. Sin cortes ni
