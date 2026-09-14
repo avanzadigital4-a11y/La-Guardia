@@ -67,15 +67,38 @@ func _run() -> void:
 	_check(station.subnivel_section.visible, "la noche 3 abre el subnivel B2")
 	_check(not station.south_wall.visible, "la pared del fondo desaparece")
 
+	# El recorrido ya no lleva a donde deberia: el pasillo sur se muerde la cola.
+	var loop: RouteSwap = station.routes["pasillo_sur"]
+	_check(loop.active, "la noche 3 activa el desvio del pasillo sur")
+	player.teleport(Vector3(0.0, 0.1, -20.2), 0.0)
+	await _wait(0.8)
+	_check(loop.times == 1, "caminar hasta el fondo dispara el desvio")
+	_check(player.global_position.z > -16.0, "el jugador reaparece en la entrada del pasillo")
+
+	# Noche 2: la senal desconocida se rastrea escuchandola, no apretando [E].
+	await director.start_night(2)
+	await _wait(0.5)
+	var signal_log: RadioLog = station.points["log_rl_03"]
+	_check(signal_log.task_id == "radio_unknown", "la senal de la noche 2 es una tarea de escucha")
+	_check(signal_log.visible, "el registro desconocido aparece la noche 2")
+
 	# Noche 5: el cierre corre entero y emite el final.
 	var finished := [false]
 	director.night_finished.connect(func(_n): finished[0] = true)
 	await director.start_night(5)
 	await _wait(0.5)
-	for id in ["generador", "subnivel", "ronda"]:
-		station.points[id].interact(player)
-		await _wait(0.3)
+	station.points["generador"].interact(player)
+	await _wait(0.3)
+	# El subnivel se completa llegando caminando, no apretando [E].
+	player.teleport(Vector3(0.0, -0.4, -28.0), 0.0)
+	await _wait(0.6)
+	_check(GameState.is_task_done("subnivel"), "bajar al subnivel se resuelve caminando")
+	_check(GameState.has_task("decidir"), "la noche 5 pide una decision")
+	await _wait(6.0)
+	station.points["salir"].interact(player)
+	await _wait(0.3)
 	_check(GameState.pending_tasks() == 0, "las tareas de la noche 5 se completan")
+	_check(GameState.get_flag("ending", "") == "salir", "la decision queda registrada")
 	await _wait(32.0)
 	_check(finished[0], "el final se reproduce hasta el cierre")
 

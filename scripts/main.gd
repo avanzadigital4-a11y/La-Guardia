@@ -135,9 +135,22 @@ func _capture_debug() -> void:
 		[Vector3(-5.0, 0.1, -11.0), -PI * 0.5, "control"],
 		[Vector3(5.0, 0.1, -9.0), PI * 0.5, "generador"],
 		[Vector3(0.0, 0.1, 13.0), PI, "patio"],
+		[Vector3(0.0, 0.1, 9.8), PI, "esclusa"],
+	]
+	var views_n3 := [
+		[Vector3(0.0, 0.1, -17.0), 0.0, "n3_pasillo_sur"],
+		[Vector3(0.0, -0.4, -26.0), 0.0, "n3_subnivel"],
 	]
 	await get_tree().create_timer(6.0).timeout
 	for v in views:
+		player.teleport(v[0], v[1])
+		await get_tree().create_timer(0.4).timeout
+		for i in 3:
+			await RenderingServer.frame_post_draw
+		var img := get_viewport().get_texture().get_image()
+		img.save_png("user://shot_%s.png" % v[2])
+	await director.start_night(3)
+	for v in views_n3:
 		player.teleport(v[0], v[1])
 		await get_tree().create_timer(0.4).timeout
 		for i in 3:

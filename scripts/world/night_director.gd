@@ -1,8 +1,8 @@
 class_name NightDirector
 extends Node
-## Aplica el estado del mundo de cada noche, arma las anomalias fuera de
-## camara y dispara los beats guionados. Toda la "evolucion del loop" pasa
-## por aca: la escena no cambia, cambia lo que esta encendido.
+## Aplica el estado del mundo de cada noche, interpreta los beats guionados y
+## arma las anomalias fuera de camara. Toda la "evolucion del loop" pasa por
+## aca: la escena no cambia, cambia lo que esta encendido.
 
 signal night_finished(night: int)
 
@@ -11,8 +11,7 @@ var player: Player
 var fade: CanvasLayer
 var env: WorldEnvironment
 
-var _armed: Array = []          # anomalias esperando que el jugador salga
-var _pending: Array = []        # definiciones de la noche actual
+var _armed: Array = []      # anomalias esperando que el jugador salga de una sala
 var _busy := false
 
 
@@ -26,20 +25,30 @@ func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_e
 	for id in station.watchers.keys():
 		var w: RoomWatcher = station.watchers[id]
 		w.player_exited.connect(_on_room_exited)
+	for id in station.routes.keys():
+		var r: RouteSwap = station.routes[id]
+		r.swapped.connect(_on_route_swapped.bind(id))
+		r.exhausted.connect(_on_route_exhausted.bind(id))
 
 
 func start_night(night: int) -> void:
 	_armed.clear()
-	_pending.clear()
 	var data := NightData.get_night(night)
 	_apply_world(data["world"], night)
-	_pending = data["offscreen"].duplicate(true)
 
 	# Todo vuelve a su lugar: la estacion arranca cada noche "normal".
 	for id in station.props.keys():
 		(station.props[id] as Prop).set_altered(false)
 	for id in station.doors.keys():
 		(station.doors[id] as Door).set_open(false, true)
+	for id in station.routes.keys():
+		var r: RouteSwap = station.routes[id]
+		r.active = false
+		r.times = 0
+	for key in station.points.keys():
+		var node: Node = station.points[key]
+		if node is TriggerZone:
+			(node as TriggerZone).active = true
 	station.doors["almacen"].locked = data["world"].get("door_storage_locked", false)
 	station.doors["almacen"].locked_text = "Trabada. La llave figura en el inventario del turno anterior."
 
@@ -52,6 +61,10 @@ func start_night(night: int) -> void:
 			if node is Interactable:
 				(node as Interactable).enabled = night >= from_night
 
+	# La senal desconocida de la noche 2 se rastrea escuchandola entera.
+	if station.points.has("log_rl_03"):
+		(station.points["log_rl_03"] as RadioLog).task_id = "radio_unknown"
+
 	GameState.start_night(night)
 	player.teleport(StationBuilder.SPAWN, -PI * 0.5)
 	AudioDirector.set_dread(clampf((night - 1) / 4.0, 0.0, 1.0))
@@ -59,6 +72,7 @@ func start_night(night: int) -> void:
 	if fade.has_method("show_card"):
 		await fade.fade_in(1.8)
 		await fade.show_card(data["title"], data["subtitle"], 2.4)
+	await _run_actions(NightData.beats_for(night, "inicio"))
 
 
 func _apply_world(world: Dictionary, night: int) -> void:
@@ -67,6 +81,11 @@ func _apply_world(world: Dictionary, night: int) -> void:
 	Build.set_active(station.south_wall, not has_south)
 	Build.set_active(station.subnivel_section, has_south and world.get("subnivel_b2", false))
 
+	# Objetos que esta noche no estan (los trajes de la esclusa, por ejemplo).
+	var hidden: Array = world.get("hidden", [])
+	for id in station.variants.keys():
+		Build.set_active(station.variants[id], id not in hidden)
+
 	station.recolor_walls(world.get("wall_tint", Color(0.3, 0.3, 0.32)))
 	var energy: float = world.get("light_energy", 1.0)
 	for l in station.lights:
@@ -74,45 +93,55 @@ func _apply_world(world: Dictionary, night: int) -> void:
 			l.light_energy = energy * 2.6
 
 	if env and env.environment:
-		env.environment.fog_density = world.get("fog_density", 0.055)
+		env.environment.fog_density = world.get("fog_density", 0.04)
 		var dread := clampf((night - 1) / 4.0, 0.0, 1.0)
 		env.environment.fog_light_color = Color(0.10, 0.11, 0.13).lerp(Color(0.05, 0.05, 0.07), dread)
 
 
 func _on_task_completed(id: String) -> void:
-	# Arma las anomalias que esperaban esta tarea.
-	for a in _pending:
-		if String(a.get("after_task", "")) == id:
-			_armed.append(a)
 	if id == "subnivel":
 		GameState.set_flag("saw_b2", true)
-	_beat(id)
+	await _run_actions(NightData.beats_for(GameState.current_night, id))
 
 
-func _beat(task_id: String) -> void:
-	match task_id:
-		"generator":
-			await get_tree().create_timer(4.0).timeout
-			AudioDirector.play_cue("creak", player.global_position + Vector3(0, 2.5, -6), -8.0)
-		"round":
-			await get_tree().create_timer(2.0).timeout
-			_flicker_lights(2.4)
-			Subtitles.show_line("(el viento se corta un segundo y vuelve)", 2.6)
-		"sensors":
-			GameState.notice.emit("El panel marco una lectura de mas y la borro solo.")
-		"radio_unknown":
-			Subtitles.show_line("(la portadora sigue sonando despues de apagar el equipo)", 3.2)
-		"subnivel":
-			_flicker_lights(3.0)
+## Interprete de beats. El contenido esta en night_data.gd; aca solo se
+## ejecuta, para que agregar una noche no implique tocar codigo.
+func _run_actions(actions: Array) -> void:
+	for a in actions:
+		var action: Dictionary = a
+		if action.has("esperar"):
+			await get_tree().create_timer(float(action["esperar"])).timeout
+		if action.has("subtitulo"):
+			Subtitles.show_line(String(action["subtitulo"]), float(action.get("tiempo", 3.0)))
+			await get_tree().create_timer(float(action.get("tiempo", 3.0)) + 0.2).timeout
+		if action.has("aviso"):
+			GameState.notice.emit(String(action["aviso"]))
+		if action.has("parpadeo"):
+			await _flicker_lights(float(action["parpadeo"]))
+		if action.has("sonido"):
+			AudioDirector.play_cue(String(action["sonido"]), player.global_position, float(action.get("db", -8.0)))
+		if action.has("bitacora"):
+			GameState.add_log(String(action.get("hora", "")), String(action["bitacora"]), bool(action.get("falsa", false)))
+		if action.has("anomalia"):
+			_apply_anomaly(String(action["anomalia"]))
+		if action.has("armar"):
+			_armed.append({"id": String(action["armar"]), "room": String(action.get("sala", ""))})
+		if action.has("ruta") and station.routes.has(action["ruta"]):
+			var r: RouteSwap = station.routes[action["ruta"]]
+			r.active = bool(action.get("activa", true))
+		if action.has("puerta") and station.doors.has(action["puerta"]):
+			(station.doors[action["puerta"]] as Door).set_open(bool(action.get("abrir", true)), true)
+		if action.has("ocultar"):
+			for id in action["ocultar"]:
+				if station.variants.has(id):
+					Build.set_active(station.variants[id], false)
 
 
 func _on_all_tasks_done() -> void:
 	if _busy:
 		return
-	if GameState.is_task_done("sleep") or not GameState.has_task("sleep"):
+	if GameState.pending_tasks() == 0:
 		_finish_night()
-	else:
-		GameState.notice.emit("Volve al dormitorio.")
 
 
 func _on_room_exited(room_id: String) -> void:
@@ -122,7 +151,6 @@ func _on_room_exited(room_id: String) -> void:
 	for a in _armed:
 		if String(a.get("room", "")) == room_id:
 			_apply_anomaly(String(a["id"]))
-			_pending.erase(a)
 		else:
 			still.append(a)
 	_armed = still
@@ -138,6 +166,21 @@ func _apply_anomaly(id: String) -> void:
 				(station.doors["almacen"] as Door).set_open(true, true)
 		_:
 			push_warning("Anomalia desconocida: %s" % id)
+
+
+func _on_route_swapped(times: int, route_id: String) -> void:
+	if route_id == "pasillo_sur":
+		Subtitles.show_line("(estas de nuevo en la entrada del pasillo)", 2.8)
+		if times == 1:
+			GameState.add_log("", "Camine el pasillo sur hasta el fondo y sali de nuevo por la entrada.", true)
+	elif route_id == "puerta_dormitorio":
+		Subtitles.show_line("(esta no es tu pieza)", 3.0)
+		GameState.notice.emit("Entraste al dormitorio y saliste en el almacen.")
+
+
+func _on_route_exhausted(route_id: String) -> void:
+	if route_id == "pasillo_sur":
+		Subtitles.show_line("(esta vez el pasillo termina donde deberia)", 3.0)
 
 
 func _flicker_lights(duration: float) -> void:
@@ -177,7 +220,16 @@ func _finish_night() -> void:
 
 
 func _ending() -> void:
-	# Final principal: la radio cierra sin explicar nada.
+	var choice := String(GameState.get_flag("ending", "salir"))
+	if choice == "quedarse":
+		await _ending_stay()
+	else:
+		await _ending_leave()
+	await fade.show_card("LA GUARDIA", "fin", 5.0)
+
+
+## Final principal: la radio cierra sin explicar nada.
+func _ending_leave() -> void:
 	await fade.show_card("AMANECE", "Se escucha un motor sobre el hielo.", 3.0)
 	var lines := [
 		"Base movil a Cabo Hueso. Estamos a dos kilometros.",
@@ -185,8 +237,23 @@ func _ending() -> void:
 		"...",
 		"No hay personal asignado a esa estacion desde hace once meses.",
 	]
+	if GameState.radio_logs_found.size() >= NightData.RADIO_LOGS.size():
+		lines.append("Y las grabaciones que dejaron ahi son todas de la misma voz.")
+	await _speak(lines)
+
+
+## Variante menor: el jugador decide no salir.
+func _ending_stay() -> void:
+	await fade.show_card("ABAJO", "La escotilla cierra desde adentro.", 3.0)
+	await _speak([
+		"Base movil a Cabo Hueso. Estamos en el patio.",
+		"No hay nadie en superficie. Repetimos: no hay nadie.",
+		"Dejen la puerta como esta.",
+	])
+
+
+func _speak(lines: Array) -> void:
 	for line in lines:
-		Subtitles.show_line(line, 3.6)
+		Subtitles.show_line(String(line), 3.6)
 		await get_tree().create_timer(3.8).timeout
 	Subtitles.clear()
-	await fade.show_card("LA GUARDIA", "fin", 5.0)

@@ -4,6 +4,21 @@ extends RefCounted
 ## Todo el contenido por noche vive aca: tareas, variaciones del mundo,
 ## entradas de bitacora y beats guionados. La escena es siempre la misma;
 ## lo unico que cambia es este diccionario.
+##
+## Los beats son listas de acciones que el NightDirector interpreta. Las
+## claves son "inicio", "final" o el id de la tarea que los dispara.
+## Acciones disponibles:
+##   {"esperar": 3.0}                                  pausa
+##   {"subtitulo": "...", "tiempo": 3.2}               linea en pantalla
+##   {"aviso": "..."}                                  aviso del HUD
+##   {"parpadeo": 2.4}                                 las luces fallan
+##   {"sonido": "creak", "db": -8.0}                   senal sonora
+##   {"bitacora": "...", "hora": "01:12", "falsa": true}
+##   {"anomalia": "dorm_chair"}                        cambio inmediato
+##   {"armar": "dorm_chair", "sala": "dormitorio"}     cambio fuera de camara
+##   {"ruta": "pasillo_sur", "activa": true}           el recorrido se desvia
+##   {"puerta": "almacen", "abrir": true}
+##   {"ocultar": ["traje_3"]}                          objetos que ya no estan
 
 const NIGHTS := {
 	1: {
@@ -15,21 +30,35 @@ const NIGHTS := {
 			{"id": "round", "text": "Hacer la ronda exterior"},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 		],
-		# Tareas que aparecen recien cuando se completan las anteriores.
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
-		# Estado del mundo: que objetos existen/estan visibles esta noche.
 		"world": {
 			"subnivel_b2": false,
 			"corridor_south": false,
 			"door_storage_locked": true,
-			"fog_density": 0.055,
+			"fog_density": 0.040,
 			"light_energy": 1.0,
 			"wall_tint": Color(0.30, 0.32, 0.34),
+			"hidden": [],
 		},
-		# Anomalias fuera de camara: id -> se dispara al salir de esta sala.
-		"offscreen": [
-			{"id": "dorm_chair", "room": "dormitorio", "after_task": "sensors"},
-		],
+		"beats": {
+			"inicio": [
+				{"subtitulo": "Cuarto turno solo. Faltan cinco dias.", "tiempo": 3.0},
+			],
+			"generator": [
+				{"esperar": 4.0},
+				{"sonido": "creak", "db": -8.0},
+				{"subtitulo": "(algo se acomoda en el techo del pasillo)", "tiempo": 2.8},
+			],
+			"round": [
+				{"esperar": 2.0},
+				{"parpadeo": 2.2},
+				{"subtitulo": "(el viento se corta un segundo y vuelve)", "tiempo": 2.6},
+			],
+			"sensors": [
+				{"aviso": "El panel marco una lectura de mas y la borro solo."},
+				{"armar": "dorm_chair", "sala": "dormitorio"},
+			],
+		},
 		"logbook": [
 			{"time": "23:04", "text": "Cuarto turno solo. Faltan cinco dias para la evacuacion."},
 		],
@@ -51,14 +80,33 @@ const NIGHTS := {
 			"subnivel_b2": false,
 			"corridor_south": false,
 			"door_storage_locked": false,
-			"fog_density": 0.062,
+			"fog_density": 0.048,
 			"light_energy": 0.9,
 			"wall_tint": Color(0.29, 0.30, 0.33),
+			"hidden": [],
 		},
-		"offscreen": [
-			{"id": "control_chair", "room": "sala de control", "after_task": "generator"},
-			{"id": "corridor_door", "room": "almacen", "after_task": "radio_unknown"},
-		],
+		"beats": {
+			"inicio": [
+				{"subtitulo": "El almacen esta abierto. Juraria que ayer estaba trabado.", "tiempo": 3.4},
+				{"aviso": "Hay una portadora en la banda 4. No figura en el registro."},
+			],
+			"generator": [
+				{"esperar": 3.0},
+				{"armar": "control_chair", "sala": "sala de control"},
+				{"sonido": "door", "db": -12.0},
+				{"subtitulo": "(una puerta, en algun lado, termina de cerrarse)", "tiempo": 3.0},
+			],
+			"sensors": [
+				{"aviso": "Ocupacion registrada: 1. El sensor tardo en decidirlo."},
+			],
+			"radio_unknown": [
+				{"esperar": 1.5},
+				{"subtitulo": "(la portadora sigue sonando despues de apagar el equipo)", "tiempo": 3.4},
+				{"parpadeo": 1.6},
+				{"armar": "corridor_door", "sala": "almacen"},
+				{"bitacora": "La senal estaba grabada hoy, a una hora que todavia no paso.", "hora": "01:58"},
+			],
+		},
 		"logbook": [
 			{"time": "22:51", "text": "El almacen esta abierto. Juraria que ayer estaba trabado."},
 		],
@@ -74,21 +122,39 @@ const NIGHTS := {
 		"tasks": [
 			{"id": "generator", "text": "Revisar el generador"},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
-			{"id": "subnivel", "text": "Confirmar el nivel que aparecio en el mapa"},
+			{"id": "subnivel", "text": "Bajar al nivel que aparecio en el mapa"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
 			"subnivel_b2": true,
 			"corridor_south": true,
 			"door_storage_locked": false,
-			"fog_density": 0.075,
+			"fog_density": 0.058,
 			"light_energy": 0.75,
 			"wall_tint": Color(0.27, 0.27, 0.30),
+			"hidden": ["traje_3"],
 		},
-		"offscreen": [
-			{"id": "dorm_chair", "room": "dormitorio", "after_task": "generator"},
-			{"id": "control_chair", "room": "sala de control", "after_task": "sensors"},
-		],
+		"beats": {
+			"inicio": [
+				{"subtitulo": "El pasillo sigue mas alla de donde terminaba.", "tiempo": 3.2},
+				{"ruta": "pasillo_sur", "activa": true},
+			],
+			"generator": [
+				{"esperar": 2.5},
+				{"armar": "dorm_chair", "sala": "dormitorio"},
+				{"sonido": "creak", "db": -6.0},
+			],
+			"sensors": [
+				{"aviso": "El mapa suma un SUBNIVEL B2 que no esta en los planos."},
+				{"armar": "control_chair", "sala": "sala de control"},
+			],
+			"subnivel": [
+				{"parpadeo": 3.0},
+				{"subtitulo": "Hay marcas en la pared. Son de esta semana.", "tiempo": 3.6},
+				{"subtitulo": "Es tu letra.", "tiempo": 3.0},
+				{"bitacora": "Las marcas del B2 son mias. No me acuerdo de haberlas hecho.", "hora": "03:07", "falsa": true},
+			],
+		},
 		"logbook": [
 			{"time": "23:19", "text": "El pasillo sur es mas largo que ayer. Lo camine dos veces para contarlo."},
 		],
@@ -112,21 +178,44 @@ const NIGHTS := {
 			"subnivel_b2": false,
 			"corridor_south": true,
 			"door_storage_locked": false,
-			"fog_density": 0.085,
+			"fog_density": 0.068,
 			"light_energy": 0.6,
 			"wall_tint": Color(0.25, 0.25, 0.27),
+			"hidden": ["traje_2", "traje_3"],
 		},
-		"offscreen": [
-			{"id": "dorm_chair", "room": "dormitorio", "after_task": "logbook_check"},
-			{"id": "dorm_bed", "room": "dormitorio", "after_task": "sensors"},
-		],
+		"beats": {
+			"inicio": [
+				{"subtitulo": "Hoy el B2 no esta. El mapa dice que nunca estuvo.", "tiempo": 3.4},
+				{"ocultar": ["traje_2", "traje_3"]},
+			],
+			"logbook_check": [
+				{"esperar": 1.0},
+				{"bitacora": "Abri la puerta del generador.", "hora": "23:41", "falsa": true},
+				{"esperar": 1.2},
+				{"bitacora": "No debi abrirla.", "hora": "23:43", "falsa": true},
+				{"esperar": 1.2},
+				{"bitacora": "El todavia no sabe que fui yo.", "hora": "23:47", "falsa": true},
+				{"aviso": "Tres entradas nuevas. Con tu letra. De hace una hora."},
+				{"sonido": "creak", "db": -10.0},
+				{"ruta": "puerta_dormitorio", "activa": true},
+			],
+			"generator": [
+				{"esperar": 2.0},
+				{"armar": "dorm_bed", "sala": "dormitorio"},
+				{"subtitulo": "(la puerta del generador ya estaba abierta)", "tiempo": 3.0},
+			],
+			"sensors": [
+				{"aviso": "OCUPACION REGISTRADA: 0 personas."},
+				{"parpadeo": 2.0},
+				{"armar": "control_chair", "sala": "sala de control"},
+			],
+		},
 		"logbook": [
 			{"time": "00:02", "text": "Hoy el B2 no esta. El mapa dice que nunca estuvo."},
 		],
 		"logbook_end": [
-			{"time": "23:41", "text": "Abri la puerta del generador."},
-			{"time": "23:43", "text": "No debi abrirla."},
-			{"time": "23:47", "text": "El todavia no sabe que fui yo."},
+			{"time": "04:30", "text": "Revise las tres firmas de la bitacora."},
+			{"time": "04:31", "text": "Las tres son mias."},
 		],
 	},
 	5: {
@@ -135,28 +224,40 @@ const NIGHTS := {
 		"clock": "21:40",
 		"tasks": [
 			{"id": "generator", "text": "Dejar el generador en modo de cierre"},
-			{"id": "subnivel", "text": "Bajar al subnivel"},
-			{"id": "round", "text": "Esperar el vehiculo en el patio"},
+			{"id": "subnivel", "text": "Bajar al subnivel por ultima vez"},
 		],
-		"final_task": {},
+		"final_task": {"id": "decidir", "text": "Decidir: esperar el vehiculo en el patio o quedarte abajo"},
 		"world": {
 			"subnivel_b2": true,
 			"corridor_south": true,
 			"door_storage_locked": false,
-			"fog_density": 0.10,
+			"fog_density": 0.080,
 			"light_energy": 0.45,
 			"wall_tint": Color(0.23, 0.22, 0.24),
+			"hidden": ["traje_1", "traje_2", "traje_3"],
 		},
-		"offscreen": [
-			{"id": "dorm_bed", "room": "dormitorio", "after_task": "generator"},
-			{"id": "control_chair", "room": "sala de control", "after_task": "subnivel"},
-		],
+		"beats": {
+			"inicio": [
+				{"subtitulo": "Ultima guardia. Manana a esta hora esto es hielo vacio.", "tiempo": 3.4},
+				{"ocultar": ["traje_1", "traje_2", "traje_3"]},
+			],
+			"generator": [
+				{"esperar": 2.0},
+				{"subtitulo": "El generador queda en minimo. La estacion se enfria rapido.", "tiempo": 3.2},
+				{"armar": "dorm_bed", "sala": "dormitorio"},
+			],
+			"subnivel": [
+				{"parpadeo": 2.6},
+				{"subtitulo": "Las marcas de la pared ahora son una lista de fechas.", "tiempo": 3.6},
+				{"subtitulo": "La ultima es la de manana.", "tiempo": 3.0},
+				{"aviso": "El vehiculo llega al amanecer. Hay que decidir."},
+			],
+		},
 		"logbook": [
 			{"time": "21:40", "text": "Ultima guardia. Manana a esta hora esto es hielo vacio."},
 		],
 		"logbook_end": [
 			{"time": "05:50", "text": "Escucho el motor."},
-			{"time": "05:58", "text": "No hay personal asignado a esa estacion desde hace 11 meses."},
 		],
 	},
 }
@@ -192,10 +293,34 @@ const RADIO_LOGS := {
 			"Son las 23:12.",
 		],
 	},
+	"rl_04": {
+		"label": "REG-030 / Nivel B2",
+		"night": 3,
+		"lines": [
+			"Prueba de eco en el subnivel. Dia doscientos once.",
+			"El pasillo mide catorce metros de ida y diecinueve de vuelta.",
+			"Lo medimos cuatro veces. Dejamos de medirlo.",
+		],
+	},
+	"rl_05": {
+		"label": "REG-041 / Tu voz",
+		"night": 4,
+		"lines": [
+			"Registro cuarenta y uno. Estacion Cabo Hueso.",
+			"Si estas escuchando esto, ya hiciste la ronda tres veces esta noche.",
+			"No la hagas de nuevo.",
+			"[la grabacion tiene tu voz y no la reconoces]",
+		],
+	},
 }
 
 static func get_night(n: int) -> Dictionary:
 	return NIGHTS.get(clampi(n, 1, 5), NIGHTS[1])
+
+
+static func beats_for(n: int, key: String) -> Array:
+	return get_night(n).get("beats", {}).get(key, [])
+
 
 static func logs_for_night(n: int) -> Array:
 	var out: Array = []

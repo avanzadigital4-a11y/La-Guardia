@@ -22,6 +22,8 @@ var doors := {}
 var props := {}
 var points := {}
 var watchers := {}
+var routes := {}
+var variants := {}
 var lights: Array[OmniLight3D] = []
 var wall_meshes: Array[MeshInstance3D] = []
 var south_section: Node3D
@@ -52,6 +54,7 @@ func build(tint: Color) -> void:
 	_build_airlock()
 	_build_exterior()
 	_build_south()
+	_build_routes()
 	_build_watchers()
 
 
@@ -198,6 +201,19 @@ func _build_airlock() -> void:
 	_add_door("esclusa", Vector3(-Build.DOOR_W * 0.5, 0.0, 11.0), 0.0, Build.DOOR_W)
 	Build.label3d(self, "SALIDA / PATIO", Vector3(0.0, 2.35, 10.88), 0.0, 0.2, Color(0.8, 0.75, 0.6))
 
+	# Tres trajes colgados. Las ultimas noches falta alguno.
+	Build.box(self, "Perchero", Vector3(4.0, 0.08, 0.08), Vector3(0.0, 2.05, 7.5), _mat_metal)
+	var suit_mat := Build.surface(Color(0.55, 0.38, 0.14))
+	for i in 3:
+		var suit := Node3D.new()
+		suit.name = "Traje%d" % (i + 1)
+		add_child(suit)
+		suit.position = Vector3(-1.2 + i * 1.2, 0.0, 7.5)
+		Build.box(suit, "Tela", Vector3(0.5, 1.3, 0.22), Vector3(0.0, 1.3, 0.0), suit_mat)
+		variants["traje_%d" % (i + 1)] = suit
+	Build.box(self, "BancoEsclusa", Vector3(2.2, 0.45, 0.6), Vector3(1.6, 0.22, 9.6), _mat_metal)
+	_add_radio_log("rl_05", Vector3(1.6, 0.5, 9.6), 4)
+
 
 func _build_exterior() -> void:
 	var r: Rect2 = ROOMS["patio"]
@@ -226,6 +242,20 @@ func _build_exterior() -> void:
 	marker.log_text = "Ronda exterior hecha. Cuarenta y un nudos de viento."
 	points["ronda"] = marker
 	Build.label3d(self, "PTO. 3", Vector3(-8.0, 1.4, 19.6), PI, 0.18, Color(0.85, 0.7, 0.3))
+
+	Build.box(self, "Tambores", Vector3(0.8, 1.1, 0.8), Vector3(10.0, 0.55, 14.0), _mat_metal)
+	Build.box(self, "Tambores2", Vector3(0.8, 1.1, 0.8), Vector3(10.9, 0.55, 14.6), _mat_metal)
+
+	# Decision de la ultima noche: esperar el vehiculo.
+	var leave := ChoicePoint.new()
+	leave.name = "EsperarVehiculo"
+	add_child(leave)
+	leave.position = Vector3(0.0, 0.0, 25.0)
+	leave.ending_id = "salir"
+	leave.choice_prompt = "Esperar el vehiculo aca"
+	leave.setup_box(Vector3(1.2, 1.0, 1.2), Build.surface(Color(0.5, 0.45, 0.2)), Vector3(0.0, 0.5, 0.0))
+	points["salir"] = leave
+	Build.label3d(self, "PUNTO DE RETIRO", Vector3(0.0, 1.5, 24.4), PI, 0.2, Color(0.8, 0.7, 0.4))
 
 
 func _build_south() -> void:
@@ -256,18 +286,63 @@ func _build_south() -> void:
 	# Rampa corta desde el pasillo sur hasta el B2.
 	Build.box(subnivel_section, "Rampa", Vector3(3.0, 0.2, 2.0), Vector3(0.0, -0.3, -23.2), _mat_dark)
 
-	var point := TaskPoint.new()
-	point.name = "PuntoSubnivel"
-	subnivel_section.add_child(point)
-	point.position = Vector3(0.0, -0.6, -28.0)
-	point.setup_box(Vector3(1.0, 1.4, 1.0), Build.surface(Color(0.16, 0.16, 0.18)), Vector3(0.0, 0.7, 0.0))
-	point.task_id = "subnivel"
-	point.active_prompt = "Mirar lo que hay abajo"
-	point.done_prompt = "Ya lo viste"
-	point.notice_on_done = "Es tu propia letra en la pared."
-	point.log_text = "Baje al B2. La pared tiene mi letra."
-	points["subnivel"] = point
-	Build.light(subnivel_section, Vector3(0.0, 1.6, -28.0), Color(0.35, 0.4, 0.45), 0.6, 6.0)
+	# La tarea del subnivel se completa llegando, no apretando un boton.
+	var zone := TriggerZone.new()
+	zone.name = "ZonaSubnivel"
+	subnivel_section.add_child(zone)
+	zone.position = Vector3(0.0, -0.6, -28.0)
+	zone.task_id = "subnivel"
+	zone.notice = "Hay marcas en la pared."
+	zone.configure(Vector3(6.0, 2.4, 4.0))
+	points["subnivel"] = zone
+
+	Build.box(subnivel_section, "Marcas", Vector3(3.2, 1.2, 0.06), Vector3(0.0, 0.8, -30.9), Build.surface(Color(0.22, 0.20, 0.20)))
+	Build.label3d(subnivel_section, "|||| |||| |||| ||", Vector3(0.0, 0.9, -30.84), 0.0, 0.22, Color(0.55, 0.5, 0.45))
+	Build.light(subnivel_section, Vector3(0.0, 1.0, -28.0), Color(0.35, 0.4, 0.45), 0.9, 6.0)
+	_add_radio_log("rl_04", Vector3(2.2, -0.1, -27.0), 3)
+
+	# Decision de la ultima noche: quedarse abajo.
+	var stay := ChoicePoint.new()
+	stay.name = "QuedarseAbajo"
+	subnivel_section.add_child(stay)
+	stay.position = Vector3(0.0, -0.6, -30.0)
+	stay.ending_id = "quedarse"
+	stay.choice_prompt = "Cerrar la escotilla desde adentro"
+	stay.setup_box(Vector3(1.4, 0.9, 0.6), _mat_dark, Vector3(0.0, 0.45, 0.0))
+	points["quedarse"] = stay
+
+
+func _build_routes() -> void:
+	# El pasillo sur se muerde la cola: caminar hacia el fondo devuelve al
+	# principio del pasillo, hasta que deja de hacerlo.
+	var loop_dest := Node3D.new()
+	loop_dest.name = "DestinoPasilloSur"
+	add_child(loop_dest)
+	loop_dest.position = Vector3(0.0, 0.0, -14.6)
+
+	var loop := RouteSwap.new()
+	loop.name = "RutaPasilloSur"
+	south_section.add_child(loop)
+	loop.position = Vector3(0.0, 0.0, -20.5)
+	loop.loop_limit = 2
+	loop.configure(loop_dest, Vector3(3.0, 2.6, 0.5))
+	routes["pasillo_sur"] = loop
+
+	# La puerta del dormitorio deja de dar al dormitorio.
+	var swap_dest := Node3D.new()
+	swap_dest.name = "DestinoAlmacen"
+	add_child(swap_dest)
+	swap_dest.position = Vector3(1.5, 0.0, -2.5)
+	swap_dest.rotation.y = -PI * 0.5
+
+	var swap := RouteSwap.new()
+	swap.name = "RutaPuertaDormitorio"
+	add_child(swap)
+	swap.position = Vector3(-1.5, 0.0, -2.5)
+	swap.rotation.y = PI * 0.5
+	swap.loop_limit = 1
+	swap.configure(swap_dest, Vector3(Build.DOOR_W, 2.4, 0.5))
+	routes["puerta_dormitorio"] = swap
 
 
 func _build_watchers() -> void:

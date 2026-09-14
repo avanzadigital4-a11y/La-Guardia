@@ -8,11 +8,15 @@ El documento de diseno completo esta en [`docs/diseno.md`](docs/diseno.md).
 
 ## Estado actual
 
-Vertical slice jugable: la **Noche 1 completa de punta a punta** (lista de
-tareas -> recorrido -> evento extrano -> cierre de noche) sobre el framework
-que maneja las cinco noches. Las noches 2 a 5 ya corren con sus variaciones
-de mundo y sus beats definidos en datos, con menos contenido propio: son la
-base para iterar, no el contenido final.
+Las cinco noches se juegan de punta a punta, cada una con sus propias tareas,
+beats y variaciones de la estacion, y con dos finales. La Noche 1 es la que
+esta mas pulida; las demas ya no son un esqueleto, pero les falta densidad de
+props y detalle ambiental.
+
+Cada noche pide un verbo distinto para que el loop no se sienta ejecutado
+cinco veces: la 1 se resuelve recorriendo y apretando, la 2 escuchando una
+senal entera, la 3 caminando hasta un lugar que se mueve, la 4 leyendo la
+bitacora, y la 5 decidiendo.
 
 Lo que ya funciona:
 
@@ -28,10 +32,21 @@ Lo que ya funciona:
 - Registros de radio con subtitulos y ruido de portadora.
 - Anomalias **fuera de camara**: el estado de un objeto cambia mientras el
   jugador no esta en la sala, sin animacion ni jumpscare.
+- **El recorrido deja de llevar a donde deberia**: el pasillo sur se muerde
+  la cola (caminas hasta el fondo y salis por la entrada, dos veces, hasta
+  que deja de pasar) y la puerta del dormitorio da al almacen. Sin cortes ni
+  pantallas de carga: se conserva la posicion relativa y hacia donde camina
+  el jugador.
+- Tareas que no se resuelven apretando `[E]`: llegar caminando a un lugar,
+  escuchar un registro entero, releer la bitacora.
 - Variaciones de la estacion por noche: un pasillo sur que no esta en los
   planos, el subnivel B2, la iluminacion, la niebla y el tinte de las
   paredes.
-- Ciclo completo de cinco noches con el final principal del diseno.
+- Ciclo completo de cinco noches, con una decision en la ultima y dos
+  finales: el principal del diseno y una variante mas cerrada.
+- Beats guionados por noche (subtitulos, avisos, cortes de luz, entradas de
+  bitacora que se escriben solas, anomalias) escritos como datos, no como
+  codigo.
 - Audio sintetizado en runtime (viento continuo, crujidos, puertas, pasos):
   el proyecto no depende de ningun asset externo.
 - Post-proceso PS1: cuantizacion de color, grano, scanlines, vineta y
@@ -83,6 +98,7 @@ scenes/          main.tscn (entrada) y player.tscn
 scripts/
   autoload/      GameState: noche actual, tareas, banderas, bitacora, guardado
   data/          night_data.gd: TODO el contenido por noche vive aca
+                 (tareas, beats, variaciones, registros de radio)
   player/        controlador en primera persona
   world/         construccion de la estacion, interactuables y NightDirector
   ui/            HUD, bitacora, panel de sensores, fundidos, subtitulos
@@ -106,17 +122,21 @@ cambios que estaban armados para ese cuarto: la silla mira para otro lado, la
 cama esta corrida, una puerta quedo abierta. Es mas barato que animar y
 genera mas duda que un susto.
 
+**Los beats son datos.** Cada noche define listas de acciones
+(`{"subtitulo": ...}`, `{"parpadeo": 2.4}`, `{"armar": "dorm_chair",
+"sala": "dormitorio"}`) que dispara el inicio de la noche o el fin de una
+tarea. `night_director.gd` solo las interpreta, asi que escribir una noche
+nueva no implica tocar codigo.
+
 ## Proximos pasos
 
-En orden de prioridad, siguiendo el riesgo que marca el documento de diseno
-(que el loop se sienta mecanico):
-
-1. Darle a las noches 2 a 4 el mismo nivel de contenido que la 1: mas beats
-   propios, mas registros de radio, y que la tarea del medio cambie de forma
-   (no siempre "ir y apretar").
-2. Que el recorrido de la Noche 3 realmente no lleve a donde deberia: hoy el
-   pasillo sur aparece, pero falta que una ruta conocida cambie de destino.
-3. Mas props por sala (el maximo de diseno son 2-3) y detalle en el patio.
-4. Reemplazar o complementar el audio sintetizado con grabaciones reales,
-   sobre todo las voces de los registros de radio.
-5. Los 1-2 finales alternativos mas cerrados como variantes menores.
+1. Reemplazar o complementar el audio sintetizado con grabaciones reales,
+   sobre todo las voces de los registros de radio: hoy son subtitulos sobre
+   ruido de portadora y es lo que mas le falta al juego.
+2. Densidad ambiental: props y detalle sala por sala (el maximo de diseno son
+   2-3 por ambiente) y trabajo en el patio, que es el espacio mas vacio.
+3. Pulir el ritmo de las noches 2 y 4, que hoy dependen mas del texto que de
+   lo que pasa en el espacio.
+4. Una pasada de balance de la linterna: cuanta bateria dura una noche
+   completa y donde conviene dejar las pilas.
+5. Menu de inicio, continuar partida (el guardado ya existe) y opciones.
