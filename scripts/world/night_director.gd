@@ -93,6 +93,84 @@ func start_night(night: int) -> void:
 		await fade.show_card(data["title"], data["subtitle"], 2.4)
 	await _run_actions(NightData.beats_for(night, "inicio"))
 
+	# Si venimos de un guardado a mitad de noche, se retoma ahi.
+	if not GameState.pending_world.is_empty():
+		var world_state: Dictionary = GameState.pending_world
+		GameState.pending_world = {}
+		restore_world(world_state)
+
+
+## Foto del mundo para el guardado: alcanza para retomar la noche donde iba.
+func world_state() -> Dictionary:
+	var doors := {}
+	for id in station.doors.keys():
+		doors[id] = (station.doors[id] as Door).is_open
+	var routes := {}
+	for id in station.routes.keys():
+		var r: RouteSwap = station.routes[id]
+		routes[id] = {"activa": r.active, "veces": r.times}
+	var points := {}
+	for key in station.points.keys():
+		var node: Node = station.points[key]
+		if node is TaskPoint:
+			points[key] = (node as TaskPoint).spent
+		elif node is TriggerZone:
+			points[key] = not (node as TriggerZone).active
+	var batteries := []
+	for bat in station.pickups:
+		batteries.append(bat.taken)
+	return {
+		"tareas": GameState.tasks.duplicate(true),
+		"bateria": GameState.battery,
+		"jugador": player.pose(),
+		"anomalias": anomalies.applied_ids(),
+		"armadas": _armed.duplicate(true),
+		"puertas": doors,
+		"rutas": routes,
+		"puntos": points,
+		"pilas": batteries,
+		"puertas_tocadas": _doors_touched,
+	}
+
+
+func restore_world(data: Dictionary) -> void:
+	GameState.tasks = data.get("tareas", GameState.tasks)
+	GameState.tasks_changed.emit()
+	GameState.battery = float(data.get("bateria", 1.0))
+	GameState.battery_changed.emit(GameState.battery)
+	player.restore_pose(data.get("jugador", {}))
+
+	for id in data.get("anomalias", []):
+		anomalies.apply(String(id))
+	_armed = data.get("armadas", []).duplicate(true)
+	_doors_touched = bool(data.get("puertas_tocadas", false))
+
+	var doors: Dictionary = data.get("puertas", {})
+	for id in doors.keys():
+		if station.doors.has(id):
+			(station.doors[id] as Door).set_open(bool(doors[id]), true)
+	var routes: Dictionary = data.get("rutas", {})
+	for id in routes.keys():
+		if station.routes.has(id):
+			var r: RouteSwap = station.routes[id]
+			r.active = bool(routes[id].get("activa", false))
+			r.times = int(routes[id].get("veces", 0))
+	var points: Dictionary = data.get("puntos", {})
+	for key in points.keys():
+		if not station.points.has(key):
+			continue
+		var node: Node = station.points[key]
+		if node is TaskPoint:
+			(node as TaskPoint).spent = bool(points[key])
+		elif node is TriggerZone:
+			(node as TriggerZone).active = not bool(points[key])
+	var batteries: Array = data.get("pilas", [])
+	for i in mini(batteries.size(), station.pickups.size()):
+		if bool(batteries[i]):
+			station.pickups[i].taken = true
+			station.pickups[i].visible = false
+			station.pickups[i].enabled = false
+
 
 func _apply_world(world: Dictionary, night: int) -> void:
 	var has_south: bool = world.get("corridor_south", false)
@@ -142,6 +220,9 @@ func _process(delta: float) -> void:
 
 
 func _on_task_completed(id: String) -> void:
+	# Autoguardado: cada tarea cerrada es un punto seguro para retomar.
+	if not _busy:
+		GameState.save_game(world_state())
 	if id == "subnivel":
 		GameState.set_flag("saw_b2", true)
 	await _run_actions(NightData.beats_for(GameState.current_night, id))

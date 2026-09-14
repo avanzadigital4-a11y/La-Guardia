@@ -23,6 +23,7 @@ var radio_logs_found: Array = []
 var battery := 1.0
 var spare_batteries := 0   # las de repuesto se buscan en la estacion
 var night_active := false
+var pending_world := {}   # estado del mundo a restaurar al continuar
 
 
 func start_night(n: int) -> void:
@@ -174,15 +175,18 @@ func reset() -> void:
 	radio_logs_found.clear()
 	battery = 1.0
 	spare_batteries = 0
+	pending_world = {}
 
 
-func save_game() -> void:
+## `world` lo arma el NightDirector: alcanza para retomar a mitad de noche.
+func save_game(world := {}) -> void:
 	var data := {
 		"night": current_night,
 		"flags": flags,
 		"logbook": logbook,
 		"radio_logs": radio_logs_found,
 		"spare": spare_batteries,
+		"mundo": world,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
@@ -204,5 +208,6 @@ func load_game() -> bool:
 	flags = parsed.get("flags", {})
 	logbook = parsed.get("logbook", [])
 	radio_logs_found = parsed.get("radio_logs", [])
-	spare_batteries = int(parsed.get("spare", 1))
+	spare_batteries = int(parsed.get("spare", 0))
+	pending_world = parsed.get("mundo", {})
 	return true

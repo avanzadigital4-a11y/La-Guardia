@@ -38,7 +38,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		var mm := event as InputEventMouseMotion
 		var sens := MOUSE_SENS * Settings.mouse_sensitivity
 		rotate_y(-mm.relative.x * sens)
-		head.rotation.x = clampf(head.rotation.x - mm.relative.y * sens, -PITCH_LIMIT, PITCH_LIMIT)
+		var pitch_dir := 1.0 if Settings.invert_y else -1.0
+		head.rotation.x = clampf(head.rotation.x + pitch_dir * mm.relative.y * sens, -PITCH_LIMIT, PITCH_LIMIT)
 	if not can_move:
 		return
 	if event.is_action_pressed("flashlight"):
@@ -142,6 +143,26 @@ func _update_flashlight() -> void:
 
 func show_notice(text: String) -> void:
 	GameState.notice.emit(text)
+
+
+func pose() -> Dictionary:
+	return {
+		"pos": [global_position.x, global_position.y, global_position.z],
+		"yaw": rotation.y,
+		"pitch": head.rotation.x,
+		"linterna": flashlight_on,
+	}
+
+
+func restore_pose(data: Dictionary) -> void:
+	var pos: Array = data.get("pos", [])
+	if pos.size() == 3:
+		global_position = Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+	rotation.y = float(data.get("yaw", 0.0))
+	head.rotation.x = float(data.get("pitch", 0.0))
+	flashlight_on = bool(data.get("linterna", true))
+	_update_flashlight()
+	velocity = Vector3.ZERO
 
 
 func teleport(pos: Vector3, look_yaw := 0.0) -> void:

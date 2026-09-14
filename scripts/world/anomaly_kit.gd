@@ -16,6 +16,10 @@ func applied_count() -> int:
 	return _applied.size()
 
 
+func applied_ids() -> Array:
+	return _applied.keys()
+
+
 func is_applied(id: String) -> bool:
 	return _applied.has(id)
 

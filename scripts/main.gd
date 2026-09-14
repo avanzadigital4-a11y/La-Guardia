@@ -116,6 +116,14 @@ func _on_night_started_post(night: int) -> void:
 		post_material.set_shader_parameter("dread", clampf((night - 1) / 4.0, 0.0, 1.0))
 
 
+## Guarda progreso y estado del mundo, para poder retomar la noche donde iba.
+func save_now() -> void:
+	if director:
+		GameState.save_game(director.world_state())
+	else:
+		GameState.save_game()
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("logbook"):
 		if sensor_ui.is_open:

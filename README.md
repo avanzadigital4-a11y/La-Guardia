@@ -62,8 +62,12 @@ Lo que ya funciona:
   el proyecto no depende de ningun asset externo.
 - Post-proceso PS1: cuantizacion de color, grano, scanlines, vineta y
   aberracion cromatica, mas temblor de vertices en la geometria.
-- Menu de inicio con continuar partida, menu de pausa, y opciones de
-  sensibilidad, volumen, pixelado y efectos PS1 que persisten entre sesiones.
+- Menu de inicio, menu de pausa y opciones que persisten entre sesiones:
+  sensibilidad, volumen, pixelado, efectos PS1, pantalla completa, invertir
+  eje Y y **reasignacion de teclas**.
+- **Guardado a mitad de noche**: se autoguarda con cada tarea completada y al
+  pausar. Continuar devuelve las tareas hechas, la bateria, la posicion del
+  jugador, las puertas, las anomalias ya aplicadas y las que estaban armadas.
 - Voz de radio sintetizada: no dice palabras, imita la cadencia del habla
   detras de la portadora mientras corren los subtitulos.
 - Sonido ambiente posicional: los crujidos y los golpes salen de una sala
@@ -205,14 +209,17 @@ nueva no implica tocar codigo.
 1. Reemplazar o complementar el audio sintetizado con grabaciones reales,
    sobre todo las voces de los registros de radio: hoy son subtitulos sobre
    ruido de portadora y es lo que mas le falta al juego.
-2. Densidad ambiental: props y detalle sala por sala (el maximo de diseno son
-   2-3 por ambiente) y trabajo en el patio, que es el espacio mas vacio.
-3. Playtest real de punta a punta para medir cuanto dura una noche y ajustar
-   el ritmo con eso en la mano (hoy el balance esta calculado, no jugado).
-4. Un pase de sonido posicional: que los crujidos y las puertas vengan de
-   salas concretas y no del entorno general.
+2. Arte: texturas (aunque sean chicas), props modelados y una tipografia
+   propia. Hoy la estacion son cajas de color plano.
+3. Iluminacion horneada, que es lo que pide el diseno y lo que falta para
+   cumplir el objetivo de hardware de gama baja. Nunca se midio un FPS en un
+   equipo asi.
+4. Playtest con personas. Todo lo que sabemos del ritmo sale de un bot que
+   camina derecho.
 5. Seguir subiendo el contenido por noche hasta acercarse a las 2-3 horas del
    diseno, midiendo con `tests/pacing.tscn` cada vez: mas tareas por noche y
    mas para encontrar, no mas texto.
-6. Definir la licencia del proyecto: todavia no hay archivo `LICENSE`, y esa
+6. Localizacion: los textos estan escritos en el codigo. Si se quiere otro
+   idioma hay que migrarlos a archivos de traduccion.
+7. Definir la licencia del proyecto: todavia no hay archivo `LICENSE`, y esa
    decision es del autor.

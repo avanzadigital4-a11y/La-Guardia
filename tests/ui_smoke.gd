@@ -63,6 +63,31 @@ func _run() -> void:
 	var autonomy := (1.0 / Player.BATTERY_DRAIN) * (1 + GameState.spare_batteries + station.pickups.size())
 	_check(autonomy > 900.0, "la linterna da para mas de 15 minutos con todo (%d s)" % int(autonomy))
 
+	# --- Guardado a mitad de noche ---
+	var director: NightDirector = main.director
+	await get_tree().create_timer(4.0).timeout
+	station.points["valvula"].interact(main.player)
+	station.doors["almacen"].set_open(true, true)
+	director.anomalies.apply("control_taza")
+	GameState.drain_battery(0.3)
+	main.player.teleport(Vector3(4.0, 0.1, -11.0), 1.0)
+	main.save_now()
+
+	var saved_battery := GameState.battery
+	GameState.reset()
+	_check(GameState.load_game(), "el guardado se relee")
+	_check(not GameState.pending_world.is_empty(), "el guardado incluye el estado del mundo")
+	await director.start_night(GameState.current_night)
+	await get_tree().create_timer(0.5).timeout
+	_check(GameState.is_task_done("valvula"), "las tareas hechas siguen hechas al continuar")
+	# Tolerancia: la linterna sigue consumiendo mientras corre la restauracion.
+	_check(absf(GameState.battery - saved_battery) < 0.02,
+		"la bateria se retoma donde iba (%.3f vs %.3f)" % [GameState.battery, saved_battery])
+	_check(station.doors["almacen"].is_open, "las puertas quedan como estaban")
+	_check(director.anomalies.is_applied("control_taza"), "las anomalias aplicadas siguen aplicadas")
+	_check(main.player.global_position.distance_to(Vector3(4.0, 0.1, -11.0)) < 1.5,
+		"el jugador vuelve donde estaba")
+
 	_report()
 
 
