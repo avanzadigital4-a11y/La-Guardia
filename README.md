@@ -155,6 +155,20 @@ recalcularlo cuando las noches crezcan.
 Para revisar la estetica sin jugar, `godot --path . -- --capture` guarda una
 captura de cada ambiente en el directorio `user://` del proyecto.
 
+## Medir el rendimiento
+
+`[F3]` dentro del juego muestra FPS, draw calls, primitivas, VRAM y escala 3D.
+
+Para medir con un recorrido fijo y comparable (pensado para correrlo en la
+maquina objetivo, no en la de desarrollo):
+
+```bash
+godot --path . res://tools/benchmark.tscn    # sin --headless: mide el render
+```
+
+Recorre la estacion girando la camara todo el tiempo (el caso peor para el
+culling) e imprime FPS promedio, minimo y percentil 1%.
+
 ## Exportar
 
 Hay presets para Linux y Windows en `export_presets.cfg` (excluyen `tests/`,
@@ -166,6 +180,10 @@ godot --headless --path . --export-release "Windows" build/windows/la-guardia.ex
 ```
 
 Requiere tener instaladas las export templates de Godot 4.3.
+
+El workflow `.github/workflows/build.yml` hace lo mismo en GitHub Actions al
+publicar un tag `v*` (o a mano desde la pestana Actions) y sube los dos builds
+como artefactos.
 
 ## Como esta armado
 

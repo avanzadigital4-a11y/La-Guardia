@@ -68,6 +68,7 @@ func _setup_ui() -> void:
 	sensor_ui = _add_layer("PanelSensores", "res://scripts/ui/sensor_ui.gd")
 	fade = _add_layer("Fundido", "res://scripts/ui/screen_fade.gd")
 	pause_menu = _add_layer("Pausa", "res://scripts/ui/pause_menu.gd")
+	_add_layer("Estadisticas", "res://scripts/ui/stats_overlay.gd")
 
 
 func _add_layer(name: String, script_path: String) -> CanvasLayer:

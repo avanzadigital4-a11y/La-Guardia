@@ -1,0 +1,50 @@
+name: builds
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  export:
+    name: Exportar Windows y Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cachear Godot y sus templates
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/export_templates
+          key: godot-4.3-stable-con-templates
+
+      - name: Descargar Godot y templates
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot ~/.local/share/godot/export_templates
+          cd ~/godot
+          curl -sSL -o godot.zip https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.3-stable_linux.x86_64
+          curl -sSL -o templates.tpz https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+          unzip -q templates.tpz
+          mv templates ~/.local/share/godot/export_templates/4.3.stable
+
+      - name: Importar el proyecto
+        run: ~/godot/Godot_v4.3-stable_linux.x86_64 --headless --path . --import
+
+      - name: Exportar
+        run: |
+          mkdir -p build/linux build/windows
+          ~/godot/Godot_v4.3-stable_linux.x86_64 --headless --path . --export-release "Linux" build/linux/la-guardia.x86_64
+          ~/godot/Godot_v4.3-stable_linux.x86_64 --headless --path . --export-release "Windows" build/windows/la-guardia.exe
+
+      - name: Subir los builds
+        uses: actions/upload-artifact@v4
+        with:
+          name: la-guardia-${{ github.ref_name }}
+          path: build/
+          if-no-files-found: error
