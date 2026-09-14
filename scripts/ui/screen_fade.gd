@@ -52,8 +52,8 @@ func fade_in(duration := 1.6) -> void:
 
 
 func show_card(title: String, subtitle: String, hold := 2.6) -> void:
-	_title.text = title
-	_subtitle.text = subtitle
+	_title.text = tr(title)
+	_subtitle.text = tr(subtitle)
 	_title.modulate.a = 0.0
 	_subtitle.modulate.a = 0.0
 	var tw := create_tween()

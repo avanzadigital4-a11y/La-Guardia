@@ -11,7 +11,7 @@ var _listening_button: Button = null
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 10)
-	add_child(UIUtils.label("OPCIONES", 20, UIUtils.FG))
+	add_child(UIUtils.label(tr("OPCIONES"), 20, UIUtils.FG))
 
 	var cols := HBoxContainer.new()
 	cols.add_theme_constant_override("separation", 60)
@@ -43,13 +43,13 @@ func _ready() -> void:
 	var right := VBoxContainer.new()
 	right.add_theme_constant_override("separation", 4)
 	cols.add_child(right)
-	right.add_child(UIUtils.label("TECLAS", 14, UIUtils.DIM))
+	right.add_child(UIUtils.label(tr("TECLAS"), 14, UIUtils.DIM))
 	for entry in Settings.REBINDABLE:
 		_rebind_row(right, String(entry[0]), String(entry[1]))
-	right.add_child(UIUtils.label("[ESC] cancela la reasignación", 12, UIUtils.DIM))
+	right.add_child(UIUtils.label(tr("[ESC] cancela la reasignación"), 12, UIUtils.DIM))
 
 	var back := Button.new()
-	back.text = "Volver"
+	back.text = tr("Volver")
 	back.custom_minimum_size = Vector2(160, 34)
 	back.pressed.connect(func():
 		Settings.save_settings()
@@ -78,7 +78,7 @@ func _slider(parent: Node, text: String, min_v: float, max_v: float, value: floa
 
 func _check(parent: Node, text: String, value: bool, on_change: Callable) -> void:
 	var box := CheckBox.new()
-	box.text = text
+	box.text = tr(text)
 	box.button_pressed = value
 	box.add_theme_color_override("font_color", UIUtils.FG)
 	box.toggled.connect(func(v: bool):

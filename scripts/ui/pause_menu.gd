@@ -24,7 +24,7 @@ func _ready() -> void:
 	_col = VBoxContainer.new()
 	_col.add_theme_constant_override("separation", 10)
 	center.add_child(_col)
-	var title := UIUtils.label("EN PAUSA", 24, UIUtils.FG)
+	var title := UIUtils.label(tr("EN PAUSA"), 24, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_col.add_child(title)
 
@@ -50,7 +50,7 @@ func _ready() -> void:
 
 func _button(text: String, on_press: Callable) -> void:
 	var b := Button.new()
-	b.text = text
+	b.text = tr(text)
 	b.custom_minimum_size = Vector2(280, 34)
 	b.pressed.connect(on_press)
 	_col.add_child(b)

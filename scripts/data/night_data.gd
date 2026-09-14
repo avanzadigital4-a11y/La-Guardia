@@ -521,6 +521,56 @@ const RADIO_LOGS := {
 	},
 }
 
+## Objetos que se pueden levantar y mirar de cerca. El texto cambia con las
+## noches: el objeto es el mismo, lo que dice no.
+const INSPECTABLES := {
+	"placa": {
+		"titulo": "Chapa de identificación",
+		"pos": Vector3(-3.7, 0.92, -0.6),
+		"size": Vector3(0.10, 0.02, 0.06),
+		"color": Color(0.55, 0.56, 0.52),
+		"textos": {
+			1: "Tu nombre y el número de turno: 14. La cadena está gastada de darle vueltas.",
+			3: "Tu nombre está bien. El número de turno ahora dice 15.",
+			5: "El nombre está frotado hasta casi borrarse. El número dice 16.",
+		},
+	},
+	"foto": {
+		"titulo": "Foto del equipo",
+		"pos": Vector3(-2.8, 0.92, -13.2),
+		"size": Vector3(0.16, 0.006, 0.12),
+		"color": Color(0.62, 0.60, 0.54),
+		"textos": {
+			1: "Cinco personas frente a la esclusa, con los ojos cerrados por el viento.",
+			2: "Cuatro personas. Alguien recortó el borde derecho con tijera.",
+			4: "Tres. El recorte es más nuevo que la foto.",
+			5: "Una sola persona, de espaldas. Lo demás es hielo.",
+		},
+	},
+	"taza": {
+		"titulo": "Taza",
+		"pos": Vector3(-3.9, 0.94, -13.2),
+		"size": Vector3(0.09, 0.11, 0.09),
+		"color": Color(0.70, 0.68, 0.62),
+		"textos": {
+			1: "Café frío de hace horas. Es tuya.",
+			3: "Café tibio. Hoy no hiciste café.",
+			5: "Vacía y limpia, como recién lavada.",
+		},
+	},
+	"traba": {
+		"titulo": "Traba del generador",
+		"pos": Vector3(2.1, 0.94, -8.7),
+		"size": Vector3(0.06, 0.03, 0.22),
+		"color": Color(0.48, 0.50, 0.54),
+		"textos": {
+			1: "La traba de la puerta del generador. Pesa más de lo que parece.",
+			4: "Está en tu mano otra vez. En la bitácora figura que la dejaste puesta.",
+		},
+	},
+}
+
+
 static func get_night(n: int) -> Dictionary:
 	return NIGHTS.get(clampi(n, 1, 5), NIGHTS[1])
 

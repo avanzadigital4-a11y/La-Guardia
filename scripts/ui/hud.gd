@@ -23,7 +23,7 @@ func _ready() -> void:
 	tasks_panel.position = Vector2(28, 24)
 	tasks_panel.add_theme_constant_override("separation", 2)
 	root.add_child(tasks_panel)
-	var header := UIUtils.label("TAREAS DE LA NOCHE", 13, UIUtils.DIM)
+	var header := UIUtils.label(tr("TAREAS DE LA NOCHE"), 13, UIUtils.DIM)
 	tasks_panel.add_child(header)
 	_tasks_box = VBoxContainer.new()
 	_tasks_box.add_theme_constant_override("separation", 2)
@@ -69,7 +69,7 @@ func _ready() -> void:
 	root.add_child(_notice)
 
 	# Bateria.
-	var bat_label := UIUtils.label("LINTERNA", 12, UIUtils.DIM)
+	var bat_label := UIUtils.label(tr("LINTERNA"), 12, UIUtils.DIM)
 	bat_label.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	bat_label.offset_left = 28.0
 	bat_label.offset_top = -66.0
@@ -92,7 +92,7 @@ func _ready() -> void:
 	_battery_fill.size = Vector2(120, 10)
 	bat_bg.add_child(_battery_fill)
 
-	var hint := UIUtils.label("[E] usar   [F] linterna   [TAB] bitácora", 12, UIUtils.DIM)
+	var hint := UIUtils.label(tr("[E] usar   [F] linterna   [TAB] bitácora"), 12, UIUtils.DIM)
 	hint.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	hint.offset_left = -360.0
 	hint.offset_top = -46.0
@@ -123,15 +123,15 @@ func _refresh_tasks() -> void:
 		var progress := ""
 		if int(t.get("steps", 1)) > 1 and not t["done"]:
 			progress = " (%d/%d)" % [t["done_steps"], t["steps"]]
-		_tasks_box.add_child(UIUtils.label("%s %s%s" % [mark, t["text"], progress], 14, color))
+		_tasks_box.add_child(UIUtils.label("%s %s%s" % [mark, tr(t["text"]), progress], 14, color))
 
 
 func set_prompt(text: String) -> void:
-	_prompt.text = "" if text == "" else "[E]  %s" % text
+	_prompt.text = "" if text == "" else "[E]  %s" % tr(text)
 
 
 func show_notice(text: String) -> void:
-	_notice.text = text
+	_notice.text = tr(text)
 	_notice.modulate.a = 1.0
 	_notice_time = 4.0
 

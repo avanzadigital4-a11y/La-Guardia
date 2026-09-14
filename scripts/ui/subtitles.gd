@@ -30,7 +30,7 @@ func _apply_size() -> void:
 
 
 func show_line(text: String, duration := 3.0) -> void:
-	_label.text = text
+	_label.text = tr(text)
 	_timer = duration
 
 

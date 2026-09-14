@@ -16,6 +16,7 @@ const STEP_DISTANCE := 1.9
 @onready var ray: RayCast3D = $Head/Camera3D/InteractRay
 
 var can_move := true
+var look_enabled := true
 var flashlight_on := true
 var _bob_time := 0.0
 var _step_accum := 0.0
@@ -43,7 +44,7 @@ func _apply_comfort() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	if event is InputEventMouseMotion and look_enabled and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mm := event as InputEventMouseMotion
 		var sens := MOUSE_SENS * Settings.mouse_sensitivity
 		rotate_y(-mm.relative.x * sens)

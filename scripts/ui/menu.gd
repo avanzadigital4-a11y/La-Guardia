@@ -20,10 +20,10 @@ func _ready() -> void:
 	add_child(bg)
 
 	_main_col = _panel()
-	var title := UIUtils.label("LA GUARDIA", 40, UIUtils.FG)
+	var title := UIUtils.label(tr("LA GUARDIA"), 40, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_main_col.add_child(title)
-	var sub := UIUtils.label("Estación Cabo Hueso  ---  cinco noches", 14, UIUtils.DIM)
+	var sub := UIUtils.label(tr("Estación Cabo Hueso  ---  cinco noches"), 14, UIUtils.DIM)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_main_col.add_child(sub)
 	_main_col.add_child(UIUtils.label("", 16, UIUtils.DIM))
@@ -48,7 +48,7 @@ func _ready() -> void:
 	_refresh_slots()
 	_show(_main_col)
 
-	var hint := UIUtils.label("[WASD] moverse   [E] usar   [F] linterna   [TAB] bitácora   [F3] rendimiento", 12, UIUtils.DIM)
+	var hint := UIUtils.label(tr("[WASD] moverse   [E] usar   [F] linterna   [TAB] bitácora   [F3] rendimiento"), 12, UIUtils.DIM)
 	hint.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	hint.offset_top = -46.0
 	hint.offset_bottom = -26.0
@@ -74,7 +74,7 @@ func _show(which: Control) -> void:
 
 func _button(parent: Node, text: String, on_press: Callable, width := 320) -> Button:
 	var b := Button.new()
-	b.text = text
+	b.text = tr(text)
 	b.custom_minimum_size = Vector2(width, 36)
 	b.pressed.connect(on_press)
 	parent.add_child(b)
@@ -84,7 +84,7 @@ func _button(parent: Node, text: String, on_press: Callable, width := 320) -> Bu
 func _refresh_slots() -> void:
 	for c in _slots_col.get_children():
 		c.queue_free()
-	var title := UIUtils.label("PARTIDAS", 20, UIUtils.FG)
+	var title := UIUtils.label(tr("PARTIDAS"), 20, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_slots_col.add_child(title)
 
@@ -133,7 +133,7 @@ func _play(slot: int, used: bool) -> void:
 
 
 func _build_credits() -> void:
-	var title := UIUtils.label("CRÉDITOS", 20, UIUtils.FG)
+	var title := UIUtils.label(tr("CRÉDITOS"), 20, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_credits.add_child(title)
 	_credits.add_child(UIUtils.label("", 10, UIUtils.DIM))

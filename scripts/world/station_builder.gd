@@ -60,6 +60,7 @@ func build(tint: Color) -> void:
 	_build_routes()
 	_build_extras()
 	_build_radio_logs()
+	_build_inspectables()
 	_build_watchers()
 
 
@@ -486,6 +487,21 @@ func _build_radio_logs() -> void:
 		elif pos.z <= -16.0:
 			parent = south_section
 		_add_radio_log(id, pos, int(data.get("night", 1)), parent)
+
+
+## Objetos para mirar de cerca: van de la tabla de contenido al mundo.
+func _build_inspectables() -> void:
+	for id in NightData.INSPECTABLES.keys():
+		var spec: Dictionary = NightData.INSPECTABLES[id]
+		var item := Inspectable.new()
+		item.name = "Inspeccionable_%s" % id
+		add_child(item)
+		item.position = spec.get("pos", Vector3.ZERO)
+		item.inspect_id = String(id)
+		item.titulo = String(spec.get("titulo", "Objeto"))
+		item.setup_box(spec.get("size", Vector3(0.1, 0.1, 0.1)),
+			Build.surface(spec.get("color", Color(0.5, 0.5, 0.5))))
+		points["ver_%s" % id] = item
 
 
 func _add_battery(name: String, pos: Vector3) -> BatteryPickup:

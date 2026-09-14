@@ -27,8 +27,8 @@ func _ready() -> void:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 10)
 	margin.add_child(col)
-	col.add_child(UIUtils.label("BITÁCORA DE GUARDIA", 20, UIUtils.FG))
-	col.add_child(UIUtils.label("Estación Cabo Hueso  ---  registro personal", 13, UIUtils.DIM))
+	col.add_child(UIUtils.label(tr("BITÁCORA DE GUARDIA"), 20, UIUtils.FG))
+	col.add_child(UIUtils.label(tr("Estación Cabo Hueso  ---  registro personal"), 13, UIUtils.DIM))
 
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -38,7 +38,7 @@ func _ready() -> void:
 	_list.add_theme_constant_override("separation", 6)
 	scroll.add_child(_list)
 
-	col.add_child(UIUtils.label("[TAB] cerrar", 13, UIUtils.DIM))
+	col.add_child(UIUtils.label(tr("[TAB] cerrar"), 13, UIUtils.DIM))
 
 	GameState.logbook_changed.connect(_refresh)
 
@@ -58,7 +58,7 @@ func _refresh() -> void:
 		var time: String = e.get("time", "")
 		var prefix := "%s  " % time if time != "" else ""
 		var color: Color = UIUtils.WRONG if e.get("wrong", false) else UIUtils.FG
-		var entry := UIUtils.label("%s%s" % [prefix, e["text"]], 15, color)
+		var entry := UIUtils.label("%s%s" % [prefix, tr(e["text"])], 15, color)
 		entry.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		entry.custom_minimum_size.x = 900
 		_list.add_child(entry)

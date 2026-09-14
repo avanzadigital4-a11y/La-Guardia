@@ -105,6 +105,24 @@ func _run() -> void:
 	_check(placed == NightData.RADIO_LOGS.size(), "todos los registros estan colocados en la estacion (%d/%d)" % [
 		placed, NightData.RADIO_LOGS.size()])
 
+	# --- Objetos para mirar de cerca ---
+	var inspect_ok := true
+	for id in NightData.INSPECTABLES.keys():
+		var spec: Dictionary = NightData.INSPECTABLES[id]
+		if not station.points.has("ver_%s" % id):
+			inspect_ok = false
+		if not spec.get("textos", {}).has(1):
+			inspect_ok = false   # tiene que haber texto desde la noche 1
+	_check(inspect_ok, "los %d objetos inspeccionables estan puestos y tienen texto" % NightData.INSPECTABLES.size())
+	var placa: Inspectable = station.points["ver_placa"]
+	GameState.current_night = 1
+	var texto_1 := placa.description()
+	GameState.current_night = 5
+	var texto_5 := placa.description()
+	GameState.current_night = 1
+	_check(texto_1 != texto_5 and texto_1 != "" and texto_5 != "",
+		"lo que dice un objeto cambia con las noches")
+
 	# --- Aplicar todo y volver atras ---
 	for id in AnomalyData.ANOMALIES.keys():
 		director.anomalies.apply(String(id))

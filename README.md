@@ -36,6 +36,9 @@ Lo que ya funciona:
   que se apagan. Cada noche arma su propio lote.
 - **20 registros de radio** repartidos por la estacion, el subnivel y el
   patio, con su noche de aparicion escrita en la misma tabla.
+- **Objetos para mirar de cerca**: se levantan, se giran con el mouse, y lo
+  que dicen cambia noche a noche (la chapa con tu numero de turno, la foto del
+  equipo a la que le van faltando personas).
 - **El recorrido deja de llevar a donde deberia**: el pasillo sur se muerde
   la cola (caminas hasta el fondo y salis por la entrada, dos veces, hasta
   que deja de pasar) y la puerta del dormitorio da al almacen. Sin cortes ni
@@ -187,6 +190,21 @@ El workflow `.github/workflows/build.yml` hace lo mismo en GitHub Actions al
 publicar un tag `v*` (o a mano desde la pestana Actions) y sube los dos builds
 como artefactos.
 
+## Traducir
+
+Todo el texto que ve el jugador pasa por `tr()` en los puntos donde sale a
+pantalla, asi que las tablas de contenido siguen escritas en castellano
+normal. La plantilla se genera con:
+
+```bash
+godot --headless --path . res://tools/exportar_traduccion.tscn
+```
+
+Eso escribe `localizacion/la-guardia.pot` con los 181 textos del juego (los de
+las tablas y los de la interfaz, cada uno con una nota de donde sale). Para
+agregar un idioma: copiar el `.pot` a `localizacion/en.po`, completar los
+`msgstr` y registrarlo en Proyecto > Configuracion > Localizacion.
+
 ## Como esta armado
 
 ```
@@ -239,7 +257,5 @@ nueva no implica tocar codigo.
 5. Seguir subiendo el contenido por noche hasta acercarse a las 2-3 horas del
    diseno, midiendo con `tests/pacing.tscn` cada vez: mas tareas por noche y
    mas para encontrar, no mas texto.
-6. Localizacion: los textos estan escritos en el codigo. Si se quiere otro
-   idioma hay que migrarlos a archivos de traduccion.
-7. Definir la licencia del proyecto: todavia no hay archivo `LICENSE`, y esa
+6. Definir la licencia del proyecto: todavia no hay archivo `LICENSE`, y esa
    decision es del autor.
