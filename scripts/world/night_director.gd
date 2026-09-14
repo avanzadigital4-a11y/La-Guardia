@@ -16,6 +16,7 @@ var _busy := false
 var anomalies: AnomalyKit
 var _door_check := 0.0
 var _doors_touched := false
+var _start_token := 0
 
 
 func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_env: WorldEnvironment) -> void:
@@ -37,6 +38,10 @@ func setup(p_station: StationBuilder, p_player: Player, p_fade: CanvasLayer, p_e
 
 
 func start_night(night: int) -> void:
+	# Si entra otro arranque de noche mientras este todavia esta esperando
+	# fundidos o beats, el viejo se corta acá y no pisa el estado del nuevo.
+	_start_token += 1
+	var token := _start_token
 	_armed.clear()
 	_doors_touched = false
 	anomalies.reset_all()
@@ -90,8 +95,14 @@ func start_night(night: int) -> void:
 
 	if fade.has_method("show_card"):
 		await fade.fade_in(1.8)
+		if token != _start_token:
+			return
 		await fade.show_card(data["title"], data["subtitle"], 2.4)
+		if token != _start_token:
+			return
 	await _run_actions(NightData.beats_for(night, "inicio"))
+	if token != _start_token:
+		return
 
 	# Si venimos de un guardado a mitad de noche, se retoma ahi.
 	if not GameState.pending_world.is_empty():

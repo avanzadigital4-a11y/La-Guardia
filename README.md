@@ -62,9 +62,11 @@ Lo que ya funciona:
   el proyecto no depende de ningun asset externo.
 - Post-proceso PS1: cuantizacion de color, grano, scanlines, vineta y
   aberracion cromatica, mas temblor de vertices en la geometria.
-- Menu de inicio, menu de pausa y opciones que persisten entre sesiones:
-  sensibilidad, volumen, pixelado, efectos PS1, pantalla completa, invertir
-  eje Y y **reasignacion de teclas**.
+- Menu de inicio con tres ranuras de guardado (con la noche, la fecha y si
+  quedo a mitad de noche), borrado con confirmacion, creditos y opciones.
+- Opciones que persisten entre sesiones: sensibilidad, volumen, pixelado,
+  efectos PS1, pantalla completa, invertir eje Y, cabeceo al caminar, campo de
+  vision, tamano de subtitulos y **reasignacion de teclas**.
 - **Guardado a mitad de noche**: se autoguarda con cada tarea completada y al
   pausar. Continuar devuelve las tareas hechas, la bateria, la posicion del
   jugador, las puertas, las anomalias ya aplicadas y las que estaban armadas.

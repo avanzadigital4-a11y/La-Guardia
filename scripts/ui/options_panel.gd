@@ -33,6 +33,12 @@ func _ready() -> void:
 		func(v): Settings.fullscreen = v)
 	_check(left, "Invertir eje Y", Settings.invert_y,
 		func(v): Settings.invert_y = v)
+	_check(left, "Cabeceo al caminar", Settings.head_bob,
+		func(v): Settings.head_bob = v)
+	_slider(left, "Campo de visión", 60.0, 100.0, Settings.fov, 1.0,
+		func(v): Settings.fov = v)
+	_slider(left, "Tamaño de subtítulos", 12.0, 28.0, float(Settings.subtitle_size), 1.0,
+		func(v): Settings.subtitle_size = int(v))
 
 	var right := VBoxContainer.new()
 	right.add_theme_constant_override("separation", 4)

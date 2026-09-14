@@ -13,7 +13,8 @@ signal notice(text: String)
 signal battery_changed(value: float)
 
 const MAX_NIGHT := 5
-const SAVE_PATH := "user://la_guardia_save.json"
+const SAVE_PATH := "user://la_guardia_save.json"   # partida vieja, se migra sola
+const SLOTS := 3
 
 var current_night := 1
 var tasks: Array = []              # [{id, text, done}]
@@ -24,6 +25,7 @@ var battery := 1.0
 var spare_batteries := 0   # las de repuesto se buscan en la estacion
 var night_active := false
 var pending_world := {}   # estado del mundo a restaurar al continuar
+var slot := 1
 
 
 func start_night(n: int) -> void:
@@ -178,6 +180,43 @@ func reset() -> void:
 	pending_world = {}
 
 
+static func slot_path(n: int) -> String:
+	return "user://la_guardia_%d.json" % clampi(n, 1, SLOTS)
+
+
+## Resumen de cada ranura, para el menu: {"usado", "noche", "fecha"}.
+static func slot_info(n: int) -> Dictionary:
+	var path := slot_path(n)
+	if not FileAccess.file_exists(path):
+		return {"usado": false, "noche": 0, "fecha": ""}
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return {"usado": false, "noche": 0, "fecha": ""}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return {"usado": false, "noche": 0, "fecha": ""}
+	return {
+		"usado": true,
+		"noche": int(parsed.get("night", 1)),
+		"fecha": String(parsed.get("fecha", "")),
+		"en_curso": not Dictionary(parsed.get("mundo", {})).is_empty(),
+	}
+
+
+static func delete_slot(n: int) -> void:
+	var path := slot_path(n)
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+static func any_slot_used() -> bool:
+	for i in range(1, SLOTS + 1):
+		if slot_info(i)["usado"]:
+			return true
+	return false
+
+
 ## `world` lo arma el NightDirector: alcanza para retomar a mitad de noche.
 func save_game(world := {}) -> void:
 	var data := {
@@ -187,17 +226,25 @@ func save_game(world := {}) -> void:
 		"radio_logs": radio_logs_found,
 		"spare": spare_batteries,
 		"mundo": world,
+		"fecha": Time.get_datetime_string_from_system(false, true),
 	}
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(slot_path(slot), FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(data, "\t"))
 		f.close()
 
 
-func load_game() -> bool:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return false
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
+func load_game(from_slot := 0) -> bool:
+	if from_slot > 0:
+		slot = clampi(from_slot, 1, SLOTS)
+	var path := slot_path(slot)
+	if not FileAccess.file_exists(path):
+		# Partida guardada antes de que existieran las ranuras.
+		if FileAccess.file_exists(SAVE_PATH):
+			path = SAVE_PATH
+		else:
+			return false
+	var f := FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return false
 	var parsed: Variant = JSON.parse_string(f.get_as_text())

@@ -31,6 +31,15 @@ func _ready() -> void:
 	ray.collision_mask = Build.LAYER_INTERACT
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_update_flashlight()
+	_apply_comfort()
+	Settings.changed.connect(_apply_comfort)
+
+
+## Opciones de comodidad: campo de vision y cabeceo. En terror en primera
+## persona esto es accesibilidad, no un lujo.
+func _apply_comfort() -> void:
+	if is_instance_valid(camera):
+		camera.fov = Settings.fov
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -72,7 +81,8 @@ func _physics_process(delta: float) -> void:
 func _head_bob(delta: float, speed: float) -> void:
 	if speed > 0.2:
 		_bob_time += delta * speed * 3.0
-		head.position.y = 1.55 + sin(_bob_time * 2.0) * 0.022
+		var amount := 0.022 if Settings.head_bob else 0.0
+		head.position.y = 1.55 + sin(_bob_time * 2.0) * amount
 		_step_accum += speed * delta
 		if _step_accum >= STEP_DISTANCE:
 			_step_accum = 0.0

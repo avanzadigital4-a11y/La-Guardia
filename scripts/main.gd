@@ -28,7 +28,7 @@ func _ready() -> void:
 	add_child(director)
 	director.setup(station, player, fade, world_env)
 	director.start_night(GameState.current_night)
-	if "--capture" in OS.get_cmdline_user_args():
+	if "--capturas" in OS.get_cmdline_user_args():
 		_capture_debug()
 
 
@@ -143,7 +143,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 
-## Herramienta de desarrollo: corre el juego con  -- --capture  y guarda una
+## Herramienta de desarrollo: corre el juego con  -- --capturas  y guarda una
 ## captura de cada ambiente en user:// para revisar la estetica sin jugar.
 func _capture_debug() -> void:
 	var views := [

@@ -11,6 +11,9 @@ var ps1_effects := true          # grano, scanlines, vineta
 var pixelation := 0.55           # escala interna del viewport 3D
 var fullscreen := false
 var invert_y := false
+var head_bob := true
+var fov := 68.0
+var subtitle_size := 16
 var keybinds := {}               # accion -> physical_keycode
 
 const REBINDABLE := [
@@ -87,6 +90,9 @@ func save_settings() -> void:
 	cfg.set_value("juego", "pixelation", pixelation)
 	cfg.set_value("juego", "fullscreen", fullscreen)
 	cfg.set_value("juego", "invert_y", invert_y)
+	cfg.set_value("juego", "head_bob", head_bob)
+	cfg.set_value("juego", "fov", fov)
+	cfg.set_value("juego", "subtitle_size", subtitle_size)
 	cfg.set_value("teclas", "binds", keybinds)
 	cfg.save(PATH)
 
@@ -101,4 +107,7 @@ func load_settings() -> void:
 	pixelation = float(cfg.get_value("juego", "pixelation", pixelation))
 	fullscreen = bool(cfg.get_value("juego", "fullscreen", fullscreen))
 	invert_y = bool(cfg.get_value("juego", "invert_y", invert_y))
+	head_bob = bool(cfg.get_value("juego", "head_bob", head_bob))
+	fov = float(cfg.get_value("juego", "fov", fov))
+	subtitle_size = int(cfg.get_value("juego", "subtitle_size", subtitle_size))
 	keybinds = cfg.get_value("teclas", "binds", {})

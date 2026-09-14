@@ -21,6 +21,12 @@ func _ready() -> void:
 	_label.add_theme_constant_override("shadow_outline_size", 6)
 	_label.text = ""
 	add_child(_label)
+	_apply_size()
+	Settings.changed.connect(_apply_size)
+
+
+func _apply_size() -> void:
+	_label.add_theme_font_size_override("font_size", Settings.subtitle_size)
 
 
 func show_line(text: String, duration := 3.0) -> void:

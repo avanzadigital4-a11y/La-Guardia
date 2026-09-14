@@ -17,14 +17,16 @@ func _run() -> void:
 	add_child(menu)
 	await get_tree().process_frame
 	var buttons := _find_buttons(menu)
-	_check(buttons.size() >= 4, "el menu tiene sus cuatro opciones (%d)" % buttons.size())
 	var names: Array[String] = []
 	for b in buttons:
 		names.append(b.text)
-	_check("Nueva partida" in names and "Continuar" in names, "estan nueva partida y continuar")
-	var cont: Button = buttons[names.find("Continuar")]
-	_check(cont.disabled == not FileAccess.file_exists(GameState.SAVE_PATH),
-		"continuar solo esta disponible si hay partida guardada")
+	_check("Jugar" in names and "Opciones" in names and "Créditos" in names and "Salir" in names,
+		"el menu tiene jugar, opciones, creditos y salir")
+	var slot_rows := 0
+	for name in names:
+		if name.begins_with("Ranura "):
+			slot_rows += 1
+	_check(slot_rows == GameState.SLOTS, "el menu lista las %d ranuras de guardado (%d)" % [GameState.SLOTS, slot_rows])
 
 	if "--capture" in OS.get_cmdline_user_args():
 		await get_tree().create_timer(0.6).timeout
