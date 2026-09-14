@@ -207,6 +207,126 @@ Aparece a partir de la noche 5.
 | `rl_20_2.ogg` | ~3.4 s | ...está bien. Si te quedás, cerrá desde adentro. |
 | `rl_20_3.ogg` | ~3.4 s | Si te vas, no mires el patio por la ventanilla. |
 
+## rl_21 — REG-011 / Meteorología
+
+Aparece a partir de la noche 1.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_21_1.ogg` | ~4.6 s | Parte de las veintidós. Viento del sudeste, treinta y ocho nudos. |
+| `rl_21_2.ogg` | ~3.6 s | La estación está dentro de parámetros. Todo normal. |
+| `rl_21_3.ogg` | ~5.6 s | Anoto igual que el anemómetro marcó cero durante once minutos y nadie lo tocó. |
+
+## rl_22 — REG-013 / Sin firmar
+
+Aparece a partir de la noche 1.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_22_1.ogg` | ~2.1 s | Prueba de grabadora. Uno, dos. |
+| `rl_22_2.ogg` | ~4.4 s | Si esto quedó grabando toda la noche, borrenlo sin escucharlo. |
+| `rl_22_3.ogg` | ~2.0 s | En serio. |
+
+## rl_23 — REG-018 / Jefe de base
+
+Aparece a partir de la noche 2.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_23_1.ogg` | ~4.4 s | Decisión tomada: la estación cierra al final de la temporada. |
+| `rl_23_2.ogg` | ~4.7 s | El personal sale en dos tandas. Queda una guardia hasta el retiro. |
+| `rl_23_3.ogg` | ~4.0 s | Se ofrecieron cuatro. Elegí al que menos preguntas hizo. |
+
+## rl_24 — REG-024 / Cocina
+
+Aparece a partir de la noche 2.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_24_1.ogg` | ~2.4 s | Segunda semana cocinando para uno. |
+| `rl_24_2.ogg` | ~3.4 s | Sigo poniendo dos platos. Es costumbre, supongo. |
+| `rl_24_3.ogg` | ~3.7 s | El segundo plato aparece usado. Eso no es costumbre. |
+
+## rl_25 — REG-026 / Mantenimiento
+
+Aparece a partir de la noche 2.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_25_1.ogg` | ~4.0 s | La puerta del generador no cierra sola. Alguien la abre. |
+| `rl_25_2.ogg` | ~2.1 s | Puse una traba nueva el lunes. |
+| `rl_25_3.ogg` | ~4.2 s | El martes la traba estaba puesta y la puerta abierta igual. |
+
+## rl_26 — REG-029 / Radiooperador
+
+Aparece a partir de la noche 3.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_26_1.ogg` | ~3.9 s | Grabé la portadora de la banda cuatro y la pasé lenta. |
+| `rl_26_2.ogg` | ~3.9 s | Adentro hay una voz repitiendo el parte meteorológico. |
+| `rl_26_3.ogg` | ~2.0 s | Es el parte de mañana. |
+
+## rl_27 — REG-032 / Nivel B2
+
+Aparece a partir de la noche 3.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_27_1.ogg` | ~3.1 s | Tercera prueba. Bajamos tres y subimos tres. |
+| `rl_27_2.ogg` | ~3.4 s | Nadie discute el número mientras estamos abajo. |
+| `rl_27_3.ogg` | ~4.6 s | Arriba, cada uno se acuerda de una persona distinta que no vino. |
+
+## rl_28 — REG-036 / Sin firmar
+
+Aparece a partir de la noche 3.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_28_1.ogg` | ~3.5 s | El perímetro está bien. Los tres puntos marcados. |
+| `rl_28_2.ogg` | ~4.1 s | Hay un cuarto juego de huellas que da la vuelta completa. |
+| `rl_28_3.ogg` | ~3.7 s | Yo marqué tres puntos. Las huellas pasan por cuatro. |
+
+## rl_29 — REG-043 / Tu voz
+
+Aparece a partir de la noche 4.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_29_1.ogg` | ~4.9 s | Dejé la grabadora en el pasillo toda la noche, apuntando a mi pieza. |
+| `rl_29_2.ogg` | ~3.6 s | Se escuchan mis pasos saliendo a las dos y cuarto. |
+| `rl_29_3.ogg` | ~2.0 s | No se escuchan volviendo. |
+
+## rl_30 — REG-046 / Enfermería
+
+Aparece a partir de la noche 4.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_30_1.ogg` | ~5.6 s | Al que esté de guardia: si te despertás en un lugar que no elegiste, no corras. |
+| `rl_30_2.ogg` | ~3.1 s | Sentate donde estás y esperá a que amanezca. |
+| `rl_30_3.ogg` | ~2.9 s | Los que corrieron tardaron más en volver. |
+
+## rl_31 — REG-049 / Jefe de base
+
+Aparece a partir de la noche 5.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_31_1.ogg` | ~3.6 s | Última entrada antes de salir con la primera tanda. |
+| `rl_31_2.ogg` | ~4.1 s | Dejamos la estación en condiciones y la guardia cubierta. |
+| `rl_31_3.ogg` | ~5.3 s | Que conste que el nombre de la guardia lo completé yo, y estaba en blanco. |
+
+## rl_32 — REG-053 / Sin firmar
+
+Aparece a partir de la noche 5.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_32_1.ogg` | ~4.2 s | El vehículo llega con luz. Van a preguntar por el personal. |
+| `rl_32_2.ogg` | ~3.4 s | Decí que sos el de la guardia y mostrá la chapa. |
+| `rl_32_3.ogg` | ~3.2 s | Si la chapa dice otro número, no la muestres. |
+
 ---
 
-**62 líneas en total, alrededor de 4 minutos de audio.**
+**98 líneas en total, alrededor de 7 minutos de audio.**

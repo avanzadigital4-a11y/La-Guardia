@@ -30,12 +30,14 @@ Lo que ya funciona:
   esa misma noche admitiendo cosas que el jugador nunca hizo (marcadas en
   rojo).
 - Registros de radio con subtitulos y ruido de portadora.
-- **Catalogo de 33 anomalias** fuera de camara: el estado de un objeto cambia
+- **Catalogo de 61 anomalias** fuera de camara: el estado de un objeto cambia
   mientras el jugador no esta en la sala, sin animacion ni jumpscare. Objetos
   que se mueven, que faltan, que aparecen, puertas que quedan abiertas, salas
-  que se apagan. Cada noche arma su propio lote.
-- **20 registros de radio** repartidos por la estacion, el subnivel y el
-  patio, con su noche de aparicion escrita en la misma tabla.
+  que se apagan. Cada noche arma su propio lote, mas unas cuantas al azar del
+  catalogo: dos partidas no traen exactamente los mismos cambios.
+- **32 registros de radio** (98 lineas, unos 7 minutos de audio) repartidos
+  por la estacion, el subnivel y el patio, con su noche de aparicion escrita
+  en la misma tabla.
 - **Objetos para mirar de cerca**: se levantan, se giran con el mouse, y lo
   que dicen cambia noche a noche (la chapa con tu numero de turno, la foto del
   equipo a la que le van faltando personas).
@@ -131,7 +133,7 @@ Las tres primeras salen con codigo 0 si todo pasa. `content` es la red de
 seguridad para seguir agregando contenido: verifica que cada anomalia apunte
 a un objeto, puerta o luz que exista, que las cinco noches no nombren nada
 que no este, que toda tarea tenga como resolverse, que los registros esten
-colocados, y que aplicar las 33 anomalias juntas y revertirlas deje la
+colocados, y que aplicar las 61 anomalias juntas y revertirlas deje la
 estacion como estaba.
 
 ## Ritmo medido
@@ -141,14 +143,15 @@ a cada tarea, acelerado con `Engine.time_scale`, y reporta duracion,
 distancia y bateria. La ultima medicion:
 
 ```
-duracion         89 s  (1.5 min)
-distancia       155 m
-bateria usada    24 %
+duracion        100 s  (1.7 min)
+distancia       172 m
+bateria usada    26 %
 ```
 
-A eso se le suma lo que hay para encontrar: 33 anomalias repartidas entre las
-cinco noches y 20 registros de radio (casi 4 minutos de audio). Un jugador
-que explora tarda entre dos y tres veces el recorrido directo.
+A eso se le suma lo que hay para encontrar: 61 anomalias repartidas entre las
+cinco noches, 32 registros de radio (unos 7 minutos de audio) y objetos que
+cambian de texto noche a noche. Un jugador que explora tarda entre dos y tres
+veces el recorrido directo.
 
 Aun asi el total queda lejos: **alrededor de media hora de juego contra las
 2-3 horas que pide el diseno**. La diferencia es de contenido, no de ritmo, y
@@ -200,7 +203,7 @@ normal. La plantilla se genera con:
 godot --headless --path . res://tools/exportar_traduccion.tscn
 ```
 
-Eso escribe `localizacion/la-guardia.pot` con los 181 textos del juego (los de
+Eso escribe `localizacion/la-guardia.pot` con los 238 textos del juego (los de
 las tablas y los de la interfaz, cada uno con una nota de donde sale). Para
 agregar un idioma: copiar el `.pot` a `localizacion/en.po`, completar los
 `msgstr` y registrarlo en Proyecto > Configuracion > Localizacion.

@@ -89,6 +89,20 @@ func start_night(night: int) -> void:
 		var entry := AnomalyData.get_anomaly(String(id))
 		_armed.append({"id": String(id), "room": String(entry.get("sala", ""))})
 
+	# Ademas de las fijas, la noche saca unas cuantas del catalogo al azar:
+	# dos partidas no traen exactamente los mismos cambios.
+	var extra := int(data.get("anomalias_extra", 0))
+	if extra > 0:
+		var pool: Array = AnomalyData.ANOMALIES.keys()
+		pool.shuffle()
+		for id in pool:
+			if extra <= 0:
+				break
+			if _is_armed(String(id)):
+				continue
+			_armed.append({"id": String(id), "room": String(AnomalyData.get_anomaly(String(id)).get("sala", ""))})
+			extra -= 1
+
 	GameState.start_night(night)
 	player.teleport(StationBuilder.SPAWN, -PI * 0.5)
 	AudioDirector.set_dread(clampf((night - 1) / 4.0, 0.0, 1.0))
@@ -181,6 +195,13 @@ func restore_world(data: Dictionary) -> void:
 			station.pickups[i].taken = true
 			station.pickups[i].visible = false
 			station.pickups[i].enabled = false
+
+
+func _is_armed(id: String) -> bool:
+	for a in _armed:
+		if String(a.get("id", "")) == id:
+			return true
+	return false
 
 
 func _apply_world(world: Dictionary, night: int) -> void:

@@ -41,7 +41,11 @@ const NIGHTS := {
 			"wall_tint": Color(0.30, 0.32, 0.34),
 			"hidden": [],
 		},
-		"anomalias": ["control_taza"],
+		"anomalias": [
+			"control_taza",
+			"pasillo_extintor",
+		],
+		"anomalias_extra": 0,
 		"beats": {
 			"inicio": [
 				{"subtitulo": "Cuarto turno solo. Faltan cinco días.", "tiempo": 3.0},
@@ -67,9 +71,11 @@ const NIGHTS := {
 		},
 		"logbook": [
 			{"time": "23:04", "text": "Cuarto turno solo. Faltan cinco días para la evacuación."},
+			{"time": "23:20", "text": "Rutina de siempre: generadores, ronda, sensores, válvula."},
 		],
 		"logbook_end": [
 			{"time": "04:12", "text": "Ronda completa. Sin novedades que valga la pena anotar."},
+			{"time": "04:30", "text": "Dormí bien. Anoto esto porque las próximas noches no."},
 		],
 	},
 	2: {
@@ -92,7 +98,14 @@ const NIGHTS := {
 			"wall_tint": Color(0.29, 0.30, 0.33),
 			"hidden": [],
 		},
-		"anomalias": ["almacen_cajas", "gen_herramienta", "pasillo_locker_abierto"],
+		"anomalias": [
+			"almacen_cajas",
+			"gen_herramienta",
+			"pasillo_locker_abierto",
+			"control_reloj",
+			"dorm_cama_hecha",
+		],
+		"anomalias_extra": 2,
 		"beats": {
 			"inicio": [
 				{"subtitulo": "El almacén está abierto. Juraría que ayer estaba trabado.", "tiempo": 3.4},
@@ -125,10 +138,12 @@ const NIGHTS := {
 		},
 		"logbook": [
 			{"time": "22:51", "text": "El almacén está abierto. Juraría que ayer estaba trabado."},
+			{"time": "23:05", "text": "La banda 4 tendría que estar muerta y hay algo transmitiendo."},
 		],
 		"logbook_end": [
 			{"time": "03:38", "text": "Seguí una señal hasta el almacén."},
 			{"time": "03:44", "text": "No debí seguirla."},
+			{"time": "03:51", "text": "Dejé la grabadora andando por las dudas."},
 		],
 	},
 	3: {
@@ -152,7 +167,17 @@ const NIGHTS := {
 			"wall_tint": Color(0.27, 0.27, 0.30),
 			"hidden": ["traje_3"],
 		},
-		"anomalias": ["dorm_silla_mira_cama", "control_silla_al_pasillo", "gen_marca", "esclusa_traje_falta", "patio_huellas"],
+		"anomalias": [
+			"dorm_silla_mira_cama",
+			"control_silla_al_pasillo",
+			"gen_marca",
+			"esclusa_traje_falta",
+			"patio_huellas",
+			"pasillo_silla",
+			"control_bandeja",
+			"almacen_bolsa",
+		],
+		"anomalias_extra": 3,
 		"beats": {
 			"inicio": [
 				{"subtitulo": "El pasillo sigue más allá de donde terminaba.", "tiempo": 3.2},
@@ -186,6 +211,7 @@ const NIGHTS := {
 		},
 		"logbook": [
 			{"time": "23:19", "text": "El pasillo sur es más largo que ayer. Lo caminé dos veces para contarlo."},
+			{"time": "23:40", "text": "Conté los trajes: dos. Ayer había tres y no salió nadie."},
 		],
 		"logbook_end": [
 			{"time": "02:56", "text": "Bajé al B2."},
@@ -214,7 +240,20 @@ const NIGHTS := {
 			"wall_tint": Color(0.25, 0.25, 0.27),
 			"hidden": ["traje_2", "traje_3"],
 		},
-		"anomalias": ["dorm_bulto", "dorm_marca", "control_pizarra", "control_silla_falta", "gen_puerta", "almacen_cajas_faltan", "pasillo_marca"],
+		"anomalias": [
+			"dorm_bulto",
+			"dorm_marca",
+			"control_pizarra",
+			"control_silla_falta",
+			"gen_puerta",
+			"almacen_cajas_faltan",
+			"pasillo_marca",
+			"dorm_pisadas",
+			"esclusa_marca",
+			"pasillo_camilla_falta",
+			"gen_traba_falta",
+		],
+		"anomalias_extra": 3,
 		"beats": {
 			"inicio": [
 				{"subtitulo": "Hoy el B2 no está. El mapa dice que nunca estuvo.", "tiempo": 3.4},
@@ -252,10 +291,12 @@ const NIGHTS := {
 		},
 		"logbook": [
 			{"time": "00:02", "text": "Hoy el B2 no está. El mapa dice que nunca estuvo."},
+			{"time": "00:25", "text": "Comparé mi letra con la de las entradas viejas. Es la misma."},
 		],
 		"logbook_end": [
 			{"time": "04:30", "text": "Revisé las tres firmas de la bitácora."},
 			{"time": "04:31", "text": "Las tres son mías."},
+			{"time": "04:48", "text": "Voy a dejar de anotar la hora. No me está sirviendo."},
 		],
 	},
 	5: {
@@ -278,7 +319,23 @@ const NIGHTS := {
 			"wall_tint": Color(0.23, 0.22, 0.24),
 			"hidden": ["traje_1", "traje_2", "traje_3"],
 		},
-		"anomalias": ["dorm_silla_doble", "dorm_oscuro", "control_oscuro", "gen_banco_vacio", "almacen_pila_extra", "esclusa_traje_extra", "patio_figura", "patio_tambor"],
+		"anomalias": [
+			"dorm_silla_doble",
+			"dorm_oscuro",
+			"control_oscuro",
+			"gen_banco_vacio",
+			"almacen_pila_extra",
+			"esclusa_traje_extra",
+			"patio_figura",
+			"patio_tambor",
+			"control_marca",
+			"esclusa_traje_suelo",
+			"patio_huellas_entran",
+			"dorm_linterna",
+			"pasillo_oscuro",
+			"patio_bandera",
+		],
+		"anomalias_extra": 4,
 		"beats": {
 			"inicio": [
 				{"subtitulo": "Última guardia. Mañana a esta hora esto es hielo vacío.", "tiempo": 3.4},
@@ -302,9 +359,11 @@ const NIGHTS := {
 		},
 		"logbook": [
 			{"time": "21:40", "text": "Última guardia. Mañana a esta hora esto es hielo vacío."},
+			{"time": "22:10", "text": "Dejé el inventario final sobre la mesa de control. Faltan cosas que no saqué yo."},
 		],
 		"logbook_end": [
 			{"time": "05:50", "text": "Escucho el motor."},
+			{"time": "05:54", "text": "Voy a salir igual. Sea lo que sea que salga conmigo."},
 		],
 	},
 }
@@ -517,6 +576,126 @@ const RADIO_LOGS := {
 			"[la cinta está en blanco los primeros treinta segundos]",
 			"...está bien. Si te quedás, cerrá desde adentro.",
 			"Si te vas, no mires el patio por la ventanilla.",
+		],
+	},
+	"rl_21": {
+		"label": "REG-011 / Meteorología",
+		"night": 1,
+		"pos": Vector3(-8.4, 1.2, -10.0),
+		"lines": [
+			"Parte de las veintidós. Viento del sudeste, treinta y ocho nudos.",
+			"La estación está dentro de parámetros. Todo normal.",
+			"Anoto igual que el anemómetro marcó cero durante once minutos y nadie lo tocó.",
+		],
+	},
+	"rl_22": {
+		"label": "REG-013 / Sin firmar",
+		"night": 1,
+		"pos": Vector3(8.8, 1.9, -3.0),
+		"lines": [
+			"Prueba de grabadora. Uno, dos.",
+			"Si esto quedó grabando toda la noche, borrenlo sin escucharlo.",
+			"En serio.",
+		],
+	},
+	"rl_23": {
+		"label": "REG-018 / Jefe de base",
+		"night": 2,
+		"pos": Vector3(-5.5, 1.0, -13.5),
+		"lines": [
+			"Decisión tomada: la estación cierra al final de la temporada.",
+			"El personal sale en dos tandas. Queda una guardia hasta el retiro.",
+			"Se ofrecieron cuatro. Elegí al que menos preguntas hizo.",
+		],
+	},
+	"rl_24": {
+		"label": "REG-024 / Cocina",
+		"night": 2,
+		"pos": Vector3(4.0, 0.9, -1.0),
+		"lines": [
+			"Segunda semana cocinando para uno.",
+			"Sigo poniendo dos platos. Es costumbre, supongo.",
+			"El segundo plato aparece usado. Eso no es costumbre.",
+		],
+	},
+	"rl_25": {
+		"label": "REG-026 / Mantenimiento",
+		"night": 2,
+		"pos": Vector3(1.28, 1.5, -9.0),
+		"lines": [
+			"La puerta del generador no cierra sola. Alguien la abre.",
+			"Puse una traba nueva el lunes.",
+			"El martes la traba estaba puesta y la puerta abierta igual.",
+		],
+	},
+	"rl_26": {
+		"label": "REG-029 / Radiooperador",
+		"night": 3,
+		"pos": Vector3(-1.2, 0.5, -17.5),
+		"lines": [
+			"Grabé la portadora de la banda cuatro y la pasé lenta.",
+			"Adentro hay una voz repitiendo el parte meteorológico.",
+			"Es el parte de mañana.",
+		],
+	},
+	"rl_27": {
+		"label": "REG-032 / Nivel B2",
+		"night": 3,
+		"pos": Vector3(-3.0, -0.5, -26.5),
+		"lines": [
+			"Tercera prueba. Bajamos tres y subimos tres.",
+			"Nadie discute el número mientras estamos abajo.",
+			"Arriba, cada uno se acuerda de una persona distinta que no vino.",
+		],
+	},
+	"rl_28": {
+		"label": "REG-036 / Sin firmar",
+		"night": 3,
+		"pos": Vector3(10.0, 1.2, 14.0),
+		"lines": [
+			"El perímetro está bien. Los tres puntos marcados.",
+			"Hay un cuarto juego de huellas que da la vuelta completa.",
+			"Yo marqué tres puntos. Las huellas pasan por cuatro.",
+		],
+	},
+	"rl_29": {
+		"label": "REG-043 / Tu voz",
+		"night": 4,
+		"pos": Vector3(-1.4, 1.2, -6.5),
+		"lines": [
+			"Dejé la grabadora en el pasillo toda la noche, apuntando a mi pieza.",
+			"Se escuchan mis pasos saliendo a las dos y cuarto.",
+			"No se escuchan volviendo.",
+		],
+	},
+	"rl_30": {
+		"label": "REG-046 / Enfermería",
+		"night": 4,
+		"pos": Vector3(1.1, 0.9, 0.9),
+		"lines": [
+			"Al que esté de guardia: si te despertás en un lugar que no elegiste, no corras.",
+			"Sentate donde estás y esperá a que amanezca.",
+			"Los que corrieron tardaron más en volver.",
+		],
+	},
+	"rl_31": {
+		"label": "REG-049 / Jefe de base",
+		"night": 5,
+		"pos": Vector3(-9.6, 0.9, 22.6),
+		"lines": [
+			"Última entrada antes de salir con la primera tanda.",
+			"Dejamos la estación en condiciones y la guardia cubierta.",
+			"Que conste que el nombre de la guardia lo completé yo, y estaba en blanco.",
+		],
+	},
+	"rl_32": {
+		"label": "REG-053 / Sin firmar",
+		"night": 5,
+		"pos": Vector3(8.0, 0.9, 18.0),
+		"lines": [
+			"El vehículo llega con luz. Van a preguntar por el personal.",
+			"Decí que sos el de la guardia y mostrá la chapa.",
+			"Si la chapa dice otro número, no la muestres.",
 		],
 	},
 }

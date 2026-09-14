@@ -57,16 +57,32 @@ msgstr ""
 msgid "Abrí la puerta del generador."
 msgstr ""
 
+#. registro rl_26
+msgid "Adentro hay una voz repitiendo el parte meteorológico."
+msgstr ""
+
 #. registro rl_10
 msgid "Afuera no salió nadie. El registro de la esclusa está en cero."
+msgstr ""
+
+#. registro rl_30
+msgid "Al que esté de guardia: si te despertás en un lugar que no elegiste, no corras."
 msgstr ""
 
 #. registro rl_16
 msgid "Al que venga después: la estación no te hace nada."
 msgstr ""
 
+#. registro rl_21
+msgid "Anoto igual que el anemómetro marcó cero durante once minutos y nadie lo tocó."
+msgstr ""
+
 #. registro rl_14
 msgid "Anoté todo lo que hice hoy, minuto por minuto."
+msgstr ""
+
+#. registro rl_27
+msgid "Arriba, cada uno se acuerda de una persona distinta que no vino."
 msgstr ""
 
 #. scripts/ui/logbook_ui.gd
@@ -113,6 +129,10 @@ msgstr ""
 msgid "Cinco personas frente a la esclusa, con los ojos cerrados por el viento."
 msgstr ""
 
+#. noche 4 / bitácora
+msgid "Comparé mi letra con la de las entradas viejas. Es la misma."
+msgstr ""
+
 #. noche 3 / tarea, noche 4 / tarea
 msgid "Contar los trajes de la esclusa"
 msgstr ""
@@ -127,6 +147,10 @@ msgstr ""
 
 #. noche 4 / beat trajes
 msgid "Conté los trajes otra vez. El número no coincide con ayer."
+msgstr ""
+
+#. noche 3 / bitácora
+msgid "Conté los trajes: dos. Ayer había tres y no salió nadie."
 msgstr ""
 
 #. registro rl_08
@@ -149,6 +173,18 @@ msgstr ""
 msgid "Decidir: esperar el vehículo en el patio o quedarte abajo"
 msgstr ""
 
+#. registro rl_23
+msgid "Decisión tomada: la estación cierra al final de la temporada."
+msgstr ""
+
+#. registro rl_32
+msgid "Decí que sos el de la guardia y mostrá la chapa."
+msgstr ""
+
+#. registro rl_31
+msgid "Dejamos la estación en condiciones y la guardia cubierta."
+msgstr ""
+
 #. noche 5 / tarea
 msgid "Dejar los generadores en modo de cierre"
 msgstr ""
@@ -161,12 +197,28 @@ msgstr ""
 msgid "Dejé de trabarla. Prefiero verla abierta que encontrarla así."
 msgstr ""
 
+#. noche 5 / bitácora
+msgid "Dejé el inventario final sobre la mesa de control. Faltan cosas que no saqué yo."
+msgstr ""
+
+#. noche 2 / bitácora
+msgid "Dejé la grabadora andando por las dudas."
+msgstr ""
+
+#. registro rl_29
+msgid "Dejé la grabadora en el pasillo toda la noche, apuntando a mi pieza."
+msgstr ""
+
 #. registro rl_10
 msgid "Dejé los trajes contados antes de dormir. Eran cuatro."
 msgstr ""
 
 #. registro rl_14
 msgid "Después comparé con la bitácora."
+msgstr ""
+
+#. noche 1 / bitácora
+msgid "Dormí bien. Anoto esto porque las próximas noches no."
 msgstr ""
 
 #. scripts/ui/pause_menu.gd
@@ -201,6 +253,10 @@ msgstr ""
 msgid "El mapa suma un SUBNIVEL B2 que no está en los planos."
 msgstr ""
 
+#. registro rl_25
+msgid "El martes la traba estaba puesta y la puerta abierta igual."
+msgstr ""
+
 #. objeto placa
 msgid "El nombre está frotado hasta casi borrarse. El número dice 16."
 msgstr ""
@@ -225,8 +281,32 @@ msgstr ""
 msgid "El pasillo sur no está en los planos porque lo hicimos nosotros."
 msgstr ""
 
+#. registro rl_23
+msgid "El personal sale en dos tandas. Queda una guardia hasta el retiro."
+msgstr ""
+
+#. registro rl_28
+msgid "El perímetro está bien. Los tres puntos marcados."
+msgstr ""
+
+#. registro rl_24
+msgid "El segundo plato aparece usado. Eso no es costumbre."
+msgstr ""
+
 #. noche 5 / beat subnivel
 msgid "El vehículo llega al amanecer. Hay que decidir."
+msgstr ""
+
+#. registro rl_32
+msgid "El vehículo llega con luz. Van a preguntar por el personal."
+msgstr ""
+
+#. registro rl_22
+msgid "En serio."
+msgstr ""
+
+#. registro rl_26
+msgid "Es el parte de mañana."
 msgstr ""
 
 #. noche 3 / beat subnivel
@@ -257,6 +337,10 @@ msgstr ""
 msgid "Foto del equipo"
 msgstr ""
 
+#. registro rl_26
+msgid "Grabé la portadora de la banda cuatro y la pasé lenta."
+msgstr ""
+
 #. noche 1 / tarea
 msgid "Hacer la ronda exterior"
 msgstr ""
@@ -275,6 +359,10 @@ msgstr ""
 
 #. registro rl_09
 msgid "Hay ocho kilovatios que se van a algún lado que no figura en el plano."
+msgstr ""
+
+#. registro rl_28
+msgid "Hay un cuarto juego de huellas que da la vuelta completa."
 msgstr ""
 
 #. registro rl_08
@@ -309,6 +397,10 @@ msgstr ""
 msgid "La antena engancha al vehículo. Está a dos horas."
 msgstr ""
 
+#. noche 2 / bitácora
+msgid "La banda 4 tendría que estar muerta y hay algo transmitiendo."
+msgstr ""
+
 #. registro rl_08
 msgid "La banda cuatro tendría que estar muerta desde que se fue el equipo."
 msgstr ""
@@ -317,8 +409,16 @@ msgstr ""
 msgid "La cavidad tiene la forma del pasillo que estamos parados."
 msgstr ""
 
+#. registro rl_21
+msgid "La estación está dentro de parámetros. Todo normal."
+msgstr ""
+
 #. registro rl_03
 msgid "La grabación figura hecha hoy, a las 23:47."
+msgstr ""
+
+#. registro rl_25
+msgid "La puerta del generador no cierra sola. Alguien la abre."
 msgstr ""
 
 #. noche 2 / beat radio_unknown
@@ -361,6 +461,10 @@ msgstr ""
 msgid "Lo raro es que el consumo del mes pasado da para dos."
 msgstr ""
 
+#. registro rl_30
+msgid "Los que corrieron tardaron más en volver."
+msgstr ""
+
 #. noche 1
 msgid "NOCHE 1"
 msgstr ""
@@ -379,6 +483,10 @@ msgstr ""
 
 #. noche 5
 msgid "NOCHE 5"
+msgstr ""
+
+#. registro rl_27
+msgid "Nadie discute el número mientras estamos abajo."
 msgstr ""
 
 #. registro rl_06
@@ -409,6 +517,10 @@ msgstr ""
 msgid "No pasó tiempo acá abajo. Arriba pasaron seis horas."
 msgstr ""
 
+#. registro rl_29
+msgid "No se escuchan volviendo."
+msgstr ""
+
 #. noche 4 / beat sensors
 msgid "OCUPACIÓN REGISTRADA: 0 personas."
 msgstr ""
@@ -427,6 +539,10 @@ msgstr ""
 
 #. scripts/ui/menu.gd
 msgid "PARTIDAS"
+msgstr ""
+
+#. registro rl_21
+msgid "Parte de las veintidós. Viento del sudeste, treinta y ocho nudos."
 msgstr ""
 
 #. registro rl_09
@@ -453,12 +569,24 @@ msgstr ""
 msgid "Prueba de eco en el subnivel. Día doscientos once."
 msgstr ""
 
+#. registro rl_22
+msgid "Prueba de grabadora. Uno, dos."
+msgstr ""
+
 #. noche 1 / tarea
 msgid "Purgar la válvula del almacén"
 msgstr ""
 
+#. registro rl_25
+msgid "Puse una traba nueva el lunes."
+msgstr ""
+
 #. noche 4
 msgid "Pérdida de confianza"
+msgstr ""
+
+#. registro rl_31
+msgid "Que conste que el nombre de la guardia lo completé yo, y estaba en blanco."
 msgstr ""
 
 #. registro rl_01
@@ -469,12 +597,24 @@ msgstr ""
 msgid "REG-009 / Enfermería"
 msgstr ""
 
+#. registro rl_21
+msgid "REG-011 / Meteorología"
+msgstr ""
+
+#. registro rl_22
+msgid "REG-013 / Sin firmar"
+msgstr ""
+
 #. registro rl_01
 msgid "REG-014 / Jefe de base"
 msgstr ""
 
 #. registro rl_07
 msgid "REG-016 / Cocina"
+msgstr ""
+
+#. registro rl_23
+msgid "REG-018 / Jefe de base"
 msgstr ""
 
 #. registro rl_02
@@ -485,12 +625,24 @@ msgstr ""
 msgid "REG-023 / Radiooperador"
 msgstr ""
 
+#. registro rl_24
+msgid "REG-024 / Cocina"
+msgstr ""
+
 #. registro rl_09
 msgid "REG-025 / Mantenimiento"
 msgstr ""
 
+#. registro rl_25
+msgid "REG-026 / Mantenimiento"
+msgstr ""
+
 #. registro rl_10
 msgid "REG-027 / Sin firmar"
+msgstr ""
+
+#. registro rl_26
+msgid "REG-029 / Radiooperador"
 msgstr ""
 
 #. registro rl_04
@@ -501,12 +653,20 @@ msgstr ""
 msgid "REG-031 / Nivel B2"
 msgstr ""
 
+#. registro rl_27
+msgid "REG-032 / Nivel B2"
+msgstr ""
+
 #. registro rl_12
 msgid "REG-033 / Sin firmar"
 msgstr ""
 
 #. registro rl_13
 msgid "REG-034 / Glaciología"
+msgstr ""
+
+#. registro rl_28
+msgid "REG-036 / Sin firmar"
 msgstr ""
 
 #. registro rl_05
@@ -517,6 +677,10 @@ msgstr ""
 msgid "REG-042 / Tu voz"
 msgstr ""
 
+#. registro rl_29
+msgid "REG-043 / Tu voz"
+msgstr ""
+
 #. registro rl_15
 msgid "REG-044 / Tu voz"
 msgstr ""
@@ -525,8 +689,16 @@ msgstr ""
 msgid "REG-045 / Sin firmar"
 msgstr ""
 
+#. registro rl_30
+msgid "REG-046 / Enfermería"
+msgstr ""
+
 #. registro rl_17
 msgid "REG-048 / Continente"
+msgstr ""
+
+#. registro rl_31
+msgid "REG-049 / Jefe de base"
 msgstr ""
 
 #. registro rl_18
@@ -539,6 +711,10 @@ msgstr ""
 
 #. registro rl_20
 msgid "REG-052 / Sin firmar"
+msgstr ""
+
+#. registro rl_32
+msgid "REG-053 / Sin firmar"
 msgstr ""
 
 #. registro rl_03
@@ -585,16 +761,40 @@ msgstr ""
 msgid "Rutina"
 msgstr ""
 
+#. noche 1 / bitácora
+msgid "Rutina de siempre: generadores, ronda, sensores, válvula."
+msgstr ""
+
+#. registro rl_29
+msgid "Se escuchan mis pasos saliendo a las dos y cuarto."
+msgstr ""
+
+#. registro rl_23
+msgid "Se ofrecieron cuatro. Elegí al que menos preguntas hizo."
+msgstr ""
+
 #. registro rl_11
 msgid "Segunda prueba. Entramos dos, salimos dos."
+msgstr ""
+
+#. registro rl_24
+msgid "Segunda semana cocinando para uno."
 msgstr ""
 
 #. noche 2 / bitácora
 msgid "Seguí una señal hasta el almacén."
 msgstr ""
 
+#. registro rl_30
+msgid "Sentate donde estás y esperá a que amanezca."
+msgstr ""
+
 #. registro rl_01
 msgid "Si escuchan esto en el inventario final: el generador B pierde presión. No lo fuercen."
+msgstr ""
+
+#. registro rl_22
+msgid "Si esto quedó grabando toda la noche, borrenlo sin escucharlo."
 msgstr ""
 
 #. registro rl_19
@@ -605,8 +805,16 @@ msgstr ""
 msgid "Si estás escuchando esto, ya hiciste la ronda tres veces esta noche."
 msgstr ""
 
+#. registro rl_32
+msgid "Si la chapa dice otro número, no la muestres."
+msgstr ""
+
 #. registro rl_20
 msgid "Si te vas, no mires el patio por la ventanilla."
+msgstr ""
+
+#. registro rl_24
+msgid "Sigo poniendo dos platos. Es costumbre, supongo."
 msgstr ""
 
 #. registro rl_03
@@ -627,6 +835,10 @@ msgstr ""
 
 #. objeto taza
 msgid "Taza"
+msgstr ""
+
+#. registro rl_27
+msgid "Tercera prueba. Bajamos tres y subimos tres."
 msgstr ""
 
 #. objeto traba
@@ -681,6 +893,18 @@ msgstr ""
 msgid "Vos hacés cosas y después no te acordás. Es distinto y es peor."
 msgstr ""
 
+#. noche 4 / bitácora
+msgid "Voy a dejar de anotar la hora. No me está sirviendo."
+msgstr ""
+
+#. noche 5 / bitácora
+msgid "Voy a salir igual. Sea lo que sea que salga conmigo."
+msgstr ""
+
+#. registro rl_28
+msgid "Yo marqué tres puntos. Las huellas pasan por cuatro."
+msgstr ""
+
 #. registro rl_02
 msgid "Yo soy el único que hace la ronda."
 msgstr ""
@@ -719,6 +943,10 @@ msgstr ""
 
 #. noche 4 / beat logbook_check
 msgid "Él todavía no sabe que fui yo."
+msgstr ""
+
+#. registro rl_31
+msgid "Última entrada antes de salir con la primera tanda."
 msgstr ""
 
 #. registro rl_18

@@ -99,7 +99,7 @@ func _build_corridor() -> void:
 	# Lockers contra la pared.
 	Build.box(self, "Lockers", Vector3(0.45, 1.9, 2.4), Vector3(-1.2, 0.95, -7.0), _mat_metal)
 	objects["camilla"] = Build.box(self, "Camilla", Vector3(0.7, 0.7, 2.0), Vector3(1.1, 0.35, 0.5), _mat_metal)
-	Build.box(self, "Extintor", Vector3(0.22, 0.6, 0.22), Vector3(1.28, 1.1, -9.0), Build.surface(Color(0.45, 0.16, 0.12)))
+	objects["extintor"] = Build.box(self, "Extintor", Vector3(0.22, 0.6, 0.22), Vector3(1.28, 1.1, -9.0), Build.surface(Color(0.45, 0.16, 0.12)))
 	Build.label3d(self, "NIVEL 1  ->  ESCLUSA", Vector3(-1.35, 2.3, -6.0), PI * 0.5, 0.22)
 	Build.label3d(self, "<-  B2", Vector3(1.35, 2.3, -14.5), -PI * 0.5, 0.22, Color(0.5, 0.52, 0.55))
 
@@ -216,7 +216,7 @@ func _build_storage() -> void:
 	_add_door("almacen", Vector3(1.5, 0.0, -2.5 - Build.DOOR_W * 0.5), -PI * 0.5, Build.DOOR_W)
 
 	Build.box(self, "Estante1", Vector3(0.6, 2.2, 3.0), Vector3(8.8, 1.1, -3.0), _mat_metal)
-	Build.box(self, "Estante2", Vector3(2.6, 2.0, 0.5), Vector3(5.0, 1.0, -4.6), _mat_metal)
+	objects["estante_2"] = Build.box(self, "Estante2", Vector3(2.6, 2.0, 0.5), Vector3(5.0, 1.0, -4.6), _mat_metal)
 	objects["cajas"] = Build.box(self, "Cajas", Vector3(1.2, 1.2, 1.2), Vector3(6.5, 0.6, -1.4), Build.surface(Color(0.35, 0.30, 0.22)))
 	_add_battery("PilaAlmacen", Vector3(5.0, 2.1, -4.6))
 
@@ -502,6 +502,7 @@ func _build_inspectables() -> void:
 		item.setup_box(spec.get("size", Vector3(0.1, 0.1, 0.1)),
 			Build.surface(spec.get("color", Color(0.5, 0.5, 0.5))))
 		points["ver_%s" % id] = item
+		objects[String(id)] = item
 
 
 func _add_battery(name: String, pos: Vector3) -> BatteryPickup:
