@@ -1,0 +1,199 @@
+extends Node
+## Audio sintetizado en runtime: el juego no depende de ningun asset externo.
+## El viento es un generador continuo; los golpes, pasos y crujidos son
+## pequenos WAV generados al arrancar.
+
+const RATE := 22050.0
+
+var _cues := {}
+var _wind: AudioStreamPlayer
+var _wind_playback: AudioStreamGeneratorPlayback
+var _wind_phase := 0.0
+var _wind_lp := 0.0
+var _gust := 0.35
+var _gust_target := 0.35
+var _creak_timer := 9.0
+var _dread := 0.0
+var _rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	_rng.randomize()
+	_build_cues()
+	_start_wind()
+
+
+func _build_cues() -> void:
+	_cues["step"] = _wav(_noise_hit(0.13, 0.35, 0.55))
+	_cues["click"] = _wav(_noise_hit(0.05, 0.25, 1.0))
+	_cues["door"] = _wav(_creak_sound(1.0, 120.0, 260.0))
+	_cues["door_locked"] = _wav(_clunk())
+	_cues["task"] = _wav(_beeps([660.0, 880.0], 0.09))
+	_cues["panel"] = _wav(_beeps([440.0], 0.12))
+	_cues["pickup"] = _wav(_beeps([880.0], 0.07))
+	_cues["creak"] = _wav(_creak_sound(1.8, 55.0, 95.0))
+	_cues["radio_on"] = _wav(_noise_hit(0.35, 0.4, 0.9))
+	_cues["hiss"] = _wav(_noise_loop(1.0), true)
+
+
+func _wav(samples: PackedFloat32Array, loop := false) -> AudioStreamWAV:
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = int(RATE)
+	stream.stereo = false
+	var bytes := PackedByteArray()
+	bytes.resize(samples.size() * 2)
+	for i in samples.size():
+		var v := int(clampf(samples[i], -1.0, 1.0) * 32000.0)
+		bytes.encode_s16(i * 2, v)
+	stream.data = bytes
+	if loop:
+		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		stream.loop_begin = 0
+		stream.loop_end = samples.size()
+	return stream
+
+
+func _noise_hit(dur: float, cutoff: float, sharpness: float) -> PackedFloat32Array:
+	var n := int(RATE * dur)
+	var out := PackedFloat32Array()
+	out.resize(n)
+	var lp := 0.0
+	for i in n:
+		var t := float(i) / n
+		lp += (_rng.randf_range(-1.0, 1.0) - lp) * cutoff
+		out[i] = lp * pow(1.0 - t, 2.0 + sharpness * 3.0)
+	return out
+
+
+func _noise_loop(dur: float) -> PackedFloat32Array:
+	var n := int(RATE * dur)
+	var out := PackedFloat32Array()
+	out.resize(n)
+	var lp := 0.0
+	for i in n:
+		lp += (_rng.randf_range(-1.0, 1.0) - lp) * 0.5
+		out[i] = lp * 0.35
+	return out
+
+
+func _creak_sound(dur: float, f0: float, f1: float) -> PackedFloat32Array:
+	var n := int(RATE * dur)
+	var out := PackedFloat32Array()
+	out.resize(n)
+	var phase := 0.0
+	for i in n:
+		var t := float(i) / n
+		var freq: float = lerpf(f0, f1, t * t)
+		phase += TAU * freq / RATE
+		var wobble := sin(t * 40.0) * 0.35
+		var env := sin(PI * t)
+		out[i] = (sin(phase) * 0.5 + _rng.randf_range(-1.0, 1.0) * 0.12) * env * (0.7 + wobble * 0.3)
+	return out
+
+
+func _clunk() -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	out.append_array(_noise_hit(0.09, 0.2, 1.2))
+	out.append_array(_silence(0.06))
+	out.append_array(_noise_hit(0.09, 0.2, 1.2))
+	return out
+
+
+func _beeps(freqs: Array, dur: float) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	for f in freqs:
+		var n := int(RATE * dur)
+		var part := PackedFloat32Array()
+		part.resize(n)
+		for i in n:
+			var t := float(i) / n
+			part[i] = sin(TAU * float(f) * float(i) / RATE) * sin(PI * t) * 0.5
+		out.append_array(part)
+	return out
+
+
+func _silence(dur: float) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	out.resize(int(RATE * dur))
+	out.fill(0.0)
+	return out
+
+
+func _start_wind() -> void:
+	var gen := AudioStreamGenerator.new()
+	gen.mix_rate = RATE
+	gen.buffer_length = 0.35
+	_wind = AudioStreamPlayer.new()
+	_wind.name = "Viento"
+	_wind.stream = gen
+	_wind.volume_db = -12.0
+	add_child(_wind)
+	_wind.play()
+	_wind_playback = _wind.get_stream_playback() as AudioStreamGeneratorPlayback
+
+
+func _process(delta: float) -> void:
+	_fill_wind()
+	_ambient_creaks(delta)
+
+
+func _fill_wind() -> void:
+	if _wind_playback == null:
+		return
+	var frames := _wind_playback.get_frames_available()
+	if frames <= 0:
+		return
+	for i in frames:
+		if _rng.randf() < 0.00004:
+			_gust_target = _rng.randf_range(0.15, 1.0)
+		_gust = lerpf(_gust, _gust_target, 0.00008)
+		_wind_lp += (_rng.randf_range(-1.0, 1.0) - _wind_lp) * 0.045
+		_wind_phase += 0.00013
+		var body := _wind_lp * (0.45 + _gust * 0.55)
+		var whistle := sin(_wind_phase * TAU * 40.0) * 0.03 * _gust
+		var s := clampf(body + whistle, -1.0, 1.0) * (0.55 + _dread * 0.4)
+		_wind_playback.push_frame(Vector2(s, s))
+
+
+func _ambient_creaks(delta: float) -> void:
+	_creak_timer -= delta * (1.0 + _dread)
+	if _creak_timer <= 0.0:
+		_creak_timer = _rng.randf_range(14.0, 38.0)
+		play_cue("creak", Vector3.ZERO, -18.0)
+
+
+func set_dread(value: float) -> void:
+	_dread = clampf(value, 0.0, 1.0)
+
+
+func play_cue(id: String, pos: Vector3, volume_db := -6.0) -> void:
+	if not _cues.has(id):
+		return
+	var p := AudioStreamPlayer3D.new()
+	p.stream = _cues[id]
+	p.unit_size = 6.0
+	p.max_distance = 30.0
+	p.volume_db = volume_db
+	p.position = pos
+	add_child(p)
+	p.play()
+	p.finished.connect(p.queue_free)
+
+
+func start_hiss(pos: Vector3) -> AudioStreamPlayer3D:
+	var p := AudioStreamPlayer3D.new()
+	p.stream = _cues["hiss"]
+	p.unit_size = 5.0
+	p.max_distance = 18.0
+	p.volume_db = -14.0
+	p.position = pos
+	add_child(p)
+	p.play()
+	return p
+
+
+func stop_hiss(p: AudioStreamPlayer3D) -> void:
+	if is_instance_valid(p):
+		p.stop()
+		p.queue_free()

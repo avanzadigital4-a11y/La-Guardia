@@ -1,0 +1,147 @@
+extends Node3D
+## Punto de entrada: arma el mundo, la interfaz y el post-proceso, y le pasa
+## el control al NightDirector.
+
+const PLAYER_SCENE := preload("res://scenes/player.tscn")
+
+var station: StationBuilder
+var player: Player
+var director: NightDirector
+var hud: CanvasLayer
+var logbook_ui: CanvasLayer
+var sensor_ui: CanvasLayer
+var fade: CanvasLayer
+var world_env: WorldEnvironment
+var post_material: ShaderMaterial
+
+
+func _ready() -> void:
+	_setup_environment()
+	_setup_station()
+	_setup_player()
+	_setup_ui()
+	_setup_post_process()
+
+	director = NightDirector.new()
+	director.name = "NightDirector"
+	add_child(director)
+	director.setup(station, player, fade, world_env)
+	director.start_night(GameState.current_night)
+	if "--capture" in OS.get_cmdline_user_args():
+		_capture_debug()
+
+
+func _setup_environment() -> void:
+	var e := Environment.new()
+	e.background_mode = Environment.BG_COLOR
+	e.background_color = Color(0.02, 0.025, 0.03)
+	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	e.ambient_light_color = Color(0.16, 0.18, 0.22)
+	e.ambient_light_energy = 0.55
+	e.fog_enabled = true
+	e.fog_light_color = Color(0.10, 0.11, 0.13)
+	e.fog_density = 0.04
+	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	world_env = WorldEnvironment.new()
+	world_env.name = "Entorno"
+	world_env.environment = e
+	add_child(world_env)
+
+
+func _setup_station() -> void:
+	station = StationBuilder.new()
+	station.name = "Estacion"
+	add_child(station)
+	station.build(Color(0.30, 0.32, 0.34))
+
+
+func _setup_player() -> void:
+	player = PLAYER_SCENE.instantiate()
+	add_child(player)
+	player.global_position = StationBuilder.SPAWN
+
+
+func _setup_ui() -> void:
+	hud = _add_layer("HUD", "res://scripts/ui/hud.gd")
+	logbook_ui = _add_layer("Bitacora", "res://scripts/ui/logbook_ui.gd")
+	sensor_ui = _add_layer("PanelSensores", "res://scripts/ui/sensor_ui.gd")
+	fade = _add_layer("Fundido", "res://scripts/ui/screen_fade.gd")
+
+
+func _add_layer(name: String, script_path: String) -> CanvasLayer:
+	var layer := CanvasLayer.new()
+	layer.name = name
+	layer.set_script(load(script_path))
+	add_child(layer)
+	return layer
+
+
+func _setup_post_process() -> void:
+	var shader := load("res://shaders/ps1_post.gdshader") as Shader
+	if shader == null:
+		return
+	var layer := CanvasLayer.new()
+	layer.name = "PostProceso"
+	layer.layer = 5
+	add_child(layer)
+
+	var copy := BackBufferCopy.new()
+	copy.copy_mode = BackBufferCopy.COPY_MODE_VIEWPORT
+	layer.add_child(copy)
+
+	post_material = ShaderMaterial.new()
+	post_material.shader = shader
+	post_material.set_shader_parameter("time_seed", randf() * 100.0)
+
+	var rect := ColorRect.new()
+	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.material = post_material
+	layer.add_child(rect)
+
+	GameState.night_started.connect(_on_night_started_post)
+
+
+func _on_night_started_post(night: int) -> void:
+	if post_material:
+		post_material.set_shader_parameter("dread", clampf((night - 1) / 4.0, 0.0, 1.0))
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("logbook"):
+		if sensor_ui.is_open:
+			sensor_ui.close()
+		logbook_ui.toggle()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("pause") or event.is_action_pressed("interact"):
+		if sensor_ui.is_open:
+			sensor_ui.close()
+			get_viewport().set_input_as_handled()
+		elif logbook_ui.is_open:
+			logbook_ui.close()
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("pause"):
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			get_viewport().set_input_as_handled()
+
+
+## Herramienta de desarrollo: corre el juego con  -- --capture  y guarda una
+## captura de cada ambiente en user:// para revisar la estetica sin jugar.
+func _capture_debug() -> void:
+	var views := [
+		[Vector3(-6.0, 0.1, -2.5), -PI * 0.5, "dorm"],
+		[Vector3(0.0, 0.1, -6.0), PI, "pasillo"],
+		[Vector3(0.0, 0.1, -6.0), 0.0, "pasillo_sur"],
+		[Vector3(-5.0, 0.1, -11.0), -PI * 0.5, "control"],
+		[Vector3(5.0, 0.1, -9.0), PI * 0.5, "generador"],
+		[Vector3(0.0, 0.1, 13.0), PI, "patio"],
+	]
+	await get_tree().create_timer(6.0).timeout
+	for v in views:
+		player.teleport(v[0], v[1])
+		await get_tree().create_timer(0.4).timeout
+		for i in 3:
+			await RenderingServer.frame_post_draw
+		var img := get_viewport().get_texture().get_image()
+		img.save_png("user://shot_%s.png" % v[2])
+	print("Capturas guardadas en %s" % ProjectSettings.globalize_path("user://"))

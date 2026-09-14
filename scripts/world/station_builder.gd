@@ -1,0 +1,323 @@
+class_name StationBuilder
+extends Node3D
+## Construye la estacion completa por codigo, a partir de una tabla de salas.
+## Es UNA sola escena base: las noches no agregan geometria nueva, solo
+## encienden o apagan tramos y cambian materiales.
+
+const ROOMS := {
+	"pasillo": Rect2(-1.5, -16.0, 3.0, 23.0),
+	"sala de control": Rect2(-9.5, -14.0, 8.0, 6.0),
+	"sala de generador": Rect2(1.5, -14.0, 8.0, 6.0),
+	"dormitorio": Rect2(-9.5, -5.0, 8.0, 5.0),
+	"almacen": Rect2(1.5, -5.0, 8.0, 5.0),
+	"esclusa": Rect2(-3.0, 7.0, 6.0, 4.0),
+	"patio": Rect2(-14.0, 11.0, 28.0, 16.0),
+	"pasillo sur": Rect2(-1.5, -24.0, 3.0, 8.0),
+	"subnivel": Rect2(-4.0, -31.0, 8.0, 7.0),
+}
+
+const SPAWN := Vector3(-6.0, 0.1, -2.5)
+
+var doors := {}
+var props := {}
+var points := {}
+var watchers := {}
+var lights: Array[OmniLight3D] = []
+var wall_meshes: Array[MeshInstance3D] = []
+var south_section: Node3D
+var south_wall: Node3D
+var subnivel_section: Node3D
+
+var _mat_wall: Material
+var _mat_floor: Material
+var _mat_metal: Material
+var _mat_dark: Material
+var _mat_snow: Material
+var _mat_screen: Material
+
+
+func build(tint: Color) -> void:
+	_mat_wall = Build.surface(tint)
+	_mat_floor = Build.surface(tint.darkened(0.45))
+	_mat_metal = Build.surface(Color(0.22, 0.24, 0.26))
+	_mat_dark = Build.surface(Color(0.08, 0.08, 0.09))
+	_mat_snow = Build.surface(Color(0.62, 0.66, 0.70))
+	_mat_screen = Build.surface(Color(0.35, 0.72, 0.58), 1.6)
+
+	_build_corridor()
+	_build_control()
+	_build_generator()
+	_build_dorm()
+	_build_storage()
+	_build_airlock()
+	_build_exterior()
+	_build_south()
+	_build_watchers()
+
+
+func _mesh_room(name: String, rect: Rect2, openings: Dictionary, ceiling := true) -> Node3D:
+	var holder := Build.room(self, name, rect, _mat_wall, _mat_floor, openings, ceiling)
+	for c in holder.get_children():
+		if c is MeshInstance3D and String(c.name).begins_with("pared"):
+			wall_meshes.append(c)
+	return holder
+
+
+func _build_corridor() -> void:
+	var r: Rect2 = ROOMS["pasillo"]
+	_mesh_room("Pasillo", r, {
+		"w": [Vector2(-11.0, Build.DOOR_W), Vector2(-2.5, Build.DOOR_W)],
+		"e": [Vector2(-11.0, Build.DOOR_W), Vector2(-2.5, Build.DOOR_W)],
+		"s": [Vector2(0.0, Build.DOOR_W)],
+		"n": [Vector2(0.0, Build.DOOR_W)],
+	})
+	# La pared del fondo del pasillo: existe salvo las noches en que el
+	# pasillo sur "aparece".
+	# Tapa del hueco del fondo: la pared que "siempre estuvo ahi" hasta que
+	# una noche deja de estar.
+	south_wall = Node3D.new()
+	south_wall.name = "ParedFondo"
+	add_child(south_wall)
+	Build.box(south_wall, "tapa", Vector3(Build.DOOR_W, Build.DOOR_H, Build.WALL_T),
+			Vector3(0.0, Build.DOOR_H * 0.5, r.position.y), _mat_wall)
+
+	Build.light(self, Vector3(0.0, 2.75, -12.0), Color(0.72, 0.78, 0.85), 1.6, 8.0)
+	Build.light(self, Vector3(0.0, 2.75, -4.0), Color(0.72, 0.78, 0.85), 1.6, 8.0)
+	lights.append(Build.light(self, Vector3(0.0, 2.75, 3.0), Color(0.70, 0.74, 0.80), 1.3, 8.0))
+
+	# Lockers contra la pared.
+	Build.box(self, "Lockers", Vector3(0.45, 1.9, 2.4), Vector3(-1.2, 0.95, -7.0), _mat_metal)
+	Build.label3d(self, "NIVEL 1  ->  ESCLUSA", Vector3(-1.35, 2.3, -6.0), PI * 0.5, 0.22)
+	Build.label3d(self, "<-  B2", Vector3(1.35, 2.3, -14.5), -PI * 0.5, 0.22, Color(0.5, 0.52, 0.55))
+
+
+func _build_control() -> void:
+	var r: Rect2 = ROOMS["sala de control"]
+	_mesh_room("SalaDeControl", r, {"e": [Vector2(-11.0, Build.DOOR_W)]})
+	lights.append(Build.light(self, Vector3(-5.5, 2.7, -11.0), Color(0.62, 0.72, 0.82), 1.5, 8.0))
+
+	_add_door("control", Vector3(-1.5, 0.0, -11.0 + Build.DOOR_W * 0.5), PI * 0.5, Build.DOOR_W)
+
+	# Consola de sensores contra la pared oeste.
+	var console := SensorPanel.new()
+	console.name = "ConsolaSensores"
+	add_child(console)
+	console.position = Vector3(-8.4, 0.0, -11.0)
+	console.setup_box(Vector3(1.2, 1.1, 2.6), _mat_metal, Vector3(0.0, 0.55, 0.0))
+	Build.box(console, "Pantalla", Vector3(0.08, 0.7, 1.6), Vector3(0.5, 1.5, 0.0), _mat_screen, false)
+	Build.light(console, Vector3(0.9, 1.5, 0.0), Color(0.35, 0.8, 0.6), 0.8, 3.5)
+	points["sensores"] = console
+
+	var chair := _add_prop("control_chair", Vector3(-6.4, 0.0, -11.0), 0.0, Vector3(0.55, 0.9, 0.55))
+	chair.register("control_chair", Vector3(0.6, 0.0, 0.8), 145.0)
+
+	_add_radio_log("rl_01", Vector3(-3.2, 0.9, -13.2), 1)
+	Build.box(self, "MesaControl", Vector3(1.6, 0.85, 0.7), Vector3(-3.2, 0.42, -13.2), _mat_metal)
+
+
+func _build_generator() -> void:
+	var r: Rect2 = ROOMS["sala de generador"]
+	_mesh_room("SalaDeGenerador", r, {"w": [Vector2(-11.0, Build.DOOR_W)]})
+	lights.append(Build.light(self, Vector3(5.5, 2.7, -11.0), Color(0.85, 0.62, 0.42), 1.5, 8.0))
+
+	_add_door("generador", Vector3(1.5, 0.0, -11.0 - Build.DOOR_W * 0.5), -PI * 0.5, Build.DOOR_W)
+
+	var gen := TaskPoint.new()
+	gen.name = "Generador"
+	add_child(gen)
+	gen.position = Vector3(6.0, 0.0, -11.0)
+	gen.setup_box(Vector3(2.4, 1.8, 3.2), _mat_metal, Vector3(0.0, 0.9, 0.0))
+	gen.task_id = "generator"
+	gen.active_prompt = "Revisar el generador"
+	gen.done_prompt = "Generador estable"
+	gen.notice_on_done = "Presion en verde. Generador B sigue perdiendo."
+	gen.log_time = ""
+	gen.log_text = "Generador revisado. El B pierde presion, como siempre."
+	points["generador"] = gen
+	Build.light(gen, Vector3(0.0, 2.0, 0.0), Color(0.9, 0.5, 0.25), 0.7, 4.0)
+	Build.label3d(self, "GEN-A", Vector3(4.7, 1.9, -11.0), -PI * 0.5, 0.2, Color(0.8, 0.6, 0.4))
+
+	var bat := BatteryPickup.new()
+	bat.name = "PilaGenerador"
+	add_child(bat)
+	bat.position = Vector3(2.6, 0.9, -9.0)
+	bat.setup_box(Vector3(0.18, 0.3, 0.18), Build.surface(Color(0.7, 0.66, 0.2)))
+	Build.box(self, "BancoTaller", Vector3(1.4, 0.85, 1.0), Vector3(2.6, 0.42, -9.0), _mat_metal)
+
+
+func _build_dorm() -> void:
+	var r: Rect2 = ROOMS["dormitorio"]
+	_mesh_room("Dormitorio", r, {"e": [Vector2(-2.5, Build.DOOR_W)]})
+	lights.append(Build.light(self, Vector3(-5.5, 2.7, -2.5), Color(0.75, 0.66, 0.55), 1.2, 7.0))
+
+	_add_door("dormitorio", Vector3(-1.5, 0.0, -2.5 + Build.DOOR_W * 0.5), PI * 0.5, Build.DOOR_W)
+
+	var bed_prop := Prop.new()
+	bed_prop.name = "CamaProp"
+	add_child(bed_prop)
+	bed_prop.position = Vector3(-8.2, 0.0, -3.4)
+	bed_prop.register("dorm_bed", Vector3(0.35, 0.0, 0.15), 4.0)
+	props["dorm_bed"] = bed_prop
+
+	var bed := Bed.new()
+	bed.name = "Cucheta"
+	bed_prop.add_child(bed)
+	bed.setup_box(Vector3(1.0, 0.55, 2.1), Build.surface(Color(0.30, 0.28, 0.26)), Vector3(0.0, 0.28, 0.0))
+	points["cama"] = bed
+
+	var chair := _add_prop("dorm_chair", Vector3(-4.0, 0.0, -1.2), 0.0, Vector3(0.55, 0.9, 0.55))
+	chair.register("dorm_chair", Vector3(-0.5, 0.0, -0.9), 160.0)
+
+	var desk := LogbookDesk.new()
+	desk.name = "Escritorio"
+	add_child(desk)
+	desk.position = Vector3(-4.2, 0.0, -0.6)
+	desk.setup_box(Vector3(1.6, 0.85, 0.7), _mat_metal, Vector3(0.0, 0.42, 0.0))
+	Build.box(desk, "Cuaderno", Vector3(0.3, 0.04, 0.22), Vector3(0.0, 0.88, 0.0), Build.surface(Color(0.65, 0.62, 0.5)), false)
+	points["bitacora"] = desk
+
+	_add_radio_log("rl_02", Vector3(-4.2, 0.9, -1.0), 1)
+
+
+func _build_storage() -> void:
+	var r: Rect2 = ROOMS["almacen"]
+	_mesh_room("Almacen", r, {"w": [Vector2(-2.5, Build.DOOR_W)]})
+	lights.append(Build.light(self, Vector3(5.5, 2.7, -2.5), Color(0.6, 0.62, 0.66), 0.9, 7.0))
+
+	_add_door("almacen", Vector3(1.5, 0.0, -2.5 - Build.DOOR_W * 0.5), -PI * 0.5, Build.DOOR_W)
+
+	Build.box(self, "Estante1", Vector3(0.6, 2.2, 3.0), Vector3(8.8, 1.1, -3.0), _mat_metal)
+	Build.box(self, "Cajas", Vector3(1.2, 1.2, 1.2), Vector3(6.5, 0.6, -1.4), Build.surface(Color(0.35, 0.30, 0.22)))
+	_add_radio_log("rl_03", Vector3(6.5, 1.3, -1.4), 2)
+
+
+func _build_airlock() -> void:
+	var r: Rect2 = ROOMS["esclusa"]
+	_mesh_room("Esclusa", r, {"n": [Vector2(0.0, Build.DOOR_W)], "s": [Vector2(0.0, Build.DOOR_W)]})
+	lights.append(Build.light(self, Vector3(0.0, 2.7, 9.0), Color(0.55, 0.65, 0.75), 1.0, 6.0))
+	_add_door("esclusa", Vector3(-Build.DOOR_W * 0.5, 0.0, 11.0), 0.0, Build.DOOR_W)
+	Build.label3d(self, "SALIDA / PATIO", Vector3(0.0, 2.35, 10.88), 0.0, 0.2, Color(0.8, 0.75, 0.6))
+
+
+func _build_exterior() -> void:
+	var r: Rect2 = ROOMS["patio"]
+	Build.floor_slab(self, r, 0.0, _mat_snow, "Nieve")
+	# Cerco perimetral: limita el patio sin techarlo.
+	Build.wall(self, "cerco_n", 0, r.position.y, r.position.x, -3.0, _mat_metal, [], 2.4)
+	Build.wall(self, "cerco_n2", 0, r.position.y, 3.0, r.end.x, _mat_metal, [], 2.4)
+	Build.wall(self, "cerco_s", 0, r.end.y, r.position.x, r.end.x, _mat_metal, [], 2.4)
+	Build.wall(self, "cerco_o", 2, r.position.x, r.position.y, r.end.y, _mat_metal, [], 2.4)
+	Build.wall(self, "cerco_e", 2, r.end.x, r.position.y, r.end.y, _mat_metal, [], 2.4)
+
+	Build.box(self, "Mastil", Vector3(0.3, 7.0, 0.3), Vector3(-8.0, 3.5, 20.0), _mat_metal)
+	Build.box(self, "Antena", Vector3(3.0, 0.2, 0.2), Vector3(-8.0, 6.6, 20.0), _mat_metal)
+	Build.box(self, "Contenedor", Vector3(5.0, 2.4, 2.4), Vector3(8.0, 1.2, 18.0), Build.surface(Color(0.32, 0.26, 0.24)))
+	lights.append(Build.light(self, Vector3(0.0, 4.0, 13.0), Color(0.55, 0.62, 0.75), 1.1, 12.0))
+
+	var marker := TaskPoint.new()
+	marker.name = "MarcaRonda"
+	add_child(marker)
+	marker.position = Vector3(-8.0, 0.0, 20.0)
+	marker.setup_box(Vector3(0.7, 1.2, 0.7), Build.surface(Color(0.75, 0.55, 0.15)), Vector3(0.0, 0.6, 0.0))
+	marker.task_id = "round"
+	marker.active_prompt = "Marcar la ronda exterior"
+	marker.done_prompt = "Ronda marcada"
+	marker.notice_on_done = "Viento 41 nudos. Sin novedad en el perimetro."
+	marker.log_text = "Ronda exterior hecha. Cuarenta y un nudos de viento."
+	points["ronda"] = marker
+	Build.label3d(self, "PTO. 3", Vector3(-8.0, 1.4, 19.6), PI, 0.18, Color(0.85, 0.7, 0.3))
+
+
+func _build_south() -> void:
+	# Tramo que solo existe algunas noches: el pasillo que no esta en los planos.
+	south_section = Node3D.new()
+	south_section.name = "PasilloSur"
+	add_child(south_section)
+
+	var r: Rect2 = ROOMS["pasillo sur"]
+	Build.floor_slab(south_section, r, 0.0, _mat_floor)
+	Build.ceiling_slab(south_section, r, 0.0, _mat_wall)
+	Build.wall(south_section, "sur_o", 2, r.position.x, r.position.y, r.end.y, _mat_wall)
+	Build.wall(south_section, "sur_e", 2, r.end.x, r.position.y, r.end.y, _mat_wall)
+	Build.wall(south_section, "sur_n", 0, r.position.y, r.position.x, r.end.x, _mat_wall, [Vector2(0.0, Build.DOOR_W)])
+	Build.light(south_section, Vector3(0.0, 2.75, -20.0), Color(0.45, 0.5, 0.58), 0.9, 8.0)
+	Build.label3d(south_section, "SUBNIVEL B2", Vector3(-1.35, 2.2, -19.0), PI * 0.5, 0.2, Color(0.5, 0.55, 0.6))
+
+	subnivel_section = Node3D.new()
+	subnivel_section.name = "SubnivelB2"
+	south_section.add_child(subnivel_section)
+	var s: Rect2 = ROOMS["subnivel"]
+	Build.floor_slab(subnivel_section, s, -0.6, _mat_dark)
+	Build.ceiling_slab(subnivel_section, s, -0.6, _mat_dark)
+	Build.wall(subnivel_section, "b2_o", 2, s.position.x, s.position.y, s.end.y, _mat_dark)
+	Build.wall(subnivel_section, "b2_e", 2, s.end.x, s.position.y, s.end.y, _mat_dark)
+	Build.wall(subnivel_section, "b2_s", 0, s.position.y, s.position.x, s.end.x, _mat_dark)
+	Build.wall(subnivel_section, "b2_n", 0, s.end.y, s.position.x, s.end.x, _mat_dark, [Vector2(0.0, Build.DOOR_W)])
+	# Rampa corta desde el pasillo sur hasta el B2.
+	Build.box(subnivel_section, "Rampa", Vector3(3.0, 0.2, 2.0), Vector3(0.0, -0.3, -23.2), _mat_dark)
+
+	var point := TaskPoint.new()
+	point.name = "PuntoSubnivel"
+	subnivel_section.add_child(point)
+	point.position = Vector3(0.0, -0.6, -28.0)
+	point.setup_box(Vector3(1.0, 1.4, 1.0), Build.surface(Color(0.16, 0.16, 0.18)), Vector3(0.0, 0.7, 0.0))
+	point.task_id = "subnivel"
+	point.active_prompt = "Mirar lo que hay abajo"
+	point.done_prompt = "Ya lo viste"
+	point.notice_on_done = "Es tu propia letra en la pared."
+	point.log_text = "Baje al B2. La pared tiene mi letra."
+	points["subnivel"] = point
+	Build.light(subnivel_section, Vector3(0.0, 1.6, -28.0), Color(0.35, 0.4, 0.45), 0.6, 6.0)
+
+
+func _build_watchers() -> void:
+	for id in ["dormitorio", "sala de control", "sala de generador", "almacen", "patio"]:
+		var w := RoomWatcher.new()
+		w.name = "Watcher_%s" % id
+		add_child(w)
+		w.configure(id, ROOMS[id])
+		watchers[id] = w
+
+
+func _add_door(id: String, hinge: Vector3, rot_y: float, width: float) -> Door:
+	var d := Door.new()
+	d.name = "Puerta_%s" % id
+	add_child(d)
+	d.position = hinge
+	d.rotation.y = rot_y
+	d.configure(width, _mat_metal)
+	doors[id] = d
+	return d
+
+
+func _add_prop(id: String, pos: Vector3, rot_y: float, size: Vector3) -> Prop:
+	var p := Prop.new()
+	p.name = "Prop_%s" % id
+	add_child(p)
+	p.position = pos
+	p.rotation.y = rot_y
+	# Silla: asiento + respaldo, dos cajas y listo.
+	Build.box(p, "Asiento", Vector3(size.x, 0.08, size.z), Vector3(0.0, size.y * 0.5, 0.0), _mat_metal)
+	Build.box(p, "Respaldo", Vector3(size.x, size.y * 0.55, 0.08), Vector3(0.0, size.y * 0.78, -size.z * 0.45), _mat_metal)
+	Build.box(p, "Pata", Vector3(0.08, size.y * 0.5, 0.08), Vector3(0.0, size.y * 0.25, 0.0), _mat_metal)
+	props[id] = p
+	return p
+
+
+func _add_radio_log(id: String, pos: Vector3, from_night: int) -> RadioLog:
+	var rl := RadioLog.new()
+	rl.name = "Registro_%s" % id
+	add_child(rl)
+	rl.position = pos
+	rl.log_id = id
+	rl.setup_box(Vector3(0.28, 0.1, 0.18), Build.surface(Color(0.45, 0.42, 0.38)))
+	rl.set_meta("from_night", from_night)
+	points["log_%s" % id] = rl
+	return rl
+
+
+func recolor_walls(tint: Color) -> void:
+	var mat := Build.surface(tint)
+	for m in wall_meshes:
+		if is_instance_valid(m):
+			m.material_override = mat
