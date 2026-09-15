@@ -429,6 +429,7 @@ func _build_b2() -> void:
 		"Purgar la bomba B", "La bomba B ya está purgada", true)
 	_b2_prop("b2_tanque", Vector3(-4.0, B2_Y, -39.8), 0.0, Vector3(1.6, 1.8, 1.2))
 	_b2_prop("b2_banco", Vector3(-3.6, B2_Y, -36.2), 0.0, Vector3(1.8, 0.85, 0.7))
+	_add_battery("PilaBombas", Vector3(-3.6, B2_Y + 0.95, -36.2), subnivel_section)
 	_b2_task("llave_bombas", "cerrar_b2", Vector3(-6.2, B2_Y, -40.4), Vector3(0.7, 1.0, 0.5),
 		"Cerrar la llave de las bombas", "Esta llave ya está cerrada", true)
 
@@ -461,6 +462,7 @@ func _build_b2() -> void:
 		Vector3(0.0, B2_Y + 1.5, -49.84), 0.0, 0.22, Color(0.55, 0.5, 0.45))
 	_b2_prop("b2_camastro", Vector3(-3.4, B2_Y, -47.4), 0.0, Vector3(0.9, 0.45, 2.0))
 	_b2_prop("b2_lata", Vector3(3.2, B2_Y, -46.0), 0.0, Vector3(0.35, 0.4, 0.35))
+	_add_battery("PilaFondo", Vector3(4.2, B2_Y + 0.2, -48.2), subnivel_section)
 	_b2_task("llave_fondo", "cerrar_b2", Vector3(0.0, B2_Y, -45.4), Vector3(1.2, 1.0, 0.7),
 		"Cerrar la llave del fondo", "Esta llave ya está cerrada", true,
 		"Las tres llaves del B2 cerradas. El subnivel queda muerto.")
@@ -673,8 +675,16 @@ func _build_inspectables() -> void:
 		var spec: Dictionary = NightData.INSPECTABLES[id]
 		var item := Inspectable.new()
 		item.name = "Inspeccionable_%s" % id
-		add_child(item)
-		item.position = spec.get("pos", Vector3.ZERO)
+		var pos: Vector3 = spec.get("pos", Vector3.ZERO)
+		# Misma regla que los registros: lo que esta abajo cuelga del tramo que
+		# esa noche puede no existir.
+		var parent: Node3D = self
+		if pos.z <= -24.0:
+			parent = subnivel_section
+		elif pos.z <= -16.0:
+			parent = south_section
+		parent.add_child(item)
+		item.position = pos
 		item.inspect_id = String(id)
 		item.titulo = String(spec.get("titulo", "Objeto"))
 		item.setup_box(spec.get("size", Vector3(0.1, 0.1, 0.1)),
@@ -683,10 +693,10 @@ func _build_inspectables() -> void:
 		objects[String(id)] = item
 
 
-func _add_battery(name: String, pos: Vector3) -> BatteryPickup:
+func _add_battery(name: String, pos: Vector3, parent: Node3D = null) -> BatteryPickup:
 	var bat := BatteryPickup.new()
 	bat.name = name
-	add_child(bat)
+	(parent if parent != null else self).add_child(bat)
 	bat.position = pos
 	bat.setup_box(Vector3(0.18, 0.3, 0.18), Build.surface(Color(0.7, 0.66, 0.2)))
 	pickups.append(bat)

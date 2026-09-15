@@ -2,7 +2,7 @@ extends Node
 ## Medicion de ritmo de las cinco noches: camina cada noche como la caminaria
 ## alguien que va derecho a cada tarea, y reporta cuanto dura, cuanto se
 ## camina y cuanta bateria gasta. Sirve para ajustar el balance con numeros y
-## para saber si el juego se esta acercando a las 2-3 horas del diseno.
+## para saber si el juego se esta acercando a los 60-90 min del diseno.
 ##
 ## Uso:  godot --headless --path . res://tests/pacing.tscn
 ##
@@ -284,14 +284,17 @@ func _report() -> void:
 	for r in _rows:
 		peor = maxf(peor, float(r["bateria"]))
 	var cargas: float = 1.0 + float(GameState.spare_batteries) + float(station.pickups.size())
+	var margen: float = cargas / maxf(peor, 0.001)
 	print("  bateria: la peor noche gasta %.0f %% de una carga; hay %.0f cargas" % [
 		peor * 100.0, cargas])
+	print("           alcanzan para %.1f noches asi -> %s" % [margen,
+		"sobra demasiado, rebalancear" if margen > 4.0 else "razonable"])
 	# Un jugador que explora tarda entre dos y tres veces el recorrido directo,
 	# mas lo que escuche de radio.
 	var audio: float = _logs_available(GameState.MAX_NIGHT)["segundos"]
 	print("  explorando (x2-x3) %6.1f a %.1f min, mas %.1f min de audio" % [
 		total * 2.0 / 60.0, total * 3.0 / 60.0, audio / 60.0])
-	print("  objetivo del diseno  120 a 180 min")
+	print("  objetivo del diseno   60 a 90 min")
 	if not _atascos.is_empty():
 		print("")
 		print("  OJO: %d tramos se cortaron por atasco -> %s" % [

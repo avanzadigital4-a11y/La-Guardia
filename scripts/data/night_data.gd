@@ -738,11 +738,56 @@ const RADIO_LOGS := {
 			"Si la chapa dice otro número, no la muestres.",
 		],
 	},
+
+	# --- El B2 de adentro: lo que quedo en las salas del fondo ---
+	"rl_33": {
+		"label": "REG-054 / Sala de bombas",
+		"night": 3,
+		"pos": Vector3(-8.2, -0.5, -37.4),
+		"lines": [
+			"Las bombas las purgamos cada doce horas. Es la única tarea que no se puede saltear.",
+			"Si se detienen, lo de abajo sube. No sé decirlo mejor que así.",
+			"El turno anterior dejó de purgarlas cuatro días. No preguntamos por qué.",
+		],
+	},
+	"rl_34": {
+		"label": "REG-055 / Archivo",
+		"night": 3,
+		"pos": Vector3(6.6, -0.5, -39.0),
+		"lines": [
+			"Archivamos los legajos del personal saliente en el estante de abajo.",
+			"Están todos. Incluido el de la persona que va a quedar de guardia.",
+			"Eso no debería poder archivarse todavía.",
+		],
+	},
+	"rl_35": {
+		"label": "REG-056 / Sin firmar",
+		"night": 5,
+		"pos": Vector3(-2.6, -0.5, -47.8),
+		"lines": [
+			"Bajé otra vez. Ya no cuento los días en la pared, cuento las veces que bajo.",
+			"Las rayas no son días.",
+			"Son yo.",
+		],
+	},
 }
 
 ## Objetos que se pueden levantar y mirar de cerca. El texto cambia con las
 ## noches: el objeto es el mismo, lo que dice no.
 const INSPECTABLES := {
+	# En el fondo del B2: lo unico que hay sobre el camastro. Los que estan a
+	# z <= -24 se cuelgan del subnivel, asi que desaparecen con la zona.
+	"manta": {
+		"titulo": "Manta doblada",
+		"pos": Vector3(-3.4, -0.1, -47.4),
+		"size": Vector3(0.34, 0.10, 0.26),
+		"color": Color(0.30, 0.28, 0.25),
+		"textos": {
+			1: "Una manta de la estación, doblada en cuatro. Está usada.",
+			3: "Doblada en cuatro, como la dejás vos. Huele a vos.",
+			5: "Sigue tibia.",
+		},
+	},
 	"placa": {
 		"titulo": "Chapa de identificación",
 		"pos": Vector3(-3.7, 0.92, -0.6),

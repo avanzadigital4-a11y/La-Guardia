@@ -37,7 +37,7 @@ Lo que ya funciona:
   que se mueven, que faltan, que aparecen, puertas que quedan abiertas, salas
   que se apagan. Cada noche arma su propio lote, mas unas cuantas al azar del
   catalogo: dos partidas no traen exactamente los mismos cambios.
-- **32 registros de radio** (98 lineas, unos 7 minutos de audio) repartidos
+- **35 registros de radio** (107 lineas, unos 7 minutos de audio) repartidos
   por la estacion, el subnivel y el patio, con su noche de aparicion escrita
   en la misma tabla.
 - **El parte del turno**: la hoja sobre la mesa de control. Las tres primeras
@@ -175,11 +175,12 @@ queda sin punto en el mundo, lo dice.
       4    205.5 s     300.3 m       51 %        8          26          14
       5    221.2 s     390.5 m       55 %        6          32          18
 
-  total directo       839.7 s   (14.0 min)
+  total directo       839.3 s   (14.0 min)
   distancia total    1352.3 m
-  bateria: la peor noche gasta 55 % de una carga; hay 4 cargas
-  explorando (x2-x3)   28.0 a 42.0 min, mas 6.2 min de audio
-  objetivo        60 a 90 min
+  bateria: la peor noche gasta 55 % de una carga; hay 6 cargas
+           alcanzan para 10.9 noches asi -> sobra demasiado, rebalancear
+  explorando (x2-x3)   28.0 a 42.0 min, mas 6.8 min de audio
+  objetivo del diseno   60 a 90 min
 ```
 
 **El objetivo dejo de ser 2-3 horas.** Para una persona sola, y sin arte ni
@@ -193,8 +194,13 @@ se aprende rapido y aburre si dura, y la ultima noche tiene que pesar. De
 107 s a 221 s, sin pozos en el medio.
 
 La bateria empezo a significar algo: la peor noche gasta un 55 % de una
-carga contra el 32 % de antes. Todavia sobra (hay cuatro cargas), pero ya no
-es decorativa, sobre todo con el apagon.
+carga contra el 32 % de antes. Pero **sobra demasiado y hay que rebalancear**,
+y el medidor ahora lo dice solo. Al poner dos pilas en el B2 (sin ellas, el
+que explora la zona mas profunda y oscura se queda sin luz y sin forma de
+recuperarla) el total subio a seis cargas para una noche que gasta media:
+alcanza para once noches. La linterna no puede importar con ese margen. El
+numero correcto sale de un playtest, no de una cuenta, asi que queda anotado
+en vez de tocado a ojo.
 
 ## Medir el rendimiento
 
@@ -255,7 +261,7 @@ normal. La plantilla se genera con:
 godot --headless --path . res://tools/exportar_traduccion.tscn
 ```
 
-Eso escribe `localizacion/la-guardia.pot` con los 337 textos del juego (los de
+Eso escribe `localizacion/la-guardia.pot` con los 353 textos del juego (los de
 las tablas y los de la interfaz, cada uno con una nota de donde sale). Para
 agregar un idioma: copiar el `.pot` a `localizacion/en.po`, completar los
 `msgstr` y registrarlo en Proyecto > Configuracion > Localizacion.
