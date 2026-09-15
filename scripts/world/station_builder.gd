@@ -51,11 +51,11 @@ var _mat_screen: Material
 
 
 func build(tint: Color) -> void:
-	_mat_wall = Build.surface(tint)
-	_mat_floor = Build.surface(tint.darkened(0.45))
-	_mat_metal = Build.surface(Color(0.22, 0.24, 0.26))
-	_mat_dark = Build.surface(Color(0.08, 0.08, 0.09))
-	_mat_snow = Build.surface(Color(0.62, 0.66, 0.70))
+	_mat_wall = Build.surface(tint, 0.0, 0.8, "chapa")
+	_mat_floor = Build.surface(tint.darkened(0.45), 0.0, 0.8, "piso")
+	_mat_metal = Build.surface(Color(0.22, 0.24, 0.26), 0.0, 0.8, "metal")
+	_mat_dark = Build.surface(Color(0.08, 0.08, 0.09), 0.0, 0.8, "hormigon")
+	_mat_snow = Build.surface(Color(0.62, 0.66, 0.70), 0.0, 0.8, "nieve")
 	_mat_screen = Build.surface(Color(0.35, 0.72, 0.58), 1.6)
 
 	_build_corridor()
@@ -726,7 +726,7 @@ func ambient_points() -> Array[Vector3]:
 
 
 func recolor_walls(tint: Color) -> void:
-	var mat := Build.surface(tint)
+	var mat := Build.surface(tint, 0.0, 0.8, "chapa")
 	for m in wall_meshes:
 		if is_instance_valid(m):
 			m.material_override = mat

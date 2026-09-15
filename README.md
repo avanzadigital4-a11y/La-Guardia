@@ -91,6 +91,14 @@ Lo que ya funciona:
   codigo.
 - Audio sintetizado en runtime (viento continuo, crujidos, puertas, pasos):
   el proyecto no depende de ningun asset externo.
+- **Texturas generadas por codigo** (`scripts/world/textures.gd`): chapa con
+  juntas y remaches, placas de piso, rejilla, metal rayado, oxido, nieve y
+  hormigon para el B2. Ningun archivo de imagen, ninguna licencia que revisar.
+  64x64 pixeles, filtro Nearest y sin mipmaps, porque el aliasing es parte del
+  look. Se mapean triplanar desde coordenadas de mundo, asi que no hay que
+  desplegar UV en geometria generada por codigo, y una pared de 8 metros y una
+  de 3 se leen iguales. Son grises y multiplican al color, asi que el tinte
+  por noche sigue funcionando igual.
 - Post-proceso PS1: cuantizacion de color, grano, scanlines, vineta y
   aberracion cromatica, mas temblor de vertices en la geometria.
 - Menu de inicio con tres ranuras de guardado (con la noche, la fecha y si
@@ -240,9 +248,18 @@ xvfb-run -a -s "-screen 0 1152x648x24" env LIBGL_ALWAYS_SOFTWARE=1 \
   godot --path . --rendering-driver opengl3 res://tools/benchmark.tscn
 ```
 
-**Cuidado con una sola corrida.** La dispersion entre corridas identicas es de
-mas o menos 1.3 FPS sobre unos 26, asi que una diferencia de menos de eso no
-es una mejora, es ruido. Hay que medir varias veces y comparar medianas.
+**Cuidado con una sola corrida, y con comparar entre sesiones.** Entre
+corridas seguidas la dispersion es de mas o menos 1.3 FPS, asi que una
+diferencia menor a eso es ruido. Pero entre sesiones distintas la diferencia
+es muchisimo mayor: el mismo codigo midio 26 FPS una vez y 43 otra, segun lo
+ocupada que estuviera la maquina. **Los numeros absolutos de este README no
+sirven para comparar contra una medicion de otro dia.** La unica comparacion
+que vale es A/B pareado: medir las dos variantes una atras de otra, en la
+misma corrida de condiciones.
+
+Las **texturas procedurales salen gratis**: A/B pareado de dos corridas cada
+uno dio 42.6 FPS con textura contra 43.2 sin, o sea nada. El triplanar cuesta
+mas por fragmento en teoria, pero el cuello de botella esta en otro lado.
 
 Ya se probo una cosa que **no** funciono: apagar las luces lejanas para dejar
 como maximo cuatro prendidas a la vez. Tres corridas pareadas dieron 26.1
