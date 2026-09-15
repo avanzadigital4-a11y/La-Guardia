@@ -4,7 +4,9 @@ Terror psicologico en primera persona, sin combate, en una estacion antartica
 ficticia que cierra en cinco dias. Godot 4 (renderizador **Compatibility**),
 estetica low-poly tipo PS1.
 
-El documento de diseno completo esta en [`docs/diseno.md`](docs/diseno.md).
+El documento de diseno completo esta en [`docs/diseno.md`](docs/diseno.md), y
+lo que falta hacer fuera de Godot (voces, arte, playtest, licencia) esta en
+[`docs/produccion.md`](docs/produccion.md).
 
 ## Estado actual
 
@@ -37,6 +39,12 @@ Lo que ya funciona:
   que se mueven, que faltan, que aparecen, puertas que quedan abiertas, salas
   que se apagan. Cada noche arma su propio lote, mas unas cuantas al azar del
   catalogo: dos partidas no traen exactamente los mismos cambios.
+- **Audio provisorio para las 107 lineas** de los registros, generado con
+  espeak-ng (`tools/generar_voces_tts.sh`). Suena a maquina: es un piso para
+  poder jugar el juego entero con audio y hacer un playtest, no el audio
+  final. Se reemplaza de a una grabando encima, sin tocar codigo. El por que
+  de espeak y no una voz mejor (licencia) esta en
+  [`docs/produccion.md`](docs/produccion.md).
 - **35 registros de radio** (107 lineas, unos 7 minutos de audio) repartidos
   por la estacion, el subnivel y el patio, con su noche de aparicion escrita
   en la misma tabla.
