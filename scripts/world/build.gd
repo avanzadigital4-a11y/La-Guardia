@@ -69,7 +69,12 @@ static func clear_cache() -> void:
 	_mat_cache.clear()
 
 
-static func box(parent: Node, name: String, size: Vector3, pos: Vector3, mat: Material, collide := true) -> MeshInstance3D:
+## `shadow`: si la caja proyecta sombra. Por defecto si. Hasta ahora estaba
+## apagado en todas, asi que aunque una luz tuviera sombra no habia nada que
+## la proyectara: la estacion entera era geometria transparente a la luz.
+## Se apaga en lo que no conviene que la proyecte (carteles, detalle fino que
+## solo agregaria ruido al mapa de sombras).
+static func box(parent: Node, name: String, size: Vector3, pos: Vector3, mat: Material, collide := true, shadow := true) -> MeshInstance3D:
 	var mesh := BoxMesh.new()
 	mesh.size = size
 	var mi := MeshInstance3D.new()
@@ -77,7 +82,7 @@ static func box(parent: Node, name: String, size: Vector3, pos: Vector3, mat: Ma
 	mi.mesh = mesh
 	mi.material_override = mat
 	mi.position = pos
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	parent.add_child(mi)
 	if collide:
 		var body := StaticBody3D.new()
@@ -174,15 +179,32 @@ static func room(parent: Node, name: String, rect: Rect2, mat_wall: Material, ma
 	return holder
 
 
+## Todas las luces creadas al armar la estacion, para que el presupuesto de
+## sombras las conozca a todas y no solo a las de sala.
+static var created: Array[OmniLight3D] = []
+
+
 static func light(parent: Node, pos: Vector3, color: Color, energy: float, range_m := 9.0) -> OmniLight3D:
 	var l := OmniLight3D.new()
 	l.position = pos
 	l.light_color = color
 	l.light_energy = energy
 	l.omni_range = range_m
-	l.omni_attenuation = 0.9
+	# Atenuacion mas marcada: la luz cae rapido y se forma un charco en vez de
+	# banar la sala entera. Es la mitad de lo que hace que haya oscuridad.
+	l.omni_attenuation = 1.6
+	# La sombra la enciende el presupuesto, segun donde este el jugador.
 	l.shadow_enabled = false
+	l.shadow_bias = 0.04
+	l.shadow_normal_bias = 1.4
+	# Sombra de baja resolucion a proposito: dura, con el borde escalonado.
+	# Es la estetica, y ademas es lo barato.
+	l.shadow_blur = 0.0
+	l.distance_fade_enabled = true
+	l.distance_fade_begin = 22.0
+	l.distance_fade_length = 6.0
 	parent.add_child(l)
+	created.append(l)
 	return l
 
 

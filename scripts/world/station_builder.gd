@@ -36,7 +36,8 @@ var variants := {}
 var pickups: Array[BatteryPickup] = []
 var objects := {}        # nodos que una anomalia puede mover u ocultar
 var room_lights := {}    # sala -> luz de techo
-var lights: Array[OmniLight3D] = []
+var lights: Array[OmniLight3D] = []        # las de sala: su energia la maneja la noche
+var all_lights: Array[OmniLight3D] = []    # todas, para el presupuesto de sombras
 var wall_meshes: Array[MeshInstance3D] = []
 var south_section: Node3D
 var south_wall: Node3D
@@ -51,6 +52,7 @@ var _mat_screen: Material
 
 
 func build(tint: Color) -> void:
+	Build.created.clear()
 	_mat_wall = Build.surface(tint, 0.0, 0.8, "chapa")
 	_mat_floor = Build.surface(tint.darkened(0.45), 0.0, 0.8, "piso")
 	_mat_metal = Build.surface(Color(0.22, 0.24, 0.26), 0.0, 0.8, "metal")
@@ -71,7 +73,10 @@ func build(tint: Color) -> void:
 	_build_radio_logs()
 	_build_inspectables()
 	_build_recuento()
+	_build_detalle()
 	_build_watchers()
+
+	all_lights = Build.created.duplicate()
 
 
 func _mesh_room(name: String, rect: Rect2, openings: Dictionary, ceiling := true) -> Node3D:
@@ -618,6 +623,62 @@ func _build_recuento() -> void:
 	vacio.notice = "Acá bajaba la rampa. Ahora es pared."
 	vacio.configure(Vector3(3.0, 2.6, 3.0))
 	points["sin_b2"] = vacio
+
+
+## Silueta: canos, bandejas de cable y rejillas de ventilacion.
+##
+## No son props en el sentido del documento de diseno (que limita a 2-3 props
+## unicos por habitacion para acotar el trabajo de modelado): son arquitectura,
+## todas cajas del mismo primitivo, sin un solo asset nuevo. Estan por una
+## razon concreta: una sala que es una caja vacia se lee como una caja vacia,
+## por buena que sea la textura. Lo que da lectura de "estacion" es que la
+## linea del techo se rompa y que haya cosas que tapen la luz.
+##
+## Ahora que las luces proyectan sombra, esto ademas trabaja doble: un cano
+## cruzado sobre una lampara raya el piso.
+func _build_detalle() -> void:
+	var mat := _mat_metal
+	var r: Rect2 = ROOMS["pasillo"]
+
+	# Dos canos corriendo a lo largo del pasillo, a distinta altura.
+	_cano_z(mat, -0.95, 2.62, r.position.y, r.end.y, 0.13)
+	_cano_z(mat, 0.85, 2.44, r.position.y, r.end.y, 0.09)
+	# Bandeja de cables pegada a la pared oeste.
+	Build.box(self, "BandejaPasillo", Vector3(0.22, 0.06, r.size.y - 0.4),
+		Vector3(-1.32, 2.18, r.get_center().y), mat)
+	# Abrazaderas cada tanto: rompen la linea continua del cano.
+	var z := r.position.y + 1.5
+	while z < r.end.y:
+		Build.box(self, "Abrazadera", Vector3(0.3, 0.16, 0.1), Vector3(-0.95, 2.74, z), mat, false)
+		z += 3.1
+
+	# Conductos de ventilacion en las cuatro salas de la superficie, contra la
+	# pared del fondo y a la altura de la cabeza.
+	for id in ["sala de control", "sala de generador", "dormitorio", "almacen"]:
+		var s: Rect2 = ROOMS[id]
+		var oeste: bool = s.get_center().x < 0.0
+		var x: float = s.position.x + 0.28 if oeste else s.end.x - 0.28
+		_cano_z(mat, x, 2.55, s.position.y + 0.3, s.end.y - 0.3, 0.16)
+		# Rejilla de ventilacion en el extremo.
+		Build.box(self, "Rejilla_%s" % id, Vector3(0.1, 0.42, 0.62),
+			Vector3(x, 2.05, s.position.y + 0.9), Build.surface(Color(0.16, 0.17, 0.18), 0.0, 0.8, "rejilla"))
+
+	# El B2 es nivel de bombas: canos mas gruesos y mas bajos, que obligan a
+	# agacharse con la mirada.
+	for id in ["b2 pasillo", "b2 bombas", "b2 archivo", "b2 fondo"]:
+		var s2: Rect2 = ROOMS[id]
+		_cano_z(mat, s2.get_center().x - 0.7, B2_Y + 2.30, s2.position.y + 0.2, s2.end.y - 0.2, 0.2, subnivel_section)
+		_cano_z(mat, s2.get_center().x + 0.7, B2_Y + 2.46, s2.position.y + 0.2, s2.end.y - 0.2, 0.14, subnivel_section)
+
+
+## Un cano recto corriendo sobre el eje Z.
+func _cano_z(mat: Material, x: float, y: float, z0: float, z1: float, grosor: float,
+		parent: Node3D = null) -> void:
+	var largo := absf(z1 - z0)
+	if largo <= 0.2:
+		return
+	Build.box(parent if parent != null else self, "Cano",
+		Vector3(grosor, grosor, largo), Vector3(x, y, (z0 + z1) * 0.5), mat)
 
 
 func _build_watchers() -> void:

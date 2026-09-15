@@ -11,6 +11,12 @@ uniform sampler2D albedo_tex : filter_nearest, repeat_enable, hint_default_white
 uniform bool use_tex = false;
 // Cuantas veces se repite la textura por metro de mundo.
 uniform float tex_scale = 0.5;
+// Deformacion afin: la otra mitad de la firma PS1. La consola no corregia la
+// perspectiva al interpolar coordenadas de textura, y por eso las texturas se
+// retuercen al mirar una superficie en diagonal. El temblor de vertices ya
+// estaba; esto es lo que faltaba para que se lea como PS1 y no como low-poly
+// moderno. En 0 queda la interpolacion correcta de hoy.
+uniform float affine_strength : hint_range(0.0, 1.0) = 0.85;
 uniform vec2 snap_resolution = vec2(160.0, 120.0);
 uniform float snap_strength : hint_range(0.0, 1.0) = 0.8;
 uniform float emission_amount : hint_range(0.0, 4.0) = 0.0;
@@ -20,6 +26,11 @@ uniform float emission_amount : hint_range(0.0, 4.0) = 0.0;
 // junto con la geometria y marea.
 varying vec3 mundo_pos;
 varying vec3 mundo_nrm;
+// El truco: se multiplica por W en el vertice y se divide por el W
+// interpolado en el fragmento. Como el varying tambien viaja con correccion
+// de perspectiva, la division la cancela y queda interpolacion afin.
+varying vec3 afin_pos;
+varying float afin_w;
 
 void vertex() {
 	mundo_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -29,6 +40,8 @@ void vertex() {
 	NORMAL = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 
 	vec4 clip = PROJECTION_MATRIX * vec4(VERTEX, 1.0);
+	afin_w = max(clip.w, 0.0001);
+	afin_pos = mundo_pos * afin_w;
 	if (clip.w > 0.0) {
 		vec3 ndc = clip.xyz / clip.w;
 		vec2 snapped = round(ndc.xy * snap_resolution) / snap_resolution;
@@ -55,7 +68,10 @@ float mancha(vec3 p, vec3 n) {
 void fragment() {
 	vec3 color = albedo_color;
 	if (use_tex) {
-		color *= mancha(mundo_pos, normalize(mundo_nrm));
+		// Entre la coordenada correcta y la afin. Se mezcla en vez de usar la
+		// afin pura porque a distancia la deformacion se vuelve ruido.
+		vec3 p = mix(mundo_pos, afin_pos / afin_w, affine_strength);
+		color *= mancha(p, normalize(mundo_nrm));
 	}
 	ALBEDO = color;
 	ROUGHNESS = 1.0;
