@@ -32,7 +32,7 @@ Lo que ya funciona:
   esa misma noche admitiendo cosas que el jugador nunca hizo (marcadas en
   rojo).
 - Registros de radio con subtitulos y ruido de portadora.
-- **Catalogo de 61 anomalias** fuera de camara: el estado de un objeto cambia
+- **Catalogo de 71 anomalias** fuera de camara: el estado de un objeto cambia
   mientras el jugador no esta en la sala, sin animacion ni jumpscare. Objetos
   que se mueven, que faltan, que aparecen, puertas que quedan abiertas, salas
   que se apagan. Cada noche arma su propio lote, mas unas cuantas al azar del
@@ -170,30 +170,31 @@ queda sin punto en el mundo, lo dice.
 ```
   noche   duracion   distancia   bateria   tareas   registros   anomalias
       1    106.6 s     175.9 m       27 %        4           6           2
-      2     98.4 s     135.4 m       25 %        4          13           7
-      3    128.3 s     207.1 m       32 %        5          20          11
-      4    129.6 s     172.4 m       32 %        6          26          14
-      5    129.0 s     210.4 m       32 %        5          32          18
+      2    114.4 s     158.5 m       29 %        5          13           7
+      3    192.0 s     327.0 m       48 %        7          20          11
+      4    205.5 s     300.3 m       51 %        8          26          14
+      5    221.2 s     390.5 m       55 %        6          32          18
 
-  total directo       591.7 s   (9.9 min)
-  distancia total     901.2 m
-  bateria: la peor noche gasta 32 % de una carga; hay 4 cargas
-  explorando (x2-x3)   19.7 a 29.6 min, mas 6.2 min de audio
-  objetivo del diseno  120 a 180 min
+  total directo       839.7 s   (14.0 min)
+  distancia total    1352.3 m
+  bateria: la peor noche gasta 55 % de una carga; hay 4 cargas
+  explorando (x2-x3)   28.0 a 42.0 min, mas 6.2 min de audio
+  objetivo        60 a 90 min
 ```
 
-Antes esto media solo la Noche 1 y el total salia de extrapolar. Ahora esta
-medido: **10 minutos de recorrido directo y entre 20 y 30 explorando, contra
-las 2-3 horas que pide el diseno.** Falta entre cuatro y seis veces el
-contenido actual, y la diferencia es de contenido, no de ritmo.
+**El objetivo dejo de ser 2-3 horas.** Para una persona sola, y sin arte ni
+audio todavia, 60 a 90 minutos es lo que se puede terminar; *Iron Lung*, una
+de las referencias, dura alrededor de una hora. Hoy estamos en 14 minutos de
+recorrido directo y entre 28 y 42 explorando, mas 6 de audio: **falta mas o
+menos la mitad otra vez.**
 
-Dos cosas que el numero deja ver:
+La curva ya es creciente, que es como tiene que ser: la rutina de la Noche 1
+se aprende rapido y aburre si dura, y la ultima noche tiene que pesar. De
+107 s a 221 s, sin pozos en el medio.
 
-- Las cinco noches duran casi lo mismo (98 a 130 s). La Noche 5 deberia ser
-  la mas larga y no lo es.
-- La bateria sobra por goleada: la peor noche gasta un tercio de una carga y
-  hay cuatro. El balance actual solo se sostiene porque las noches son
-  cortas, y hay que rehacerlo cuando crezcan.
+La bateria empezo a significar algo: la peor noche gasta un 55 % de una
+carga contra el 32 % de antes. Todavia sobra (hay cuatro cargas), pero ya no
+es decorativa, sobre todo con el apagon.
 
 ## Medir el rendimiento
 
@@ -254,7 +255,7 @@ normal. La plantilla se genera con:
 godot --headless --path . res://tools/exportar_traduccion.tscn
 ```
 
-Eso escribe `localizacion/la-guardia.pot` con los 314 textos del juego (los de
+Eso escribe `localizacion/la-guardia.pot` con los 337 textos del juego (los de
 las tablas y los de la interfaz, cada uno con una nota de donde sale). Para
 agregar un idioma: copiar el `.pot` a `localizacion/en.po`, completar los
 `msgstr` y registrarlo en Proyecto > Configuracion > Localizacion.

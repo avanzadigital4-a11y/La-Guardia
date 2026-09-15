@@ -83,6 +83,18 @@ func _run() -> void:
 	_check(loop.times == 1, "caminar hasta el fondo dispara el desvio")
 	_check(player.global_position.z > -16.0, "el jugador reaparece en la entrada del pasillo")
 
+	# El subnivel dejo de ser una sala: bombas, archivo y fondo existen la
+	# noche 3, y las tareas de abajo se resuelven ahi.
+	_check(station.points.has("bomba_a") and station.points.has("legajo"),
+		"la noche 3 abre la sala de bombas y el archivo del B2")
+	for key in ["bomba_a", "bomba_b"]:
+		station.points[key].interact(player)
+		await _wait(0.2)
+	_check(GameState.is_task_done("bombas"), "purgar las dos bombas del subnivel")
+	station.points["legajo"].interact(player)
+	await _wait(0.2)
+	_check(GameState.is_task_done("legajo"), "buscar el legajo en el archivo")
+
 	# Noche 2: la senal desconocida se rastrea escuchandola, no apretando [E].
 	await director.start_night(2)
 	await _wait(0.5)
@@ -123,6 +135,13 @@ func _run() -> void:
 	player.teleport(Vector3(0.0, -0.4, -28.0), 0.0)
 	await _wait(0.6)
 	_check(GameState.is_task_done("subnivel"), "bajar al subnivel se resuelve caminando")
+
+	# El B2 ya no es una sala: hay que recorrerlo para cerrar las tres llaves.
+	for key in ["llave_bombas", "llave_archivo", "llave_fondo"]:
+		_check(station.points.has(key), "el B2 tiene el punto %s" % key)
+		station.points[key].interact(player)
+		await _wait(0.2)
+	_check(GameState.is_task_done("cerrar_b2"), "cerrar las tres llaves de paso del B2")
 
 	station.points["antena"].interact(player)
 	await _wait(0.2)

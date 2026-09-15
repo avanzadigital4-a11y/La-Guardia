@@ -99,6 +99,21 @@ const ANOMALIES := {
 	"patio_tambor_falta": {"sala": "patio", "tipo": "faltar", "objeto": "tambores"},
 	"patio_oscuro": {"sala": "patio", "tipo": "luz", "sala_luz": "patio"},
 	"patio_bandera": {"sala": "patio", "tipo": "aparecer", "objeto": "extra_bandera"},
+
+	# --- Subnivel B2 ---
+	"b2_tanque_corrido": {"sala": "b2 bombas", "tipo": "mover", "objeto": "b2_tanque",
+		"pos": Vector3(1.8, 0.0, 1.4), "rot": 40.0},
+	"b2_banco_falta": {"sala": "b2 bombas", "tipo": "faltar", "objeto": "b2_banco"},
+	"b2_bombas_oscuro": {"sala": "b2 bombas", "tipo": "luz", "sala_luz": "b2 bombas"},
+	"b2_fichero_abierto": {"sala": "b2 archivo", "tipo": "mover", "objeto": "b2_fichero",
+		"pos": Vector3(-0.9, 0.0, 0.5), "rot": 65.0},
+	"b2_estante_falta": {"sala": "b2 archivo", "tipo": "faltar", "objeto": "b2_estante_b"},
+	"b2_archivo_oscuro": {"sala": "b2 archivo", "tipo": "luz", "sala_luz": "b2 archivo"},
+	"b2_camastro_corrido": {"sala": "b2 fondo", "tipo": "mover", "objeto": "b2_camastro",
+		"pos": Vector3(2.2, 0.0, -0.8), "rot": 90.0},
+	"b2_lata_falta": {"sala": "b2 fondo", "tipo": "faltar", "objeto": "b2_lata"},
+	"b2_fondo_oscuro": {"sala": "b2 fondo", "tipo": "luz", "sala_luz": "b2 fondo"},
+	"b2_pasillo_oscuro": {"sala": "subnivel", "tipo": "luz", "sala_luz": "b2 pasillo"},
 }
 
 ## Como lo anota el parte del turno: cada anomalia en primera persona y en
@@ -167,6 +182,16 @@ const NOTES := {
 	"patio_figura": "Paré algo del tamaño de una persona en el fondo del patio.",
 	"patio_bandera": "Clavé una baliza en el patio.",
 	"patio_oscuro": "Apagué la luz del patio.",
+	"b2_tanque_corrido": "Corrí el tanque de la sala de bombas.",
+	"b2_banco_falta": "Saqué el banco de la sala de bombas.",
+	"b2_bombas_oscuro": "Apagué la luz de las bombas del B2.",
+	"b2_fichero_abierto": "Dejé el fichero del archivo abierto.",
+	"b2_estante_falta": "Vacié un estante del archivo del B2.",
+	"b2_archivo_oscuro": "Apagué la luz del archivo del B2.",
+	"b2_camastro_corrido": "Corrí el camastro del fondo del B2.",
+	"b2_lata_falta": "Me llevé la lata del fondo del B2.",
+	"b2_fondo_oscuro": "Apagué la luz del fondo del B2.",
+	"b2_pasillo_oscuro": "Apagué la luz del pasillo del B2.",
 }
 
 ## Objetos que solo existen cuando una anomalia los enciende. Se construyen

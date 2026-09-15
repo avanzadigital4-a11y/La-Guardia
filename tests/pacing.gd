@@ -34,6 +34,13 @@ const ENTRADAS := {
 	"patio": [Vector2(0.0, 7.0), Vector2(0.0, 9.0), Vector2(0.0, 13.0)],
 	"pasillo sur": [Vector2(0.0, -16.0), Vector2(0.0, -20.0)],
 	"subnivel": [Vector2(0.0, -16.0), Vector2(0.0, -20.0), Vector2(0.0, -26.0)],
+	"b2 pasillo": [Vector2(0.0, -16.0), Vector2(0.0, -20.0), Vector2(0.0, -26.0), Vector2(0.0, -34.0)],
+	"b2 bombas": [Vector2(0.0, -16.0), Vector2(0.0, -20.0), Vector2(0.0, -26.0),
+		Vector2(0.0, -38.0), Vector2(-4.0, -38.0)],
+	"b2 archivo": [Vector2(0.0, -16.0), Vector2(0.0, -20.0), Vector2(0.0, -26.0),
+		Vector2(0.0, -38.0), Vector2(4.0, -38.0)],
+	"b2 fondo": [Vector2(0.0, -16.0), Vector2(0.0, -20.0), Vector2(0.0, -26.0),
+		Vector2(0.0, -42.0), Vector2(0.0, -46.0)],
 }
 
 var main: Node
