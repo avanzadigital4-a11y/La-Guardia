@@ -43,8 +43,34 @@ pueden insinuar que el protagonista es poco confiable.** Todo lo raro de esas
 noches tiene que poder leerse como que la estación es la que está mal, no él.
 El golpe de la Noche 4 solo existe si antes hubo identificación sin reservas.
 
-Lo que sigue abierto: su nombre, y qué relación tenía con las cinco personas
-de la foto.
+**Se llama Olmedo. El jugador no lo lee nunca.**
+
+El nombre existe en la ficción y gobierna cómo se escribe, pero no aparece en
+ninguna línea que el jugador pueda leer. No es un olvido: es la regla. Sos él,
+y uno no lee su propio nombre.
+
+Eso el juego ya lo venía haciendo sin que estuviera escrito acá. La chapa de
+identificación dice *"tu nombre y el número de turno: 14"* en la Noche 1, y
+*"el nombre está frotado hasta casi borrarse"* en la Noche 5. La chapa que se
+gasta es la identidad que se gasta, y funciona sin explicarse.
+
+**Consecuencia para escribir, y es una regla dura: ninguna línea nueva puede
+nombrarlo.** Ni un registro de radio, ni una entrada de bitácora, ni el parte
+del turno. Si alguna vez tuviera que figurar en un papel institucional —un
+legajo, una planilla— va solo el apellido, nunca el nombre de pila: esos
+papeles usan apellido, y el nombre de pila lo usa la gente que te conoce. No
+queda nadie que lo conozca.
+
+**Es uno de los cinco de la foto.** El equipo eran cinco, y un registro ya lo
+dice al pasar: *"Tres de los cinco reportan haber despertado de pie en el
+pasillo."* Los otros cuatro salieron en el último relevo.
+
+Eso resuelve algo que estaba suelto. La foto del equipo pierde gente noche a
+noche: cinco, cuatro, tres, y en la Noche 5 *"una sola persona, de espaldas"*.
+**La foto no está registrando que se fueron: la están recortando.** Y el que
+queda es él. Es la misma mano que mueve las sillas y escribe el parte, y es la
+lectura que el juego quiere que el jugador arme solo, sin que nadie se la
+diga.
 
 ## Estructura narrativa (5 noches, con evolución del loop)
 
@@ -132,8 +158,6 @@ Cosas que el juego necesita y que acá no están decididas. No son tareas de
 implementación: son decisiones del autor, y hasta que existan, cualquiera que
 las escriba las está inventando.
 
-- **El nombre del protagonista**, y qué relación tenía con las cinco personas
-  de la foto. El resto de su definición ya está arriba, en su propia sección.
 - **El plano de la estación.** La técnica central es "el mismo espacio con
   variaciones sutiles", y el plano vive solo como tabla de rectángulos en
   `station_builder.gd`. Debería estar dibujado acá.
