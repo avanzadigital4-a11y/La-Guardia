@@ -327,6 +327,36 @@ Aparece a partir de la noche 5.
 | `rl_32_2.ogg` | ~3.4 s | Decí que sos el de la guardia y mostrá la chapa. |
 | `rl_32_3.ogg` | ~3.2 s | Si la chapa dice otro número, no la muestres. |
 
+## rl_33 — REG-054 / Sala de bombas
+
+Aparece a partir de la noche 3.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_33_1.ogg` | ~5.9 s | Las bombas las purgamos cada doce horas. Es la única tarea que no se puede saltear. |
+| `rl_33_2.ogg` | ~4.4 s | Si se detienen, lo de abajo sube. No sé decirlo mejor que así. |
+| `rl_33_3.ogg` | ~5.1 s | El turno anterior dejó de purgarlas cuatro días. No preguntamos por qué. |
+
+## rl_34 — REG-055 / Archivo
+
+Aparece a partir de la noche 3.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_34_1.ogg` | ~4.9 s | Archivamos los legajos del personal saliente en el estante de abajo. |
+| `rl_34_2.ogg` | ~4.7 s | Están todos. Incluido el de la persona que va a quedar de guardia. |
+| `rl_34_3.ogg` | ~2.9 s | Eso no debería poder archivarse todavía. |
+
+## rl_35 — REG-056 / Sin firmar
+
+Aparece a partir de la noche 5.
+
+| archivo | duración | línea |
+|---|---|---|
+| `rl_35_1.ogg` | ~5.4 s | Bajé otra vez. Ya no cuento los días en la pared, cuento las veces que bajo. |
+| `rl_35_2.ogg` | ~2.0 s | Las rayas no son días. |
+| `rl_35_3.ogg` | ~2.0 s | Son yo. |
+
 ---
 
-**98 líneas en total, alrededor de 7 minutos de audio.**
+**107 líneas en total, alrededor de 7 minutos de audio.**

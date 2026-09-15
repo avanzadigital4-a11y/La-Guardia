@@ -4,7 +4,9 @@ Terror psicologico en primera persona, sin combate, en una estacion antartica
 ficticia que cierra en cinco dias. Godot 4 (renderizador **Compatibility**),
 estetica low-poly tipo PS1.
 
-El documento de diseno completo esta en [`docs/diseno.md`](docs/diseno.md).
+El documento de diseno completo esta en [`docs/diseno.md`](docs/diseno.md), y
+lo que falta hacer fuera de Godot (voces, arte, playtest, licencia) esta en
+[`docs/produccion.md`](docs/produccion.md).
 
 ## Estado actual
 
