@@ -20,6 +20,7 @@ var current_night := 1
 var tasks: Array = []              # [{id, text, done}]
 var flags := {}                    # banderas arbitrarias de progreso
 var logbook: Array = []            # [{night, time, text, wrong}]
+var anomalies_seen: Array = []     # [{night, id}] lo que cambio de verdad en esta partida
 var radio_logs_found: Array = []
 var battery := 1.0
 var spare_batteries := 0   # las de repuesto se buscan en la estacion
@@ -140,6 +141,26 @@ func add_log(time: String, text: String, wrong := false) -> void:
 	_push_log(time, text, wrong)
 
 
+## Cada anomalia que se aplica queda anotada con su noche. No es para el
+## jugador: es el material con el que despues el parte del turno le muestra,
+## en su propia letra, lo que hizo sin acordarse. Una misma anomalia no se
+## anota dos veces en la misma noche.
+func record_anomaly(id: String) -> void:
+	for e in anomalies_seen:
+		if String(e.get("id", "")) == id and int(e.get("night", 0)) == current_night:
+			return
+	anomalies_seen.append({"night": current_night, "id": id})
+
+
+## Las anomalias de una noche, en el orden en que pasaron.
+func anomalies_of_night(night: int) -> Array:
+	var out: Array = []
+	for e in anomalies_seen:
+		if int(e.get("night", 0)) == night:
+			out.append(String(e.get("id", "")))
+	return out
+
+
 func found_radio_log(id: String) -> void:
 	if id not in radio_logs_found:
 		radio_logs_found.append(id)
@@ -174,6 +195,7 @@ func reset() -> void:
 	tasks.clear()
 	flags.clear()
 	logbook.clear()
+	anomalies_seen.clear()
 	radio_logs_found.clear()
 	battery = 1.0
 	spare_batteries = 0
@@ -223,6 +245,7 @@ func save_game(world := {}) -> void:
 		"night": current_night,
 		"flags": flags,
 		"logbook": logbook,
+		"anomalias_vistas": anomalies_seen,
 		"radio_logs": radio_logs_found,
 		"spare": spare_batteries,
 		"mundo": world,
@@ -254,6 +277,7 @@ func load_game(from_slot := 0) -> bool:
 	current_night = int(parsed.get("night", 1))
 	flags = parsed.get("flags", {})
 	logbook = parsed.get("logbook", [])
+	anomalies_seen = parsed.get("anomalias_vistas", [])
 	radio_logs_found = parsed.get("radio_logs", [])
 	spare_batteries = int(parsed.get("spare", 0))
 	pending_world = parsed.get("mundo", {})

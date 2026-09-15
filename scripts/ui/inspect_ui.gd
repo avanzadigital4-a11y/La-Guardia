@@ -49,9 +49,24 @@ func _ready() -> void:
 	root.add_child(hint)
 
 
+## `document`: el texto es una hoja escrita, no un pie de foto. Se alinea a la
+## izquierda y ocupa el centro de la pantalla, que es como se lee un parte.
 func open(title: String, description: String) -> void:
 	_title.text = tr(title)
 	_desc.text = tr(description)
+	var document := description.count("\n") >= 2
+	if document:
+		_desc.offset_left = 210.0
+		_desc.offset_right = -210.0
+		_desc.offset_top = -420.0
+		_desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		_desc.autowrap_mode = TextServer.AUTOWRAP_OFF
+	else:
+		_desc.offset_left = 180.0
+		_desc.offset_right = -180.0
+		_desc.offset_top = -156.0
+		_desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	visible = true
 
 

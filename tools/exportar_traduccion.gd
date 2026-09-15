@@ -19,6 +19,7 @@ func _ready() -> void:
 	_from_nights()
 	_from_radio_logs()
 	_from_inspectables()
+	_from_anomalies()
 	_from_code()
 	_write()
 	get_tree().quit(0)
@@ -68,6 +69,12 @@ func _from_inspectables() -> void:
 		_add(String(data.get("titulo", "")), "objeto %s" % id)
 		for night in data.get("textos", {}).keys():
 			_add(String(data["textos"][night]), "objeto %s" % id)
+
+
+## Las lineas del parte del turno: una por anomalia.
+func _from_anomalies() -> void:
+	for id in AnomalyData.NOTES.keys():
+		_add(String(AnomalyData.NOTES[id]), "parte / %s" % id)
 
 
 ## Todo lo que el código pasa por tr("...").

@@ -83,6 +83,9 @@ func _run() -> void:
 			resolvable[(node as SensorPanel).task_id] = true
 		elif node is SuitCounter:
 			resolvable[(node as SuitCounter).task_id] = true
+		elif node is ReportSheet:
+			for tid in (node as ReportSheet).task_ids:
+				resolvable[String(tid)] = true
 	resolvable["radio_unknown"] = true   # se completa escuchando el registro
 	var unreachable: Array[String] = []
 	for n in range(1, GameState.MAX_NIGHT + 1):
@@ -122,6 +125,44 @@ func _run() -> void:
 	GameState.current_night = 1
 	_check(texto_1 != texto_5 and texto_1 != "" and texto_5 != "",
 		"lo que dice un objeto cambia con las noches")
+
+	# --- El parte del turno ---
+	var sin_nota: Array[String] = []
+	for id in AnomalyData.ANOMALIES.keys():
+		if not AnomalyData.NOTES.has(String(id)):
+			sin_nota.append(String(id))
+	_check(sin_nota.is_empty(), "las %d anomalias tienen su linea para el parte%s" % [
+		AnomalyData.ANOMALIES.size(), "" if sin_nota.is_empty() else ": " + ", ".join(sin_nota)])
+	var sobran: Array[String] = []
+	for id in AnomalyData.NOTES.keys():
+		if not AnomalyData.ANOMALIES.has(String(id)):
+			sobran.append(String(id))
+	_check(sobran.is_empty(), "no hay lineas de parte sin anomalia%s" % [
+		"" if sobran.is_empty() else ": " + ", ".join(sobran)])
+	_check(station.points.has("parte"), "el parte del turno esta sobre la mesa de control")
+	var hoja: ReportSheet = station.points["parte"]
+
+	# Lo que dice la hoja sale de lo que paso en esta partida, no de un guion.
+	GameState.anomalies_seen.clear()
+	GameState.current_night = 4
+	GameState.record_anomaly("gen_puerta")
+	GameState.record_anomaly("pasillo_marca")
+	var parte := hoja.text_for(4)
+	_check(parte.contains(AnomalyData.note("gen_puerta"))
+		and parte.contains(AnomalyData.note("pasillo_marca")),
+		"el parte de la noche 4 lista lo que de verdad cambio")
+	_check(parte.contains("tuya"), "y se lo atribuye al jugador")
+	GameState.current_night = 1
+	_check(not hoja.text_for(1).contains(AnomalyData.note("gen_puerta")),
+		"antes de la noche 4 la hoja esta en blanco")
+	GameState.current_night = 5
+	GameState.record_anomaly("patio_figura")
+	var cierre := hoja.text_for(5)
+	_check(cierre.contains(AnomalyData.note("gen_puerta"))
+		and cierre.contains(AnomalyData.note("patio_figura")),
+		"el inventario de cierre junta las cinco noches")
+	GameState.anomalies_seen.clear()
+	GameState.current_night = 1
 
 	# --- Aplicar todo y volver atras ---
 	for id in AnomalyData.ANOMALIES.keys():

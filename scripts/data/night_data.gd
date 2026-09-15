@@ -225,6 +225,7 @@ const NIGHTS := {
 		"clock": "00:02",
 		"tasks": [
 			{"id": "logbook_check", "text": "Releer la bitácora de las noches anteriores"},
+			{"id": "parte", "text": "Firmar el parte del turno"},
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 			{"id": "trajes", "text": "Contar los trajes de la esclusa"},
@@ -283,6 +284,14 @@ const NIGHTS := {
 				{"esperar": 1.0},
 				{"bitacora": "Conté los trajes otra vez. El número no coincide con ayer.", "hora": "02:14", "falsa": true},
 			],
+			"parte": [
+				{"esperar": 0.8},
+				{"subtitulo": "El parte ya está completo.", "tiempo": 2.6},
+				{"subtitulo": "Es tu letra, y la hora del pie es de antes de que pasara nada.", "tiempo": 3.8},
+				{"bitacora": "Firmé el parte al entrar. Todo lo que anoté ahí pasó después.", "hora": "04:12", "falsa": true},
+				{"parpadeo": 1.6},
+				{"armar": "control_marca", "sala": "sala de control"},
+			],
 			"sensors": [
 				{"aviso": "OCUPACIÓN REGISTRADA: 0 personas."},
 				{"parpadeo": 2.0},
@@ -307,6 +316,7 @@ const NIGHTS := {
 			{"id": "generator", "text": "Dejar los generadores en modo de cierre", "steps": 2},
 			{"id": "subnivel", "text": "Bajar al subnivel por última vez"},
 			{"id": "antena", "text": "Orientar la antena para el retiro"},
+			{"id": "inventario", "text": "Cerrar el inventario del turno"},
 			{"id": "puertas", "text": "Dejar todas las puertas cerradas"},
 		],
 		"final_task": {"id": "decidir", "text": "Decidir: esperar el vehículo en el patio o quedarte abajo"},
