@@ -24,7 +24,7 @@ func _ready() -> void:
 	_col = VBoxContainer.new()
 	_col.add_theme_constant_override("separation", 10)
 	center.add_child(_col)
-	var title := UIUtils.label(tr("EN PAUSA"), 24, UIUtils.FG)
+	var title := UIUtils.title(tr("EN PAUSA"), 24, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_col.add_child(title)
 

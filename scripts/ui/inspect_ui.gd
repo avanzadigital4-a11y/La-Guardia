@@ -78,6 +78,12 @@ func _build_caption() -> Control:
 
 
 ## Documento: la hoja se lee entera, con los mismos margenes que la bitacora.
+##
+## Y se ve como una hoja. Antes era texto verde flotando sobre el fondo oscuro,
+## igual que el HUD y que el menu, asi que el parte del turno no se distinguia
+## de cualquier otro cartel del juego. Es el objeto que sostiene el giro del
+## final: tiene que leerse como papel que alguien escribio a maquina, no como
+## una pantalla mas.
 func _build_document() -> Control:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -89,22 +95,44 @@ func _build_document() -> Control:
 	_document = margin
 
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 12)
+	col.add_theme_constant_override("separation", 10)
 	margin.add_child(col)
 
-	_doc_title = UIUtils.label("", 18, UIUtils.FG)
-	col.add_child(_doc_title)
+	var hoja := PanelContainer.new()
+	hoja.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	hoja.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hoja.add_theme_stylebox_override("panel", UIUtils.paper_box())
+	col.add_child(hoja)
+
+	var adentro := MarginContainer.new()
+	adentro.add_theme_constant_override("margin_left", 30)
+	adentro.add_theme_constant_override("margin_right", 30)
+	adentro.add_theme_constant_override("margin_top", 24)
+	adentro.add_theme_constant_override("margin_bottom", 24)
+	hoja.add_child(adentro)
+
+	var hoja_col := VBoxContainer.new()
+	hoja_col.add_theme_constant_override("separation", 10)
+	adentro.add_child(hoja_col)
+
+	_doc_title = UIUtils.to_paper(UIUtils.label("", 18, UIUtils.FG), true)
+	hoja_col.add_child(_doc_title)
+
+	hoja_col.add_child(UIUtils.paper_rule())
 
 	_doc_scroll = ScrollContainer.new()
 	_doc_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	col.add_child(_doc_scroll)
+	hoja_col.add_child(_doc_scroll)
 
-	_doc_text = UIUtils.label("", 15, UIUtils.DIM)
+	_doc_text = UIUtils.to_paper(UIUtils.label("", 15, UIUtils.FG))
 	_doc_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_doc_text.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_doc_scroll.add_child(_doc_text)
 
-	col.add_child(UIUtils.label(HINT, 12, UIUtils.DIM))
+	# La ayuda no va impresa en la hoja: es del juego, no del documento.
+	var hint := UIUtils.label(HINT, 12, UIUtils.DIM)
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	col.add_child(hint)
 	return margin
 
 

@@ -41,6 +41,12 @@ El audio de los registros de radio en audio/voz/ se generó con espeak-ng
 (GPLv3). La GPL cubre el programa, no el audio que produce: los archivos
 generados no quedan sujetos a esa licencia. Ver docs/produccion.md.
 
+Las fuentes de fuentes/ son IBM Plex (Mono y Sans Condensed), copyright
+IBM Corp., licencia SIL Open Font License 1.1. La OFL permite usarlas,
+incrustarlas y redistribuirlas dentro de un producto comercial; lo único que
+prohíbe es venderlas por separado. El texto completo está en fuentes/OFL.txt
+y tiene que viajar con el juego al exportarlo.
+
 No se incluye ningún asset con licencia restringida a uso no comercial.
 Esa es una regla deliberada del proyecto: cualquier textura, fuente, voz o
 sonido que se agregue tiene que permitir uso comercial, para no hipotecar

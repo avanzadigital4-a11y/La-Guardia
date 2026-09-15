@@ -26,6 +26,7 @@ const TEX_SCALE := {
 	"oxido": 0.35,
 	"nieve": 0.18,
 	"hormigon": 0.4,
+	"crt": 2.5,
 }
 
 
@@ -33,8 +34,14 @@ const TEX_SCALE := {
 ## textures.gd). El color sigue siendo el que manda: la textura es gris y
 ## multiplica, asi que `recolor_walls` puede seguir tiniendo la estacion por
 ## noche sin regenerar nada.
-static func surface(color: Color, emission := 0.0, snap := 0.8, textura := "") -> Material:
-	var key := "%s|%.2f|%.2f|%s" % [color.to_html(false), emission, snap, textura]
+##
+## `escala`: repeticiones por metro, si hay que pisar la de TEX_SCALE. Las de
+## la tabla estan pensadas para paredes y pisos, que miden metros. Un matafuego
+## de 22 cm con la escala de "metal" muestra un quinto de baldosa, o sea un
+## manchon plano. Los props piden bastante mas repeticion para que la textura
+## se lea como material y no como suciedad al azar.
+static func surface(color: Color, emission := 0.0, snap := 0.8, textura := "", escala := 0.0) -> Material:
+	var key := "%s|%.2f|%.2f|%s|%.2f" % [color.to_html(false), emission, snap, textura, escala]
 	if _mat_cache.has(key):
 		return _mat_cache[key]
 	var mat: Material
@@ -51,7 +58,8 @@ static func surface(color: Color, emission := 0.0, snap := 0.8, textura := "") -
 			if tex != null:
 				sm.set_shader_parameter("albedo_tex", tex)
 				sm.set_shader_parameter("use_tex", true)
-				sm.set_shader_parameter("tex_scale", TEX_SCALE.get(textura, 0.5))
+				var rep: float = escala if escala > 0.0 else float(TEX_SCALE.get(textura, 0.5))
+				sm.set_shader_parameter("tex_scale", rep)
 		mat = sm
 	else:
 		var std := StandardMaterial3D.new()
