@@ -29,6 +29,8 @@ func _ready() -> void:
 		func(v): Settings.pixelation = v)
 	_check(left, "Efectos PS1 (grano, scanlines, viñeta)", Settings.ps1_effects,
 		func(v): Settings.ps1_effects = v)
+	_check(left, "Sombras (lo más caro: apagalas si va lento)", Settings.shadows,
+		func(v): Settings.shadows = v)
 	_check(left, "Pantalla completa", Settings.fullscreen,
 		func(v): Settings.fullscreen = v)
 	_check(left, "Invertir eje Y", Settings.invert_y,

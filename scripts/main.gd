@@ -15,6 +15,7 @@ var pause_menu: CanvasLayer
 var world_env: WorldEnvironment
 var post_material: ShaderMaterial
 var blackout: Blackout
+var shadows: ShadowBudget
 
 
 func _ready() -> void:
@@ -28,6 +29,11 @@ func _ready() -> void:
 	director.name = "NightDirector"
 	add_child(director)
 	director.setup(station, player, fade, world_env)
+
+	shadows = ShadowBudget.new()
+	shadows.name = "PresupuestoDeSombras"
+	add_child(shadows)
+	shadows.setup(station.all_lights, player)
 
 	blackout = Blackout.new()
 	blackout.name = "Apagon"
@@ -46,7 +52,10 @@ func _setup_environment() -> void:
 	e.background_color = Color(0.02, 0.025, 0.03)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.16, 0.18, 0.22)
-	e.ambient_light_energy = 0.55
+	# Ambiente casi nulo. Con 0.55 no habia sombra posible: la luz de relleno
+	# levantaba todos los rincones y la estacion quedaba pareja. Lo que se ve
+	# ahora lo tiene que poner una lampara o la linterna.
+	e.ambient_light_energy = 0.10
 	e.fog_enabled = true
 	e.fog_light_color = Color(0.10, 0.11, 0.13)
 	e.fog_density = 0.04

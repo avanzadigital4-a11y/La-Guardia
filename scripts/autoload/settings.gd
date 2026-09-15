@@ -8,6 +8,7 @@ const PATH := "user://opciones.cfg"
 var mouse_sensitivity := 1.0     # multiplicador
 var master_volume := 0.8         # 0..1
 var ps1_effects := true          # grano, scanlines, vineta
+var shadows := true              # sombras: lo mas caro del cuadro
 var pixelation := 0.55           # escala interna del viewport 3D
 var fullscreen := false
 var invert_y := false
@@ -87,6 +88,7 @@ func save_settings() -> void:
 	cfg.set_value("juego", "mouse_sensitivity", mouse_sensitivity)
 	cfg.set_value("juego", "master_volume", master_volume)
 	cfg.set_value("juego", "ps1_effects", ps1_effects)
+	cfg.set_value("juego", "shadows", shadows)
 	cfg.set_value("juego", "pixelation", pixelation)
 	cfg.set_value("juego", "fullscreen", fullscreen)
 	cfg.set_value("juego", "invert_y", invert_y)
@@ -104,6 +106,7 @@ func load_settings() -> void:
 	mouse_sensitivity = float(cfg.get_value("juego", "mouse_sensitivity", mouse_sensitivity))
 	master_volume = float(cfg.get_value("juego", "master_volume", master_volume))
 	ps1_effects = bool(cfg.get_value("juego", "ps1_effects", ps1_effects))
+	shadows = bool(cfg.get_value("juego", "shadows", shadows))
 	pixelation = float(cfg.get_value("juego", "pixelation", pixelation))
 	fullscreen = bool(cfg.get_value("juego", "fullscreen", fullscreen))
 	invert_y = bool(cfg.get_value("juego", "invert_y", invert_y))

@@ -91,6 +91,24 @@ Lo que ya funciona:
   codigo.
 - Audio sintetizado en runtime (viento continuo, crujidos, puertas, pasos):
   el proyecto no depende de ningun asset externo.
+- **Luz y sombra.** Hasta ahora ninguna luz de la estacion proyectaba sombra
+  (las catorce con `shadow_enabled = false`) y `Build.box` ademas apagaba el
+  proyectado en cada malla: la estacion entera era transparente a la luz y
+  cada sala quedaba banada pareja. Ahora hay sombras, con presupuesto: solo
+  las tres luces mas cercanas al jugador proyectan, que son las unicas cuya
+  sombra se distingue. La luz ambiente bajo de 0.55 a 0.10 y la atenuacion
+  subio, asi que la luz forma charcos en vez de banar. **Es lo mas caro del
+  cuadro y se puede apagar desde Opciones.**
+- **Silueta**: canos, bandejas de cable, abrazaderas y rejillas de
+  ventilacion. No son props en el sentido del documento (que limita props
+  unicos por habitacion): son arquitectura, todas cajas del mismo primitivo,
+  sin un asset nuevo. Una sala que es una caja vacia se lee como una caja
+  vacia por buena que sea la textura. Y ahora que hay sombras, un cano
+  cruzado sobre una lampara raya el piso.
+- **Mapeo afin de texturas**: la otra mitad de la firma PS1. La consola no
+  corregia la perspectiva al interpolar coordenadas de textura, y por eso las
+  texturas se retuercen al mirar en diagonal. El temblor de vertices ya
+  estaba; esto es lo que faltaba para que se lea PS1 y no low-poly moderno.
 - **Texturas generadas por codigo** (`scripts/world/textures.gd`): chapa con
   juntas y remaches, placas de piso, rejilla, metal rayado, oxido, nieve y
   hormigon para el B2. Ningun archivo de imagen, ninguna licencia que revisar.
@@ -260,6 +278,25 @@ misma corrida de condiciones.
 Las **texturas procedurales salen gratis**: A/B pareado de dos corridas cada
 uno dio 42.6 FPS con textura contra 43.2 sin, o sea nada. El triplanar cuesta
 mas por fragmento en teoria, pero el cuello de botella esta en otro lado.
+
+Las **sombras no salen gratis**, y es el unico cambio de arte que costo algo
+medible. A/B pareado:
+
+```
+  sin sombras            42.6 FPS promedio, 36 en percentil 1%
+  con sombras            33.6                26
+  + atlas 1024 y duro    36.2                29.5
+```
+
+Achicar el atlas de sombras a 1024 recupero un tercio del costo **y ademas
+mejora el look**: sombras mas duras y escalonadas es lo que pide la estetica.
+
+**Cuidado al leer ese numero.** llvmpipe rasteriza en CPU, asi que penaliza
+el relleno de los mapas de sombra mucho mas que una GPU real, por debil que
+sea. Es muy probable que en hardware de verdad el costo sea bastante menor.
+Esto no se sabe hasta medirlo en la maquina objetivo, y es la razon mas
+concreta que hay hoy para hacerlo. Mientras tanto, las sombras se apagan
+desde Opciones.
 
 Ya se probo una cosa que **no** funciono: apagar las luces lejanas para dejar
 como maximo cuatro prendidas a la vez. Tres corridas pareadas dieron 26.1
