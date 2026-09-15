@@ -1,0 +1,59 @@
+La Guardia
+Copyright (c) 2026 avanzadigital4-a11y
+
+TODOS LOS DERECHOS RESERVADOS / ALL RIGHTS RESERVED
+
+Este repositorio, su código fuente y todo su contenido (textos, diseño,
+audio, imágenes y documentación) son propiedad de su autor.
+
+No se concede ninguna licencia de uso, copia, modificación, distribución
+ni explotación comercial. Queda prohibida la reproducción total o parcial
+sin autorización expresa y por escrito del autor.
+
+Se permite, sin autorización previa:
+
+  - leer el código con fines de estudio;
+  - clonar el repositorio para inspeccionarlo o compilarlo localmente;
+  - citar fragmentos breves con atribución, en reseñas, artículos o
+    material educativo.
+
+--------------------------------------------------------------------------
+
+POR QUÉ ESTA LICENCIA
+
+Es la opción reversible. Siempre se puede liberar más adelante lo que hoy
+está reservado; no se puede volver a cerrar lo que ya se abrió. Mientras el
+juego no esté publicado y no esté decidido su modelo de distribución, esto
+mantiene todas las puertas abiertas.
+
+La decisión y sus motivos están en docs/diseno.md, sección "Publicación".
+
+--------------------------------------------------------------------------
+
+COMPONENTES DE TERCEROS
+
+El juego se construye sobre Godot Engine, distribuido bajo licencia MIT.
+Godot no se incluye en este repositorio; se enlaza al exportar. Los
+requisitos de atribución de Godot corresponden al binario exportado, no a
+este código.
+
+El audio de los registros de radio en audio/voz/ se generó con espeak-ng
+(GPLv3). La GPL cubre el programa, no el audio que produce: los archivos
+generados no quedan sujetos a esa licencia. Ver docs/produccion.md.
+
+No se incluye ningún asset con licencia restringida a uso no comercial.
+Esa es una regla deliberada del proyecto: cualquier textura, fuente, voz o
+sonido que se agregue tiene que permitir uso comercial, para no hipotecar
+la decisión de publicación. En particular, por eso el audio se generó con
+espeak-ng y no con mbrola, cuya licencia prohíbe incorporar la base a un
+producto que se venda.
+
+--------------------------------------------------------------------------
+
+Dos notas prácticas, que no son asesoramiento legal:
+
+  - Reemplazar "avanzadigital4-a11y" por el nombre legal del autor antes
+    de publicar el juego.
+  - Si en algún momento se decide abrir el código, lo habitual es separar
+    las licencias: código permisivo (MIT) y contenido reservado. Se puede
+    hacer en este mismo archivo, en dos secciones.

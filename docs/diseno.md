@@ -16,6 +16,62 @@ Terror psicológico, exploración en primera persona, sin combate. Estética vis
 
 Simple y repetible, pero **debe evolucionar noche a noche** — nunca debe sentirse como la misma secuencia ejecutada cinco veces, o el jugador cae en piloto automático.
 
+## El protagonista
+
+**Por qué se quedó solo: no se fue.** Los demás salieron en el último relevo y
+él no subió al vehículo. Eso es todo. No hay una explicación heroica ni una
+orden: simplemente no subió.
+
+Nadie lo dice en voz alta durante el juego. No hay una línea que lo confiese.
+Se deduce de lo que ya está puesto en el mundo: los cinco trajes de la esclusa
+que van faltando, la foto del equipo a la que le van sacando gente, su legajo
+archivado en el B2 con fecha de cierre. El punto de partida ya es una
+anomalía, y el jugador no tiene por qué notarlo hasta el final.
+
+Es lo que hace funcionar el remate. Si nunca subió al vehículo, que la radio
+diga que hace once meses no hay personal asignado a esa estación deja de ser
+un dato suelto: es la única lectura posible de todo lo anterior.
+
+**Qué tiene que sentir el jugador, y desde cuándo.** Al principio *sos* él, sin
+distancia: hacés sus tareas, leés su bitácora, aceptás su versión. La duda no
+se siembra antes de tiempo — llega de golpe en la Noche 4, cuando el parte del
+turno ya está escrito con tu letra y con la hora del pie anterior a que pasara
+nada.
+
+Esto tiene una consecuencia concreta para escribir: **las noches 1 a 3 no
+pueden insinuar que el protagonista es poco confiable.** Todo lo raro de esas
+noches tiene que poder leerse como que la estación es la que está mal, no él.
+El golpe de la Noche 4 solo existe si antes hubo identificación sin reservas.
+
+**Se llama Olmedo. El jugador no lo lee nunca.**
+
+El nombre existe en la ficción y gobierna cómo se escribe, pero no aparece en
+ninguna línea que el jugador pueda leer. No es un olvido: es la regla. Sos él,
+y uno no lee su propio nombre.
+
+Eso el juego ya lo venía haciendo sin que estuviera escrito acá. La chapa de
+identificación dice *"tu nombre y el número de turno: 14"* en la Noche 1, y
+*"el nombre está frotado hasta casi borrarse"* en la Noche 5. La chapa que se
+gasta es la identidad que se gasta, y funciona sin explicarse.
+
+**Consecuencia para escribir, y es una regla dura: ninguna línea nueva puede
+nombrarlo.** Ni un registro de radio, ni una entrada de bitácora, ni el parte
+del turno. Si alguna vez tuviera que figurar en un papel institucional —un
+legajo, una planilla— va solo el apellido, nunca el nombre de pila: esos
+papeles usan apellido, y el nombre de pila lo usa la gente que te conoce. No
+queda nadie que lo conozca.
+
+**Es uno de los cinco de la foto.** El equipo eran cinco, y un registro ya lo
+dice al pasar: *"Tres de los cinco reportan haber despertado de pie en el
+pasillo."* Los otros cuatro salieron en el último relevo.
+
+Eso resuelve algo que estaba suelto. La foto del equipo pierde gente noche a
+noche: cinco, cuatro, tres, y en la Noche 5 *"una sola persona, de espaldas"*.
+**La foto no está registrando que se fueron: la están recortando.** Y el que
+queda es él. Es la misma mano que mueve las sillas y escribe el parte, y es la
+lectura que el juego quiere que el jugador arme solo, sin que nadie se la
+diga.
+
 ## Estructura narrativa (5 noches, con evolución del loop)
 
 - **Noche 1 — Rutina.** Tarea → recorrido → un evento extraño aislado. El jugador aprende el layout y los sistemas. Todo parece tranquilo.
@@ -56,7 +112,11 @@ No todo lo raro ocurre frente al jugador. Algunos cambios pasan mientras no est�
 
 ## Final (el más fuerte narrativamente)
 
-El jugador descubre que algunas de las anomalías las causó él mismo, en estados que no recuerda. Al llegar el vehículo de evacuación, una transmisión de radio revela: *"No hay personal asignado a esa estación desde hace 11 meses."* No se explica qué fue exactamente lo que pasó — la ambigüedad final es intencional y es el gancho memorable del juego. (Pueden existir 1-2 finales alternativos más cerrados como variantes de menor peso, pero este es el final principal a diseñar primero.)
+El jugador descubre que algunas de las anomalías las causó él mismo, en estados que no recuerda. Al llegar el vehículo de evacuación, una transmisión de radio revela: *"No hay personal asignado a esa estación desde hace 11 meses."* No se explica qué fue exactamente lo que pasó — la ambigüedad final es intencional y es el gancho memorable del juego. **Decidido: dos finales, y no más.** El principal (salir al patio y esperar el
+vehículo) y una variante (cerrar la escotilla del B2 desde adentro y quedarse).
+Los dos están construidos. No se agregan más: la ambigüedad del final principal
+es el gancho, y cada final extra la diluye además de competir por el contenido
+que falta para llegar a los 60-90 minutos.
 
 ## Estética visual
 
@@ -98,22 +158,68 @@ Cosas que el juego necesita y que acá no están decididas. No son tareas de
 implementación: son decisiones del autor, y hasta que existan, cualquiera que
 las escriba las está inventando.
 
-- **El protagonista.** No tiene nombre, ni voz, ni una razón de estar solo,
-  ni relación con las cinco personas de la foto del equipo. Todo el terror
-  depende de que el jugador dude de él, y hoy es un hueco.
-- **Los finales alternativos.** El principal está definido y construido, y hay
-  una variante implementada (quedarse abajo). El documento dice "1-2
-  alternativos más cerrados" pero no los especifica.
 - **El plano de la estación.** La técnica central es "el mismo espacio con
   variaciones sutiles", y el plano vive solo como tabla de rectángulos en
   `station_builder.gd`. Debería estar dibujado acá.
 - **Presupuesto y cronograma.** "Un desarrollador solo" aparece como
   restricción de alcance, pero no hay horas estimadas ni fechas.
-- **Publicación.** Plataforma, precio, demo, fecha. Nada.
-- **Licencia.** No hay archivo `LICENSE` en el repositorio.
 - **Accesibilidad.** No hay sección, aunque el juego ya tiene más de lo que
   el documento pide: remapeo de teclas, tamaño de subtítulos, invertir el eje
   Y, quitar el cabeceo, campo de visión ajustable.
+
+## Publicación: decidido
+
+El objetivo declarado del autor es que el juego tenga éxito **y** que deje
+dinero. "Gratis" y "vender" parecen las dos únicas opciones y no lo son:
+mezclan dos decisiones distintas que conviene separar.
+
+- **El precio** del juego (gratis, pago, o el que quiera pagar el jugador).
+- **La licencia** del código y de los assets (abierto o reservado).
+
+Son independientes. Se puede vender un juego con el código abierto, y se puede
+regalar un juego con todo reservado.
+
+### La restricción que decide el primer paso
+
+**Publicar en Steam cuesta 100 dólares por juego, pagados antes de publicar.**
+Se recuperan después de vender 1000 dólares, pero hay que ponerlos primero. En
+este proyecto el presupuesto no alcanzó para un micrófono de 60: los 100 de
+Steam no están hoy.
+
+**itch.io no cobra nada por publicar**, y permite "pagá lo que quieras" con
+mínimo cero: el jugador descarga gratis y puede dejar plata si quiere.
+
+Eso resuelve la tensión: **alcance de juego gratis, con la puerta abierta a que
+entre dinero, y sin costo de entrada.**
+
+### Lo decidido
+
+1. **`LICENSE` con todos los derechos reservados.** Hecho, está en la raíz
+   del repositorio. Es la opción
+   Es la opción reversible: siempre se puede abrir más adelante, nunca se
+   puede cerrar lo que ya se abrió.
+2. **itch.io, "pagá lo que quieras", mínimo cero.** Gratis para publicar,
+   gratis para descargar, con donación opcional.
+3. **Steam después**, si consigue tracción. Para entonces los 100 dólares
+   salen de lo recaudado o de un público que ya existe.
+4. **Nada de assets con licencia no comercial.** Esto confirma que usar
+   espeak-ng en vez de mbrola fue la decisión correcta, y la regla vale para
+   todo lo que entre de acá en adelante: cada textura, cada fuente, cada
+   sonido.
+
+### Qué esperar, con honestidad
+
+Un primer juego rara vez deja dinero significativo. Lo que deja es público y
+oficio, y eso es lo que financia al segundo.
+
+Dicho eso, el género elegido es de los pocos donde alguien solo y sin
+presupuesto puede romper: el terror corto en estética PS1 tiene un público que
+lo busca activamente, los streamers cazan justamente esto, y la estética es
+alcanzable sin un equipo de arte. Es una ventaja real de la decisión de diseño
+original, no una casualidad.
+
+La forma de aprovecharla es que el juego sea **corto, raro y terminable de una
+sentada**, que es exactamente lo que dice el objetivo de 60-90 minutos.
 
 ## Lo que falta producir (no es diseño, es trabajo)
 
