@@ -152,30 +152,40 @@ aplicar las 61 anomalias juntas y revertirlas deje la estacion como estaba.
 
 ## Ritmo medido
 
-`tests/pacing.tscn` camina la Noche 1 como la caminaria alguien que va derecho
-a cada tarea, acelerado con `Engine.time_scale`, y reporta duracion,
-distancia y bateria. La ultima medicion:
+`tests/pacing.tscn` camina **las cinco noches** como las caminaria alguien que
+va derecho a cada tarea, acelerado con `Engine.time_scale`. No hay rutas
+escritas a mano: resuelve cada tarea buscando su punto en la estacion y arma
+el camino pasando por el pasillo, asi la medicion sigue valiendo cuando se
+agregan tareas nuevas (que es justamente para lo que se usa). Si una tarea
+queda sin punto en el mundo, lo dice.
 
 ```
-duracion        100 s  (1.7 min)
-distancia       172 m
-bateria usada    26 %
+  noche   duracion   distancia   bateria   tareas   registros   anomalias
+      1    106.6 s     175.9 m       27 %        4           6           2
+      2     98.4 s     135.4 m       25 %        4          13           7
+      3    128.3 s     207.1 m       32 %        5          20          11
+      4    129.6 s     172.4 m       32 %        6          26          14
+      5    129.0 s     210.4 m       32 %        5          32          18
+
+  total directo       591.7 s   (9.9 min)
+  distancia total     901.2 m
+  bateria: la peor noche gasta 32 % de una carga; hay 4 cargas
+  explorando (x2-x3)   19.7 a 29.6 min, mas 6.2 min de audio
+  objetivo del diseno  120 a 180 min
 ```
 
-A eso se le suma lo que hay para encontrar: 61 anomalias repartidas entre las
-cinco noches, 32 registros de radio (unos 7 minutos de audio) y objetos que
-cambian de texto noche a noche. Un jugador que explora tarda entre dos y tres
-veces el recorrido directo.
+Antes esto media solo la Noche 1 y el total salia de extrapolar. Ahora esta
+medido: **10 minutos de recorrido directo y entre 20 y 30 explorando, contra
+las 2-3 horas que pide el diseno.** Falta entre cuatro y seis veces el
+contenido actual, y la diferencia es de contenido, no de ritmo.
 
-Aun asi el total queda lejos: **alrededor de media hora de juego contra las
-2-3 horas que pide el diseno**. La diferencia es de contenido, no de ritmo, y
-el numero de arriba es la forma de medir si se esta acortando. Con la bateria pasa lo mismo: la autonomia
-alcanza de sobra porque las noches son cortas, asi que el balance actual
-(una carga por noche de exploracion, tres pilas repartidas) hay que
-recalcularlo cuando las noches crezcan.
+Dos cosas que el numero deja ver:
 
-Para revisar la estetica sin jugar, `godot --path . -- --capture` guarda una
-captura de cada ambiente en el directorio `user://` del proyecto.
+- Las cinco noches duran casi lo mismo (98 a 130 s). La Noche 5 deberia ser
+  la mas larga y no lo es.
+- La bateria sobra por goleada: la peor noche gasta un tercio de una carga y
+  hay cuatro. El balance actual solo se sostiene porque las noches son
+  cortas, y hay que rehacerlo cuando crezcan.
 
 ## Medir el rendimiento
 
