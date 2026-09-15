@@ -174,9 +174,13 @@ func _capture_debug() -> void:
 		[Vector3(0.0, 0.1, 9.8), PI, "esclusa"],
 		# Vistas que encuadran props, no paredes: sin estas no hay forma de
 		# revisar el material de los objetos, que es la mitad del arte.
-		[Vector3(-5.5, 0.1, -11.0), PI * 0.5, "consola"],
+		[Vector3(-3.6, 0.1, -11.0), PI * 0.5, "consola"],
 		[Vector3(3.0, 0.1, -1.4), -PI * 0.5, "almacen_cajas"],
 		[Vector3(-6.0, 0.1, -2.5), PI * 0.5, "dorm_cucheta"],
+		[Vector3(0.0, 0.1, -8.6), -PI * 0.5, "extintor"],
+		[Vector3(2.8, 0.1, -11.0), -PI * 0.5, "generador_prop"],
+		[Vector3(6.6, 0.1, -0.6), -PI * 0.5, "valvula"],
+		[Vector3(-9.6, 0.1, 18.0), PI, "antena"],
 	]
 	var views_n3 := [
 		[Vector3(0.0, 0.1, -17.0), 0.0, "n3_pasillo_sur"],

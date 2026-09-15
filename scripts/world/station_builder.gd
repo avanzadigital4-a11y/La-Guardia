@@ -49,6 +49,8 @@ var _mat_metal: Material
 var _mat_dark: Material
 var _mat_snow: Material
 var _mat_screen: Material
+var _mat_tela: Material
+var _mat_gen: Material
 
 
 func build(tint: Color) -> void:
@@ -59,6 +61,10 @@ func build(tint: Color) -> void:
 	_mat_dark = Build.surface(Color(0.08, 0.08, 0.09), 0.0, 0.8, "hormigon")
 	_mat_snow = Build.surface(Color(0.62, 0.66, 0.70), 0.0, 0.8, "nieve")
 	_mat_screen = Build.surface(Color(0.35, 0.72, 0.58), 1.05, 0.8, "crt")
+	# Tela: asientos y colchones. Mas clara que el metal y con manchas.
+	_mat_tela = Build.surface(Color(0.28, 0.27, 0.25), 0.0, 0.8, "oxido", 1.4)
+	# El generador es lo unico pintado de la estacion, y esta despintado.
+	_mat_gen = Build.surface(Color(0.42, 0.40, 0.30), 0.0, 0.8, "oxido", 0.9)
 
 	_build_corridor()
 	_build_control()
@@ -112,9 +118,19 @@ func _build_corridor() -> void:
 	room_lights["pasillo"] = corridor_light
 
 	# Lockers contra la pared.
-	Build.box(self, "Lockers", Vector3(0.45, 1.9, 2.4), Vector3(-1.2, 0.95, -7.0), _mat_metal)
+	var lockers := Node3D.new()
+	lockers.name = "Lockers"
+	add_child(lockers)
+	lockers.position = Vector3(-1.2, 0.95, -7.0)
+	Modelos.lockers(lockers, _mat_metal)
 	objects["camilla"] = Build.box(self, "Camilla", Vector3(0.7, 0.7, 2.0), Vector3(1.1, 0.35, 0.5), _mat_metal)
-	objects["extintor"] = Build.box(self, "Extintor", Vector3(0.22, 0.6, 0.22), Vector3(1.28, 1.1, -9.0), Build.surface(Color(0.45, 0.16, 0.12), 0.0, 0.8, "metal", 6.0))
+	var extintor := Node3D.new()
+	extintor.name = "Extintor"
+	add_child(extintor)
+	extintor.position = Vector3(1.28, 0.8, -9.0)
+	extintor.rotation.y = -PI * 0.5
+	Modelos.matafuego(extintor, Build.surface(Color(0.45, 0.16, 0.12), 0.0, 0.8, "metal", 6.0), _mat_metal)
+	objects["extintor"] = extintor
 	Build.label3d(self, "NIVEL 1  ->  ESCLUSA", Vector3(-1.35, 2.3, -6.0), PI * 0.5, 0.22)
 	Build.label3d(self, "<-  B2", Vector3(1.35, 2.3, -14.5), -PI * 0.5, 0.22, Color(0.5, 0.52, 0.55))
 
@@ -132,8 +148,9 @@ func _build_control() -> void:
 	console.name = "ConsolaSensores"
 	add_child(console)
 	console.position = Vector3(-8.4, 0.0, -11.0)
-	console.setup_box(Vector3(1.2, 1.1, 2.6), _mat_metal, Vector3(0.0, 0.55, 0.0))
-	Build.box(console, "Pantalla", Vector3(0.08, 0.7, 1.6), Vector3(0.5, 1.5, 0.0), _mat_screen, false)
+	console.setup_collider(Vector3(1.2, 1.1, 2.6), Vector3(0.0, 0.55, 0.0))
+	Modelos.consola(console, _mat_metal)
+	Build.box(console, "Pantalla", Vector3(0.06, 0.68, 1.58), Vector3(0.10, 1.46, 0.0), _mat_screen, false)
 	Build.light(console, Vector3(0.9, 1.5, 0.0), Color(0.35, 0.8, 0.6), 0.8, 3.5)
 	points["sensores"] = console
 
@@ -171,7 +188,8 @@ func _build_generator() -> void:
 	gen.name = "Generador"
 	add_child(gen)
 	gen.position = Vector3(6.0, 0.0, -11.0)
-	gen.setup_box(Vector3(2.4, 1.8, 3.2), _mat_metal, Vector3(0.0, 0.9, 0.0))
+	gen.setup_collider(Vector3(2.4, 1.8, 3.2), Vector3(0.0, 0.9, 0.0))
+	Modelos.generador(gen, _mat_gen, _mat_metal)
 	gen.task_id = "generator"
 	gen.multi_step = true
 	gen.active_prompt = "Revisar GEN-A"
@@ -218,7 +236,8 @@ func _build_dorm() -> void:
 	var bed := Bed.new()
 	bed.name = "Cucheta"
 	bed_prop.add_child(bed)
-	bed.setup_box(Vector3(1.0, 0.55, 2.1), Build.surface(Color(0.30, 0.28, 0.26), 0.0, 0.8, "oxido", 1.2), Vector3(0.0, 0.28, 0.0))
+	bed.setup_collider(Vector3(1.0, 0.75, 2.1), Vector3(0.0, 0.38, 0.0))
+	Modelos.cucheta(bed, _mat_metal, _mat_tela)
 	points["cama"] = bed
 
 	var chair := _add_prop("dorm_chair", Vector3(-4.0, 0.0, -1.2), 0.0, Vector3(0.55, 0.9, 0.55))
@@ -244,14 +263,20 @@ func _build_storage() -> void:
 
 	Build.box(self, "Estante1", Vector3(0.6, 2.2, 3.0), Vector3(8.8, 1.1, -3.0), _mat_metal)
 	objects["estante_2"] = Build.box(self, "Estante2", Vector3(2.6, 2.0, 0.5), Vector3(5.0, 1.0, -4.6), _mat_metal)
-	objects["cajas"] = Build.box(self, "Cajas", Vector3(1.2, 1.2, 1.2), Vector3(6.5, 0.6, -1.4), Build.surface(Color(0.35, 0.30, 0.22), 0.0, 0.8, "hormigon", 1.8))
+	var pila := Node3D.new()
+	pila.name = "Cajas"
+	add_child(pila)
+	pila.position = Vector3(6.5, 0.0, -1.4)
+	Modelos.cajas(pila, Build.surface(Color(0.35, 0.30, 0.22), 0.0, 0.8, "hormigon", 1.8))
+	objects["cajas"] = pila
 	_add_battery("PilaAlmacen", Vector3(5.0, 2.1, -4.6))
 
 	var valve := TaskPoint.new()
 	valve.name = "Valvula"
 	add_child(valve)
 	valve.position = Vector3(8.7, 0.0, -0.6)
-	valve.setup_box(Vector3(0.5, 0.7, 0.7), Build.surface(Color(0.40, 0.42, 0.30), 0.0, 0.8, "oxido", 4.0), Vector3(0.0, 1.0, 0.0))
+	valve.setup_collider(Vector3(0.45, 1.5, 0.9), Vector3(0.0, 0.75, 0.0))
+	Modelos.valvula(valve, Build.surface(Color(0.40, 0.42, 0.30), 0.0, 0.8, "oxido", 4.0), _mat_metal)
 	valve.task_id = "valvula"
 	valve.active_prompt = "Purgar la válvula"
 	valve.done_prompt = "Válvula purgada"
@@ -318,7 +343,8 @@ func _build_exterior() -> void:
 		marker.name = "Marca_%s" % spot["key"]
 		add_child(marker)
 		marker.position = spot["pos"]
-		marker.setup_box(Vector3(0.7, 1.2, 0.7), Build.surface(Color(0.75, 0.55, 0.15), 0.0, 0.8, "metal", 3.0), Vector3(0.0, 0.6, 0.0))
+		marker.setup_collider(Vector3(0.4, 1.2, 0.4), Vector3(0.0, 0.6, 0.0))
+		Modelos.baliza(marker, Build.surface(Color(0.75, 0.55, 0.15), 0.0, 0.8, "metal", 3.0), _mat_metal)
 		marker.task_id = "round"
 		marker.multi_step = true
 		marker.active_prompt = "Marcar %s" % spot["label"]
@@ -335,7 +361,8 @@ func _build_exterior() -> void:
 	antenna.name = "ControlAntena"
 	add_child(antenna)
 	antenna.position = Vector3(-9.6, 0.0, 22.0)
-	antenna.setup_box(Vector3(0.6, 1.3, 0.5), Build.surface(Color(0.35, 0.38, 0.40), 0.0, 0.8, "metal", 3.0), Vector3(0.0, 0.65, 0.0))
+	antenna.setup_collider(Vector3(0.5, 1.6, 0.5), Vector3(0.0, 0.8, 0.0))
+	Modelos.antena(antenna, Build.surface(Color(0.35, 0.38, 0.40), 0.0, 0.8, "metal", 3.0))
 	antenna.task_id = "antena"
 	antenna.active_prompt = "Realinear la antena"
 	antenna.done_prompt = "Antena alineada"
@@ -707,10 +734,7 @@ func _add_prop(id: String, pos: Vector3, rot_y: float, size: Vector3) -> Prop:
 	add_child(p)
 	p.position = pos
 	p.rotation.y = rot_y
-	# Silla: asiento + respaldo, dos cajas y listo.
-	Build.box(p, "Asiento", Vector3(size.x, 0.08, size.z), Vector3(0.0, size.y * 0.5, 0.0), _mat_metal)
-	Build.box(p, "Respaldo", Vector3(size.x, size.y * 0.55, 0.08), Vector3(0.0, size.y * 0.78, -size.z * 0.45), _mat_metal)
-	Build.box(p, "Pata", Vector3(0.08, size.y * 0.5, 0.08), Vector3(0.0, size.y * 0.25, 0.0), _mat_metal)
+	Modelos.silla(p, _mat_metal, _mat_tela, size.y, size.x)
 	props[id] = p
 	objects[id] = p
 	return p

@@ -238,9 +238,17 @@ sentada**, que es exactamente lo que dice el objetivo de 60-90 minutos.
   Los documentos —el parte del turno y la bitácora— se dibujan en papel, no en
   verde fósforo: son objetos, no menús.
 
-  Lo que sigue abierto es arte **dibujado a mano**, que no se puede generar por
-  código: props modelados de verdad en vez de cajas, y una tipografía propia si
-  alguna vez la hay. Ninguna de las dos es necesaria para publicar.
+  Los props tampoco son cajas ya: se arman con primitivas compuestas
+  (`scripts/world/modelos.gd`). El matafuego es cilindro, cuello, manguera y
+  boquilla; la válvula tiene volante; la antena tiene mástil y brazos. Lo que
+  los hace legibles no es la cantidad de polígonos, es la silueta, y la
+  silueta se puede escribir. Costo medido en A/B pareado: 0.35 FPS, dentro
+  del ruido.
+
+  Lo único que sigue abierto es arte **dibujado a mano**: mallas modeladas en
+  Blender, texturas pintadas, una tipografía propia. Ninguna hace falta para
+  publicar, y una tipografía propia sería *peor* que IBM Plex salvo que la
+  dibuje alguien que sepa diseñar tipos.
 - **Contenido.** Falta aproximadamente la mitad otra vez para llegar a los
   60-90 minutos. Medir con `tests/pacing.tscn` en cada paso.
 - **Playtest con personas.** Todo lo que se sabe del ritmo sale de un bot que

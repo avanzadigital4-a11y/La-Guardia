@@ -106,6 +106,31 @@ static func box(parent: Node, name: String, size: Vector3, pos: Vector3, mat: Ma
 	return mi
 
 
+## Una pieza de malla cualquiera, sin colision. La usan los modelos de
+## modelos.gd: un prop se arma con diez o quince de estas, y la colision la
+## pone una sola caja en el nodo padre. Nadie necesita chocar contra el
+## volante de una valvula con precision de volante.
+static func pieza(parent: Node, name: String, mesh: Mesh, pos: Vector3, mat: Material,
+		rot := Vector3.ZERO, shadow := true) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	mi.name = name
+	mi.mesh = mesh
+	mi.material_override = mat
+	mi.position = pos
+	mi.rotation = rot
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	parent.add_child(mi)
+	return mi
+
+
+## Caja sin colision, para el detalle de un prop.
+static func detalle(parent: Node, name: String, size: Vector3, pos: Vector3, mat: Material,
+		rot := Vector3.ZERO, shadow := true) -> MeshInstance3D:
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	return pieza(parent, name, mesh, pos, mat, rot, shadow)
+
+
 static func floor_slab(parent: Node, rect: Rect2, y: float, mat: Material, name := "Piso") -> void:
 	var c := rect.get_center()
 	box(parent, name, Vector3(rect.size.x, 0.2, rect.size.y), Vector3(c.x, y - 0.1, c.y), mat)

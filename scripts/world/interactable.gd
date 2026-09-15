@@ -24,15 +24,25 @@ func setup_box(size: Vector3, mat: Material, mesh_offset := Vector3.ZERO) -> Mes
 	mi.mesh = mesh
 	mi.material_override = mat
 	mi.position = mesh_offset
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# Proyecta sombra. Estaba apagado de cuando ninguna luz tenia sombra; el
+	# generador y la consola son de los objetos mas grandes de la estacion y
+	# eran transparentes a la luz.
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	add_child(mi)
+	setup_collider(size, mesh_offset)
+	return mi
+
+
+## Solo la colision, sin malla. La usan los props que arma modelos.gd: ponen
+## su propia geometria compuesta y siguen necesitando una caja contra la que
+## chocar.
+func setup_collider(size: Vector3, offset := Vector3.ZERO) -> void:
 	var col := CollisionShape3D.new()
 	var bs := BoxShape3D.new()
 	bs.size = size
 	col.shape = bs
-	col.position = mesh_offset
+	col.position = offset
 	add_child(col)
-	return mi
 
 
 func can_interact() -> bool:
