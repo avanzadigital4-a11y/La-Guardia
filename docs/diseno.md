@@ -14,6 +14,21 @@ Terror psicológico, exploración en primera persona, sin combate. Estética vis
 
 `tarea → recorrido → anomalía → registro → volver a la base → siguiente noche`
 
+**El terror va adentro de la tarea, no entre las tareas.** Es la corrección más
+importante que recibió el diseño. Purgar una válvula y alinear una antena son
+tareas neutras: si lo raro pasa en el pasillo mientras vas de una a otra, el
+bucle se lee como trabajo administrativo con sustos alrededor. Cuando la
+válvula ya estaba cerrada, cuando la planilla del generador tiene la revisión
+de esta noche firmada a una hora que todavía no pasó, cuando contás tres
+balizas cuatro veces — ahí el trabajo **es** el terror. Toda tarea de toda
+noche tiene su beat, y `tests/content.tscn` falla si alguna queda sin uno.
+
+**Mirar es un verbo, y se enseña temprano.** Las 97 anomalías solo pagan si el
+jugador compara una sala con su recuerdo de la sala, y eso no se aprende solo:
+hay que pedirlo. La tarea de recuento aparece en la Noche 2 con dos salas, en
+la 3 con tres y en la 4 con cuatro. La de la Noche 4 ya existía; las otras dos
+son la lección que faltaba.
+
 Simple y repetible, pero **debe evolucionar noche a noche** — nunca debe sentirse como la misma secuencia ejecutada cinco veces, o el jugador cae en piloto automático.
 
 ## El protagonista
@@ -75,6 +90,14 @@ diga.
 ## Estructura narrativa (5 noches, con evolución del loop)
 
 - **Noche 1 — Rutina.** Tarea → recorrido → un evento extraño aislado. El jugador aprende el layout y los sistemas. Todo parece tranquilo.
+
+  **Salvo una cosa, y va en la primera tarea.** La planilla de GEN-A ya tiene
+  la revisión de esta noche firmada, a una hora que todavía no pasó, con tu
+  letra. No es un susto: es una incorrección administrativa, que es peor,
+  porque no se puede atribuir al viento ni a los nervios. Va en el minuto
+  cuatro de la partida a propósito — es cuando el jugador (o el streamer)
+  decide si sigue. Y siembra el giro entero sin nombrarlo: en la Noche 4 el
+  parte del turno va a estar completo por exactamente la misma razón.
 - **Noche 2 — Primera desviación.** Tarea → recorrido → anomalía → el jugador elige investigarla por su cuenta, saliéndose de la rutina establecida.
 - **Noche 3 — El espacio interfiere.** Tarea → anomalía → el recorrido planeado ya no lleva a donde debería (una ruta cambia, aparece un pasillo que no estaba en los planos).
 - **Noche 4 — Pérdida de confianza.** Objetivo → recuerdos contradictorios (bitácora) → investigar → el jugador ya no sabe si puede confiar en lo que ve o recuerda.
@@ -106,6 +129,13 @@ No todo lo raro ocurre frente al jugador. Algunos cambios pasan mientras no est�
 
    Esto convierte al propio sistema de registro en una fuente de terror, no solo en una pista informativa.
 5. **Linterna con batería limitada** — fuente de luz principal, obliga a gestión de recursos sin necesitar combate.
+
+   **Las pilas no se reponen entre noches.** Las seis de la estación más la
+   carga inicial son para las cinco noches: el turno entero es un solo
+   presupuesto de luz. Durante mucho tiempo `start_night` las reponía todas
+   las noches, así que había seis cargas por turno contra una noche que
+   gastaba media, y la linterna no podía significar nada. Medido hoy: 1.18x
+   de lo que consume explorar (banda objetivo 1.1 a 2.0, ver README).
 
    **Qué se pierde: el apagón.** Doce segundos sin linterna en una sala apagada y hay fundido a negro. Se despierta en la cucheta, sin acordarse de haber vuelto, con dos a cuatro horas del turno de menos. No hay game over: el peligro nunca es físico. Lo que cuesta es concreto — las pilas de repuesto que llevaba encima desaparecen, la linterna vuelve con poca carga, y **se aplican dos anomalías que quedan registradas como propias**, o sea que aparecen después en el parte del turno con su letra. El apagón no es un castigo agregado: es la vía más directa al giro del final. El final acusa cuántas horas del turno no figuran.
 6. **Sin combate, sin monstruo que persigue activamente** — el peligro es ambiental y psicológico, nunca una amenaza física directa.

@@ -293,15 +293,37 @@ func _report() -> void:
 	print("")
 	print("  total directo      %6.1f s   (%.1f min)" % [total, total / 60.0])
 	print("  distancia total    %6.1f m" % dist)
+	# La cuenta vieja comparaba el gasto de UNA noche contra el total de cargas
+	# del juego y daba "alcanza para once noches", que no queria decir nada:
+	# las pilas se reponian cada noche, asi que el margen real era todavia
+	# mayor. Lo que importa es el turno entero contra el presupuesto entero.
 	var peor := 0.0
+	var gasto := 0.0
 	for r in _rows:
 		peor = maxf(peor, float(r["bateria"]))
+		gasto += float(r["bateria"])
 	var cargas: float = 1.0 + float(GameState.spare_batteries) + float(station.pickups.size())
-	var margen: float = cargas / maxf(peor, 0.001)
-	print("  bateria: la peor noche gasta %.0f %% de una carga; hay %.0f cargas" % [
-		peor * 100.0, cargas])
-	print("           alcanzan para %.1f noches asi -> %s" % [margen,
-		"sobra demasiado, rebalancear" if margen > 4.0 else "razonable"])
+	# Quien explora camina entre dos y tres veces el recorrido directo, y la
+	# linterna esta prendida todo ese tiempo.
+	var gasto_explorando := gasto * 2.5
+	var margen: float = cargas / maxf(gasto_explorando, 0.001)
+	print("  bateria: %.0f %% de una carga en recorrido directo (%.0f %% la peor noche)" % [
+		gasto * 100.0, peor * 100.0])
+	print("           explorando x2.5 -> %.1f cargas contra %.0f disponibles en todo el turno" % [
+		gasto_explorando, cargas])
+	# Banda objetivo 1.1 a 2.0. Por debajo de 1.1 el jugador no tiene margen
+	# para jugar bien: cualquier rodeo termina en apagon y apagar la linterna
+	# no compra nada. Por encima de 2.0 la linterna deja de importar.
+	#
+	# El apagon no es un game over y el diseno lo quiere: es la via mas
+	# directa al giro del final. Que el jugador se quede sin luz UNA vez en
+	# la partida esta bien; que le pase siempre o nunca, no.
+	var veredicto := "razonable"
+	if margen > 2.0:
+		veredicto = "sobra demasiado, rebalancear"
+	elif margen < 1.1:
+		veredicto = "filo de cuchillo: sin margen para jugar bien, revisar"
+	print("           margen %.2fx -> %s" % [margen, veredicto])
 	# Un jugador que explora tarda entre dos y tres veces el recorrido directo,
 	# mas lo que escuche de radio.
 	var audio: float = _logs_available(GameState.MAX_NIGHT)["segundos"]

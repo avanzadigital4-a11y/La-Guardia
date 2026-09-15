@@ -212,37 +212,57 @@ queda sin punto en el mundo, lo dice.
 ```
   noche   duracion   distancia   bateria   tareas   registros   anomalias
       1    106.6 s     175.9 m       27 %        4           6           2
-      2    114.4 s     158.5 m       29 %        5          13           7
-      3    192.0 s     327.0 m       48 %        7          20          11
-      4    205.5 s     300.3 m       51 %        8          26          14
-      5    221.2 s     390.5 m       55 %        6          32          18
+      2    171.0 s     247.5 m       43 %        6          13           7
+      3    248.5 s     416.0 m       62 %        8          22          11
+      4    205.3 s     300.3 m       51 %        8          28          14
+      5    221.1 s     390.5 m       55 %        6          35          18
 
-  total directo       839.3 s   (14.0 min)
-  distancia total    1352.3 m
-  bateria: la peor noche gasta 55 % de una carga; hay 6 cargas
-           alcanzan para 10.9 noches asi -> sobra demasiado, rebalancear
-  explorando (x2-x3)   28.0 a 42.0 min, mas 6.8 min de audio
+  total directo       952.4 s   (15.9 min)
+  distancia total    1530.2 m
+  bateria: 238 % de una carga en recorrido directo (62 % la peor noche)
+           explorando x2.5 -> 6.0 cargas contra 7 disponibles en todo el turno
+           margen 1.18x -> razonable
+  explorando (x2-x3)   31.7 a 47.6 min, mas 9.4 min de audio
   objetivo del diseno   60 a 90 min
 ```
 
-**El objetivo dejo de ser 2-3 horas.** Para una persona sola, y sin arte ni
-audio todavia, 60 a 90 minutos es lo que se puede terminar; *Iron Lung*, una
-de las referencias, dura alrededor de una hora. Hoy estamos en 14 minutos de
-recorrido directo y entre 28 y 42 explorando, mas 6 de audio: **falta mas o
-menos la mitad otra vez.**
+**El objetivo dejo de ser 2-3 horas.** Para una persona sola, 60 a 90 minutos
+es lo que se puede terminar; *Iron Lung*, una de las referencias, dura
+alrededor de una hora. Hoy estamos en 15.9 minutos de recorrido directo y
+entre 32 y 48 explorando, mas 9.4 de audio: **falta todavia, pero menos.**
 
-La curva ya es creciente, que es como tiene que ser: la rutina de la Noche 1
-se aprende rapido y aburre si dura, y la ultima noche tiene que pesar. De
-107 s a 221 s, sin pozos en el medio.
+La curva es creciente, que es como tiene que ser: la rutina de la Noche 1 se
+aprende rapido y aburre si dura, y la ultima noche tiene que pesar. De 107 s
+a 248 s en la Noche 3, con la 4 y la 5 sostenidas arriba de 200.
 
-La bateria empezo a significar algo: la peor noche gasta un 55 % de una
-carga contra el 32 % de antes. Pero **sobra demasiado y hay que rebalancear**,
-y el medidor ahora lo dice solo. Al poner dos pilas en el B2 (sin ellas, el
-que explora la zona mas profunda y oscura se queda sin luz y sin forma de
-recuperarla) el total subio a seis cargas para una noche que gasta media:
-alcanza para once noches. La linterna no puede importar con ese margen. El
-numero correcto sale de un playtest, no de una cuenta, asi que queda anotado
-en vez de tocado a ojo.
+### La bateria: lo que decia esta medicion estaba mal
+
+Durante un tiempo el README dijo "hay 6 cargas, alcanzan para 10.9 noches,
+sobra demasiado". Las dos mitades estaban mal.
+
+**La cuenta comparaba lo que no habia que comparar.** Dividia el gasto de UNA
+noche por el total de cargas del juego. Lo que importa es el turno completo
+contra el presupuesto completo.
+
+**Y el margen real era todavia peor de lo que decia**, porque
+`start_night` llamaba `bat.restock()`: las cinco pilas volvian a su lugar
+todas las noches. No eran seis cargas para el juego, eran seis por noche,
+contra una noche que gastaba media. La linterna no podia importar.
+
+Ahora las pilas **no se reponen**. Las seis que hay en la estacion, mas la
+carga inicial, son para las cinco noches: el turno entero es un solo
+presupuesto de luz, y apagar la linterna en un pasillo que ya conoces compra
+margen de verdad.
+
+Eso no puede trabar la partida. Quedarse sin luz en una sala apagada lleva al
+apagon, y el apagon devuelve 0.35 de carga. El piso existe; lo que cuesta son
+horas del turno y dos anomalias que quedan firmadas con tu letra, que es
+justamente la via mas directa al giro del final.
+
+La banda objetivo es **1.1x a 2.0x**, y el medidor lo dice solo. Por debajo de
+1.1 el jugador no tiene margen para jugar bien: cualquier rodeo termina en
+apagon y apagar la linterna no compra nada. Por encima de 2.0 la linterna deja
+de importar. Hoy: 1.18x. El numero fino sale de un playtest, no de una cuenta.
 
 ## Medir el rendimiento
 

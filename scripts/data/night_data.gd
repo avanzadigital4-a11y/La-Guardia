@@ -50,22 +50,48 @@ const NIGHTS := {
 			"inicio": [
 				{"subtitulo": "Cuarto turno solo. Faltan cinco días.", "tiempo": 3.0},
 			],
+			# LA COSA QUE NO SE PUEDE DESVER. Va en la primera tarea de la
+			# primera noche, a proposito: es el minuto cuatro de la partida.
+			#
+			# No es un susto. Es una incorreccion administrativa, que es peor,
+			# porque no se puede atribuir al viento ni a los nervios. La
+			# planilla del generador ya tiene la revision de esta noche
+			# firmada, con una hora que todavia no paso, y con tu letra.
+			#
+			# Y siembra el giro entero sin nombrarlo: la Noche 4 el parte del
+			# turno va a estar completo por la misma razon.
 			"generator": [
-				{"esperar": 4.0},
+				{"esperar": 1.5},
+				{"subtitulo": "La planilla de GEN-A ya tiene la revisión de hoy.", "tiempo": 3.2},
+				{"esperar": 0.8},
+				{"subtitulo": "Firmada 01:40. Son las once y media.", "tiempo": 3.4},
+				{"esperar": 1.0},
+				{"subtitulo": "Es mi letra.", "tiempo": 2.8},
 				{"sonido": "creak", "db": -8.0},
-				{"subtitulo": "(algo se acomoda en el techo del pasillo)", "tiempo": 2.8},
+				{"bitacora": "La planilla de GEN-A estaba firmada por adelantado. Con mi letra.", "hora": "23:31"},
 			],
+			# La ronda: las huellas. El terror esta en la tarea misma —contar
+			# las balizas— y no en un ruido al costado.
 			"round": [
-				{"esperar": 2.0},
+				{"esperar": 1.5},
+				{"subtitulo": "Hay huellas hasta la baliza y de vuelta.", "tiempo": 3.2},
+				{"esperar": 0.8},
+				{"subtitulo": "Son de mi bota. Todavía no pasé por acá.", "tiempo": 3.4},
 				{"parpadeo": 2.2},
-				{"subtitulo": "(el viento se corta un segundo y vuelve)", "tiempo": 2.6},
 			],
 			"sensors": [
-				{"aviso": "El panel marcó una lectura de más y la borró solo."},
+				# El "armar" va primero, siempre. Si queda detras de una espera
+				# y el jugador se va de la sala antes de que corra, la anomalia
+				# no se arma y el cambio fuera de camara nunca pasa.
 				{"armar": "dorm_chair", "sala": "dormitorio"},
+				{"aviso": "El panel marcó una lectura de más y la borró solo."},
+				{"esperar": 1.6},
+				{"subtitulo": "La lectura era del dormitorio. Yo estaba acá.", "tiempo": 3.2},
 			],
 			"valvula": [
-				{"esperar": 2.0},
+				{"esperar": 1.5},
+				{"subtitulo": "La válvula ya estaba cerrada. La abrí para poder purgarla.", "tiempo": 3.6},
+				{"esperar": 1.2},
 				{"subtitulo": "(el agua sigue corriendo un rato después de cerrar)", "tiempo": 3.0},
 			],
 		},
@@ -88,6 +114,12 @@ const NIGHTS := {
 			{"id": "radio_unknown", "text": "Rastrear la señal que no figura en el registro"},
 			{"id": "round", "text": "Hacer la ronda exterior", "steps": 3},
 			{"id": "antena", "text": "Realinear la antena"},
+			# Mirar tiene que ser un verbo, y tiene que serlo temprano. Las 97
+			# anomalias solo pagan si el jugador aprende a comparar una sala
+			# con su recuerdo de la sala, y eso no se aprende solo: hay que
+			# pedirselo. La Noche 4 ya lo pedia con cuatro salas; aca van dos,
+			# como leccion.
+			{"id": "recuento", "text": "Anotar lo que cambió en dos salas", "steps": 2},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
 		"world": {
@@ -122,6 +154,22 @@ const NIGHTS := {
 			],
 			"sensors": [
 				{"aviso": "Ocupación registrada: 1. El sensor tardó en decidirlo."},
+				{"esperar": 1.8},
+				{"subtitulo": "Tardó porque primero marcó dos.", "tiempo": 3.0},
+			],
+			# La ronda de la Noche 2: el terror esta en contar, que es lo que
+			# la tarea pide hacer.
+			"round": [
+				{"armar": "almacen_cajas", "sala": "almacen"},
+				{"esperar": 1.5},
+				{"subtitulo": "Tres balizas. Las conté cuatro veces y me dieron tres.", "tiempo": 3.4},
+				{"esperar": 1.0},
+				{"subtitulo": "El problema es que la cuarta vez conté de vuelta sin querer.", "tiempo": 3.6},
+			],
+			"recuento": [
+				{"esperar": 1.2},
+				{"subtitulo": "Anoto lo que cambió. Mañana voy a querer tener esto.", "tiempo": 3.4},
+				{"bitacora": "Empecé a anotar los cambios sala por sala.", "hora": "01:20"},
 			],
 			"antena": [
 				{"esperar": 1.5},
@@ -158,6 +206,7 @@ const NIGHTS := {
 			{"id": "bombas", "text": "Purgar las dos bombas del subnivel", "steps": 2},
 			{"id": "legajo", "text": "Buscar tu legajo en el archivo del B2"},
 			{"id": "trajes", "text": "Contar los trajes de la esclusa"},
+			{"id": "recuento", "text": "Anotar lo que cambió en tres salas", "steps": 3},
 			{"id": "puertas", "text": "Dejar todas las puertas cerradas"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
@@ -198,6 +247,11 @@ const NIGHTS := {
 			"trajes": [
 				{"esperar": 1.0},
 				{"subtitulo": "(ayer eran tres)", "tiempo": 2.6},
+			],
+			"recuento": [
+				{"esperar": 1.2},
+				{"subtitulo": "Tres salas anotadas. Anoche anoté dos y ya no coinciden.", "tiempo": 3.6},
+				{"bitacora": "Comparé el recuento con el de anoche. Hay cosas que cambiaron dos veces.", "hora": "02:14"},
 			],
 			"puertas": [
 				{"esperar": 3.0},
@@ -326,6 +380,14 @@ const NIGHTS := {
 				{"parpadeo": 2.0},
 				{"armar": "control_chair", "sala": "sala de control"},
 			],
+			# Cierra el circulo con la planilla de la Noche 1.
+			"puertas": [
+				{"esperar": 1.5},
+				{"subtitulo": "Las cerré todas. La planilla dice que las cerré a las 02:10.", "tiempo": 3.8},
+				{"esperar": 1.0},
+				{"subtitulo": "Son las cuatro y cuarto y recién las cierro ahora.", "tiempo": 3.4},
+				{"sonido": "door", "db": -9.0},
+			],
 		},
 		"logbook": [
 			{"time": "00:02", "text": "Hoy el B2 no está. El mapa dice que nunca estuvo."},
@@ -395,6 +457,31 @@ const NIGHTS := {
 				{"subtitulo": "Las marcas de la pared ahora son una lista de fechas.", "tiempo": 3.6},
 				{"subtitulo": "La última es la de mañana.", "tiempo": 3.0},
 				{"aviso": "El vehículo llega al amanecer. Hay que decidir."},
+			],
+			"cerrar_b2": [
+				{"esperar": 1.2},
+				{"subtitulo": "Tres llaves de paso. Dos ya estaban cerradas.", "tiempo": 3.2},
+				{"esperar": 1.0},
+				{"subtitulo": "Las cerré yo hace un rato. No bajé hace un rato.", "tiempo": 3.6},
+				{"sonido": "creak", "db": -6.0},
+				{"bitacora": "Cerré las llaves del B2. Dos ya estaban.", "hora": "02:31", "falsa": true},
+			],
+			"inventario": [
+				{"armar": "control_marca", "sala": "sala de control"},
+				{"esperar": 1.0},
+				{"subtitulo": "El inventario final ya está hecho.", "tiempo": 2.8},
+				{"esperar": 0.8},
+				{"subtitulo": "Figura una persona en la estación. No dice cuál.", "tiempo": 3.8},
+				{"parpadeo": 2.0},
+			],
+			"puertas": [
+				{"esperar": 2.0},
+				{"sonido": "door", "db": -8.0},
+				{"subtitulo": "Todas cerradas. Desde adentro no se nota la diferencia.", "tiempo": 3.4},
+			],
+			"decidir": [
+				{"esperar": 1.0},
+				{"subtitulo": "Escucho el motor sobre el hielo.", "tiempo": 3.0},
 			],
 		},
 		"logbook": [

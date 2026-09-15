@@ -123,6 +123,12 @@ func _build_corridor() -> void:
 	add_child(lockers)
 	lockers.position = Vector3(-1.2, 0.95, -7.0)
 	Modelos.lockers(lockers, _mat_metal)
+	# Una pila arriba de los lockers. Sin ella el presupuesto de luz de todo
+	# el turno queda en 1.01x de lo que consume explorar, o sea filo de
+	# cuchillo: cualquier rodeo termina en apagon y el jugador no tiene forma
+	# de jugar mejor. Con esta, apagar la linterna en un pasillo conocido pasa
+	# a comprar margen de verdad.
+	_add_battery("PilaPasillo", Vector3(-1.2, 2.0, -6.2))
 	objects["camilla"] = Build.box(self, "Camilla", Vector3(0.7, 0.7, 2.0), Vector3(1.1, 0.35, 0.5), _mat_metal)
 	var extintor := Node3D.new()
 	extintor.name = "Extintor"
