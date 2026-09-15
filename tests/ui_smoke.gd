@@ -61,6 +61,7 @@ func _run() -> void:
 
 	# --- La linterna alcanza para una noche con las pilas de la estacion ---
 	var station: StationBuilder = main.station
+	var director: NightDirector = main.director
 	_check(station.pickups.size() >= 3, "hay pilas repartidas por la estacion (%d)" % station.pickups.size())
 	var autonomy := (1.0 / Player.BATTERY_DRAIN) * (1 + GameState.spare_batteries + station.pickups.size())
 	_check(autonomy > 900.0, "la linterna da para mas de 15 minutos con todo (%d s)" % int(autonomy))
@@ -82,8 +83,45 @@ func _run() -> void:
 		"al soltarlo vuelve exactamente a donde estaba")
 	_check(main.player.can_move and main.player.look_enabled, "y devuelve el control al jugador")
 
+	# --- El parte del turno se lee sin romper la pantalla ---
+	# El inventario de cierre es el texto mas largo del juego y se arma en
+	# runtime. No se mide contra un alto de linea fijo (depende de la fuente
+	# de cada maquina): se verifica lo que tiene que valer siempre, que el
+	# titulo no se monte sobre el texto y que la hoja no se derrame fuera.
+	GameState.anomalies_seen.clear()
+	var largas := _longest_notes(3 * GameState.MAX_NIGHT)
+	var k := 0
+	for n in range(1, GameState.MAX_NIGHT + 1):
+		GameState.current_night = n
+		for i in 3:
+			GameState.record_anomaly(largas[k])
+			k += 1
+	GameState.current_night = GameState.MAX_NIGHT
+	var hoja: ReportSheet = station.points["parte"]
+	var peor := hoja.text_for(GameState.MAX_NIGHT)
+	_check(peor.split("\n").size() >= 15, "el peor caso del parte es largo de verdad (%d lineas)" % peor.split("\n").size())
+	inspect_ui.open("Parte del turno", peor)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var r: Dictionary = inspect_ui.document_rects()
+	var titulo: Rect2 = r["titulo"]
+	var texto: Rect2 = r["texto"]
+	var pantalla: Rect2 = r["pantalla"]
+	_check(not titulo.intersects(texto), "el titulo de la hoja no se monta sobre el texto")
+	_check(pantalla.encloses(texto), "el bloque de la hoja entra en la pantalla (%s en %s)" % [texto, pantalla])
+	_check(texto.size.y > 0.0 and texto.size.x > 0.0, "y tiene lugar para mostrar algo")
+	# Si el texto no entra, el scroll tiene que poder llegar al final.
+	var pedido: Vector2 = r["pedido"]
+	if pedido.y > texto.size.y:
+		_check(inspect_ui._doc_scroll.get_v_scroll_bar().max_value >= pedido.y - 1.0,
+			"la hoja larga se puede scrollear hasta el final")
+	else:
+		_check(true, "la hoja entra entera sin scrollear")
+	inspect_ui.close()
+	GameState.anomalies_seen.clear()
+	GameState.current_night = 1
+
 	# --- Guardado a mitad de noche ---
-	var director: NightDirector = main.director
 	await get_tree().create_timer(4.0).timeout
 	station.points["valvula"].interact(main.player)
 	station.doors["almacen"].set_open(true, true)
@@ -108,6 +146,15 @@ func _run() -> void:
 		"el jugador vuelve donde estaba")
 
 	_report()
+
+
+## Las notas mas largas del catalogo: el peor caso para el ancho de la hoja.
+func _longest_notes(cuantas: int) -> Array[String]:
+	var ids: Array[String] = []
+	for id in AnomalyData.NOTES.keys():
+		ids.append(String(id))
+	ids.sort_custom(func(a, b): return AnomalyData.note(a).length() > AnomalyData.note(b).length())
+	return ids.slice(0, cuantas)
 
 
 func _find_buttons(node: Node) -> Array[Button]:

@@ -191,6 +191,25 @@ godot --path . res://tools/benchmark.tscn    # sin --headless: mide el render
 Recorre la estacion girando la camara todo el tiempo (el caso peor para el
 culling) e imprime FPS promedio, minimo y percentil 1%.
 
+Sin GPU a mano se puede medir por software. Los numeros absolutos no son los
+de la maquina objetivo, pero sirven para comparar un cambio contra si mismo:
+
+```bash
+xvfb-run -a -s "-screen 0 1152x648x24" env LIBGL_ALWAYS_SOFTWARE=1 \
+  godot --path . --rendering-driver opengl3 res://tools/benchmark.tscn
+```
+
+**Cuidado con una sola corrida.** La dispersion entre corridas identicas es de
+mas o menos 1.3 FPS sobre unos 26, asi que una diferencia de menos de eso no
+es una mejora, es ruido. Hay que medir varias veces y comparar medianas.
+
+Ya se probo una cosa que **no** funciono: apagar las luces lejanas para dejar
+como maximo cuatro prendidas a la vez. Tres corridas pareadas dieron 26.1
+contra 25.7 FPS de promedio, o sea nada frente al ruido. Godot ya descarta por
+alcance las luces que no tocan un objeto, asi que el cuello de botella esta en
+otro lado. Si alguien lo vuelve a intentar, que mida primero en la maquina
+objetivo.
+
 ## Exportar
 
 Hay presets para Linux y Windows en `export_presets.cfg` (excluyen `tests/`,
