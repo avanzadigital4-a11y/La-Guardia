@@ -47,6 +47,14 @@ Lo que ya funciona:
   anterior a que pasara nada. La Noche 5 la cierra juntando las cinco noches.
   Es el unico lugar donde el juego dice en limpio que las anomalias las
   causaste vos, y no es texto guionado: sale de lo que jugaste.
+- **El apagon**: quedarte sin luz no te mata ni corta la partida. Fundido a
+  negro, y despertas en la cucheta sin acordarte de haber vuelto, con horas
+  de menos. Lo que cuesta: las pilas de repuesto que llevabas encima no
+  estan, la linterna vuelve con poca carga, y **lo que paso mientras estabas
+  a oscuras queda anotado a tu nombre** -- o sea que aparece despues en el
+  parte del turno, con tu letra. Es la forma mas directa que tiene el juego
+  de convertirte en el autor de las anomalias sin que lo recuerdes. El final
+  cuenta cuantas horas del turno no figuran.
 - **Objetos para mirar de cerca**: se levantan, se giran con el mouse, y lo
   que dicen cambia noche a noche (la chapa con tu numero de turno, la foto del
   equipo a la que le van faltando personas). Verificado por la suite: al

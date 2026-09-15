@@ -83,6 +83,48 @@ func _run() -> void:
 		"al soltarlo vuelve exactamente a donde estaba")
 	_check(main.player.can_move and main.player.look_enabled, "y devuelve el control al jugador")
 
+	# --- El apagon ---
+	# Quedarse sin luz no mata ni corta la partida: te pierde. Y lo que pasa
+	# mientras no viste queda anotado a tu nombre, que es el punto.
+	var apagon: Blackout = main.blackout
+	_check(apagon != null, "el juego tiene apagon")
+	main.player.teleport(Vector3(-5.5, 0.1, -2.5), 0.0)   # dormitorio
+	main.player.set_flashlight(false)
+	station.room_lights["dormitorio"].light_energy = 0.0
+	await get_tree().process_frame
+	_check(apagon.is_dark(), "sin linterna y con la sala apagada, esta a oscuras")
+	station.room_lights["dormitorio"].light_energy = 1.2
+	await get_tree().process_frame
+	_check(not apagon.is_dark(), "bajo una luz encendida no cuenta como a oscuras")
+	station.room_lights["dormitorio"].light_energy = 0.0
+	main.player.teleport(Vector3(4.0, 0.1, -11.0), 0.0)
+
+	GameState.battery = 0.0
+	GameState.spare_batteries = 2
+	var antes_anom := GameState.anomalies_seen.size()
+	var antes_log := GameState.logbook.size()
+	apagon.trigger()
+	await get_tree().create_timer(11.0).timeout
+	_check(GameState.spare_batteries == 0, "el apagon se lleva las pilas de repuesto")
+	# Tolerancia: vuelve prendida, asi que ya consumio algo mientras corria el
+	# fundido y la placa.
+	_check(GameState.battery > 0.0 and GameState.battery <= Blackout.CARGA_AL_VOLVER
+		and Blackout.CARGA_AL_VOLVER - GameState.battery < 0.06,
+		"la linterna vuelve con poca carga (%.2f de %.2f)" % [
+			GameState.battery, Blackout.CARGA_AL_VOLVER])
+	_check(main.player.global_position.distance_to(StationBuilder.SPAWN) < 1.5,
+		"despertas en el dormitorio")
+	_check(main.player.can_move, "y podes seguir jugando: no es un game over")
+	_check(GameState.logbook.size() > antes_log, "queda escrito en la bitacora")
+	_check(int(GameState.get_flag("apagones", 0)) == 1, "el apagon queda contado")
+	_check(int(GameState.get_flag("horas_perdidas", 0)) > 0, "y las horas perdidas tambien")
+	# Lo importante: lo que paso a oscuras aparece despues en el parte, con tu
+	# letra, sin que lo hayas visto.
+	_check(GameState.anomalies_seen.size() > antes_anom,
+		"lo que paso a oscuras queda anotado a tu nombre (%d nuevas)" % [
+			GameState.anomalies_seen.size() - antes_anom])
+	station.room_lights["dormitorio"].light_energy = 1.2
+
 	# --- El parte del turno se lee sin romper la pantalla ---
 	# El inventario de cierre es el texto mas largo del juego y se arma en
 	# runtime. No se mide contra un alto de linea fijo (depende de la fuente

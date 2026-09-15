@@ -314,6 +314,22 @@ func _on_room_exited(room_id: String) -> void:
 	_armed = still
 
 
+## Aplica hasta `cuantas` de las anomalias que estaban esperando, sin importar
+## en que sala quedo el jugador. Lo usa el apagon: mientras no viste nada,
+## pasaron cosas igual.
+func apply_armed(cuantas: int) -> int:
+	var hechas := 0
+	var quedan: Array = []
+	for a in _armed:
+		if hechas < cuantas:
+			_apply_anomaly(String(a["id"]))
+			hechas += 1
+		else:
+			quedan.append(a)
+	_armed = quedan
+	return hechas
+
+
 func _apply_anomaly(id: String) -> void:
 	# Queda anotada para el parte del turno: lo que el jugador va a leer en la
 	# Noche 4 es lo que de verdad paso en su partida, no una lista guionada.
@@ -392,6 +408,11 @@ func _ending_leave() -> void:
 	]
 	if GameState.radio_logs_found.size() >= NightData.RADIO_LOGS.size():
 		lines.append("Y las grabaciones que dejaron ahí son todas de la misma voz.")
+	var apagones := int(GameState.get_flag("apagones", 0))
+	if apagones > 0:
+		lines.append("Del turno figuran %d horas sin registrar." % int(
+			GameState.get_flag("horas_perdidas", 0)))
+		lines.append("Las anotó alguien igual.")
 	await _speak(lines)
 
 

@@ -14,6 +14,7 @@ var fade: CanvasLayer
 var pause_menu: CanvasLayer
 var world_env: WorldEnvironment
 var post_material: ShaderMaterial
+var blackout: Blackout
 
 
 func _ready() -> void:
@@ -27,6 +28,12 @@ func _ready() -> void:
 	director.name = "NightDirector"
 	add_child(director)
 	director.setup(station, player, fade, world_env)
+
+	blackout = Blackout.new()
+	blackout.name = "Apagon"
+	add_child(blackout)
+	blackout.setup(station, player, fade, director)
+
 	director.start_night(GameState.current_night)
 	if "--capturas" in OS.get_cmdline_user_args():
 		_capture_debug()
