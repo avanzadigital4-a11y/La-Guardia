@@ -101,6 +101,74 @@ const ANOMALIES := {
 	"patio_bandera": {"sala": "patio", "tipo": "aparecer", "objeto": "extra_bandera"},
 }
 
+## Como lo anota el parte del turno: cada anomalia en primera persona y en
+## pasado, porque el que la escribio fue el protagonista. Es el material con
+## el que la Noche 4 y la Noche 5 le muestran al jugador lo que hizo sin
+## acordarse. Toda anomalia tiene que tener su linea (lo verifica content.gd).
+const NOTES := {
+	"dorm_chair": "Corrí la silla del dormitorio.",
+	"dorm_bed": "Moví la cucheta de lugar.",
+	"dorm_silla_mira_cama": "Puse la silla mirando la cama.",
+	"dorm_silla_falta": "Saqué la silla del dormitorio.",
+	"dorm_silla_doble": "Subí una segunda silla al dormitorio.",
+	"dorm_bulto": "Dejé algo armado arriba de la cama.",
+	"dorm_marca": "Escribí NO DUERMAS en la pared del dormitorio.",
+	"dorm_oscuro": "Apagué la luz del dormitorio.",
+	"dorm_cama_hecha": "Hice la cama.",
+	"dorm_silla_puerta": "Trabé la puerta del dormitorio con la silla.",
+	"dorm_pisadas": "Entré al dormitorio con las botas sucias.",
+	"dorm_linterna": "Dejé una linterna prendida en el piso del dormitorio.",
+	"control_chair": "Giré la silla de la sala de control.",
+	"control_silla_al_pasillo": "Saqué la silla de control hasta la puerta.",
+	"control_silla_falta": "Me llevé la silla de la sala de control.",
+	"control_silla_girada": "Di vuelta la silla de control hacia la puerta.",
+	"control_pizarra": "Escribí un 0 en la pizarra del cierre.",
+	"control_taza": "Dejé una taza servida en el escritorio.",
+	"control_reloj": "Colgué un reloj en la sala de control.",
+	"control_bandeja": "Dejé una bandeja servida en control.",
+	"control_marca": "Escribí NO CUENTES en la pared de control.",
+	"control_oscuro": "Apagué la luz de la sala de control.",
+	"gen_puerta": "Abrí la puerta del generador.",
+	"gen_puerta_cerrada": "Cerré la puerta del generador.",
+	"gen_herramienta": "Dejé la llave inglesa tirada junto al generador.",
+	"gen_banco_vacio": "Vacié el banco de taller.",
+	"gen_marca": "Marqué once rayas en la pared del generador.",
+	"gen_traba_falta": "Saqué la traba del generador.",
+	"gen_silla": "Arrimé una silla al generador.",
+	"gen_oscuro": "Apagué la luz de la sala de generador.",
+	"corridor_door": "Dejé abierta la puerta del almacén.",
+	"almacen_puerta_cerrada": "Cerré la puerta del almacén.",
+	"almacen_cajas": "Corrí las cajas del almacén.",
+	"almacen_cajas_faltan": "Saqué las cajas del almacén.",
+	"almacen_pila_extra": "Apilé cajas nuevas contra la pared del almacén.",
+	"almacen_pila_falta": "Bajé la pila de cajas del almacén.",
+	"almacen_bolsa": "Dejé una bolsa cargada en el almacén.",
+	"almacen_estante_vacio": "Vacié el segundo estante del almacén.",
+	"almacen_oscuro": "Apagué la luz del almacén.",
+	"pasillo_camilla": "Crucé la camilla en el pasillo.",
+	"pasillo_camilla_falta": "Me llevé la camilla del pasillo.",
+	"pasillo_marca": "Escribí VOLVE en la pared del pasillo.",
+	"pasillo_locker_abierto": "Dejé el locker del pasillo abierto.",
+	"pasillo_silla": "Puse una silla en la mitad del pasillo.",
+	"pasillo_linterna": "Dejé una linterna tirada en el pasillo.",
+	"pasillo_extintor": "Descolgué el extintor del pasillo.",
+	"pasillo_oscuro": "Apagué la luz del pasillo.",
+	"esclusa_traje_falta": "Descolgué el segundo traje de la esclusa.",
+	"esclusa_traje_1_falta": "Descolgué el primer traje de la esclusa.",
+	"esclusa_traje_extra": "Colgué un traje mojado en la esclusa.",
+	"esclusa_traje_suelo": "Dejé un traje tirado en el piso de la esclusa.",
+	"esclusa_marca": "Escribí un 3 en la puerta de la esclusa.",
+	"esclusa_puerta": "Dejé abierta la puerta de la esclusa.",
+	"esclusa_oscuro": "Apagué la luz de la esclusa.",
+	"patio_huellas": "Dejé una hilera de huellas saliendo al patio.",
+	"patio_huellas_entran": "Volví al patio y entre por el costado.",
+	"patio_tambor": "Rodé un tambor hasta el medio del patio.",
+	"patio_tambor_falta": "Saqué el tambor del patio.",
+	"patio_figura": "Paré algo del tamaño de una persona en el fondo del patio.",
+	"patio_bandera": "Clavé una baliza en el patio.",
+	"patio_oscuro": "Apagué la luz del patio.",
+}
+
 ## Objetos que solo existen cuando una anomalia los enciende. Se construyen
 ## apagados al armar la estacion: no cuesta nada tenerlos ahi.
 const EXTRAS := {
@@ -166,3 +234,22 @@ static func ids_for_room(room: String) -> Array:
 		if String(ANOMALIES[id].get("sala", "")) == room:
 			out.append(id)
 	return out
+## La linea del parte para una anomalia. Si alguna se agrega sin nota, se
+## arma una generica con el tipo, para que el parte nunca quede vacio.
+static func note(id: String) -> String:
+	if NOTES.has(id):
+		return String(NOTES[id])
+	var entry: Dictionary = ANOMALIES.get(id, {})
+	var room := String(entry.get("sala", "la estacion"))
+	match String(entry.get("tipo", "")):
+		"mover":
+			return "Movi algo en %s." % room
+		"faltar":
+			return "Saque algo de %s." % room
+		"aparecer":
+			return "Deje algo en %s." % room
+		"puerta":
+			return "Toque la puerta de %s." % room
+		"luz":
+			return "Apague la luz de %s." % room
+	return "Anduve en %s." % room

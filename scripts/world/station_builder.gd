@@ -131,6 +131,18 @@ func _build_control() -> void:
 
 	Build.box(self, "MesaControl", Vector3(1.6, 0.85, 0.7), Vector3(-3.2, 0.42, -13.2), _mat_metal)
 
+	# El parte del turno: en blanco hasta la Noche 4, cuando resulta que ya
+	# estaba escrito.
+	var parte := ReportSheet.new()
+	parte.name = "ParteDelTurno"
+	add_child(parte)
+	parte.position = Vector3(-3.55, 0.90, -12.95)
+	parte.inspect_id = "parte"
+	parte.titulo = "Parte del turno"
+	parte.setup_box(Vector3(0.20, 0.008, 0.28), Build.surface(Color(0.72, 0.70, 0.64)))
+	points["parte"] = parte
+	objects["parte"] = parte
+
 
 func _build_generator() -> void:
 	var r: Rect2 = ROOMS["sala de generador"]

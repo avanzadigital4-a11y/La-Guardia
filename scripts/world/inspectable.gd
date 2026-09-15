@@ -87,4 +87,6 @@ func _drop() -> void:
 func _set_collisions(on: bool) -> void:
 	for c in get_children():
 		if c is CollisionShape3D:
-			(c as CollisionShape3D).disabled = not on
+			# Diferido: levantar o soltar el objeto puede caer dentro del paso
+			# de fisica, y ahi el cambio directo se descarta.
+			(c as CollisionShape3D).set_deferred("disabled", not on)

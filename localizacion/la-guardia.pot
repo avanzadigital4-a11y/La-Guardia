@@ -5,6 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: es\n"
 
+#. scripts/world/report_sheet.gd
+msgid "%d anotaciones. Las %d con la misma letra."
+msgstr ""
+
 #. noche 1 / beat generator
 msgid "(algo se acomoda en el techo del pasillo)"
 msgstr ""
@@ -53,7 +57,7 @@ msgstr ""
 msgid "A la noche siguiente estaba abierta y la traba en mi bolsillo."
 msgstr ""
 
-#. noche 4 / beat logbook_check
+#. noche 4 / beat logbook_check, parte / gen_puerta
 msgid "Abrí la puerta del generador."
 msgstr ""
 
@@ -81,8 +85,44 @@ msgstr ""
 msgid "Anoté todo lo que hice hoy, minuto por minuto."
 msgstr ""
 
+#. parte / esclusa_oscuro
+msgid "Apagué la luz de la esclusa."
+msgstr ""
+
+#. parte / control_oscuro
+msgid "Apagué la luz de la sala de control."
+msgstr ""
+
+#. parte / gen_oscuro
+msgid "Apagué la luz de la sala de generador."
+msgstr ""
+
+#. parte / almacen_oscuro
+msgid "Apagué la luz del almacén."
+msgstr ""
+
+#. parte / dorm_oscuro
+msgid "Apagué la luz del dormitorio."
+msgstr ""
+
+#. parte / pasillo_oscuro
+msgid "Apagué la luz del pasillo."
+msgstr ""
+
+#. parte / patio_oscuro
+msgid "Apagué la luz del patio."
+msgstr ""
+
+#. parte / almacen_pila_extra
+msgid "Apilé cajas nuevas contra la pared del almacén."
+msgstr ""
+
 #. registro rl_27
 msgid "Arriba, cada uno se acuerda de una persona distinta que no vino."
+msgstr ""
+
+#. parte / gen_silla
+msgid "Arrimé una silla al generador."
 msgstr ""
 
 #. scripts/ui/logbook_ui.gd
@@ -101,6 +141,10 @@ msgstr ""
 msgid "Bajé al B2."
 msgstr ""
 
+#. parte / almacen_pila_falta
+msgid "Bajé la pila de cajas del almacén."
+msgstr ""
+
 #. scripts/ui/menu.gd
 msgid "CRÉDITOS"
 msgstr ""
@@ -117,6 +161,18 @@ msgstr ""
 msgid "Café tibio. Hoy no hiciste café."
 msgstr ""
 
+#. noche 5 / tarea
+msgid "Cerrar el inventario del turno"
+msgstr ""
+
+#. parte / almacen_puerta_cerrada
+msgid "Cerré la puerta del almacén."
+msgstr ""
+
+#. parte / gen_puerta_cerrada
+msgid "Cerré la puerta del generador."
+msgstr ""
+
 #. objeto placa
 msgid "Chapa de identificación"
 msgstr ""
@@ -127,6 +183,18 @@ msgstr ""
 
 #. objeto foto
 msgid "Cinco personas frente a la esclusa, con los ojos cerrados por el viento."
+msgstr ""
+
+#. parte / patio_bandera
+msgid "Clavé una baliza en el patio."
+msgstr ""
+
+#. parte / control_reloj
+msgid "Colgué un reloj en la sala de control."
+msgstr ""
+
+#. parte / esclusa_traje_extra
+msgid "Colgué un traje mojado en la esclusa."
 msgstr ""
 
 #. noche 4 / bitácora
@@ -151,6 +219,18 @@ msgstr ""
 
 #. noche 3 / bitácora
 msgid "Conté los trajes: dos. Ayer había tres y no salió nadie."
+msgstr ""
+
+#. parte / dorm_chair
+msgid "Corrí la silla del dormitorio."
+msgstr ""
+
+#. parte / almacen_cajas
+msgid "Corrí las cajas del almacén."
+msgstr ""
+
+#. parte / pasillo_camilla
+msgid "Crucé la camilla en el pasillo."
 msgstr ""
 
 #. registro rl_08
@@ -193,12 +273,28 @@ msgstr ""
 msgid "Dejar todas las puertas cerradas"
 msgstr ""
 
+#. parte / esclusa_puerta
+msgid "Dejé abierta la puerta de la esclusa."
+msgstr ""
+
+#. parte / corridor_door
+msgid "Dejé abierta la puerta del almacén."
+msgstr ""
+
+#. parte / dorm_bulto
+msgid "Dejé algo armado arriba de la cama."
+msgstr ""
+
 #. registro rl_15
 msgid "Dejé de trabarla. Prefiero verla abierta que encontrarla así."
 msgstr ""
 
 #. noche 5 / bitácora
 msgid "Dejé el inventario final sobre la mesa de control. Faltan cosas que no saqué yo."
+msgstr ""
+
+#. parte / pasillo_locker_abierto
+msgid "Dejé el locker del pasillo abierto."
 msgstr ""
 
 #. noche 2 / bitácora
@@ -209,12 +305,60 @@ msgstr ""
 msgid "Dejé la grabadora en el pasillo toda la noche, apuntando a mi pieza."
 msgstr ""
 
+#. parte / gen_herramienta
+msgid "Dejé la llave inglesa tirada junto al generador."
+msgstr ""
+
 #. registro rl_10
 msgid "Dejé los trajes contados antes de dormir. Eran cuatro."
 msgstr ""
 
+#. parte / esclusa_traje_suelo
+msgid "Dejé un traje tirado en el piso de la esclusa."
+msgstr ""
+
+#. parte / control_bandeja
+msgid "Dejé una bandeja servida en control."
+msgstr ""
+
+#. parte / almacen_bolsa
+msgid "Dejé una bolsa cargada en el almacén."
+msgstr ""
+
+#. parte / patio_huellas
+msgid "Dejé una hilera de huellas saliendo al patio."
+msgstr ""
+
+#. parte / dorm_linterna
+msgid "Dejé una linterna prendida en el piso del dormitorio."
+msgstr ""
+
+#. parte / pasillo_linterna
+msgid "Dejé una linterna tirada en el pasillo."
+msgstr ""
+
+#. parte / control_taza
+msgid "Dejé una taza servida en el escritorio."
+msgstr ""
+
+#. parte / pasillo_extintor
+msgid "Descolgué el extintor del pasillo."
+msgstr ""
+
+#. parte / esclusa_traje_1_falta
+msgid "Descolgué el primer traje de la esclusa."
+msgstr ""
+
+#. parte / esclusa_traje_falta
+msgid "Descolgué el segundo traje de la esclusa."
+msgstr ""
+
 #. registro rl_14
 msgid "Después comparé con la bitácora."
+msgstr ""
+
+#. parte / control_silla_girada
+msgid "Di vuelta la silla de control hacia la puerta."
 msgstr ""
 
 #. noche 1 / bitácora
@@ -265,6 +409,10 @@ msgstr ""
 msgid "El panel marcó una lectura de más y la borró solo."
 msgstr ""
 
+#. noche 4 / beat parte
+msgid "El parte ya está completo."
+msgstr ""
+
 #. registro rl_04
 msgid "El pasillo mide catorce metros de ida y diecinueve de vuelta."
 msgstr ""
@@ -305,12 +453,40 @@ msgstr ""
 msgid "En serio."
 msgstr ""
 
+#. parte / dorm_pisadas
+msgid "Entré al dormitorio con las botas sucias."
+msgstr ""
+
 #. registro rl_26
 msgid "Es el parte de mañana."
 msgstr ""
 
+#. noche 4 / beat parte
+msgid "Es tu letra, y la hora del pie es de antes de que pasara nada."
+msgstr ""
+
 #. noche 3 / beat subnivel
 msgid "Es tu letra."
+msgstr ""
+
+#. parte / control_marca
+msgid "Escribí NO CUENTES en la pared de control."
+msgstr ""
+
+#. parte / dorm_marca
+msgid "Escribí NO DUERMAS en la pared del dormitorio."
+msgstr ""
+
+#. parte / pasillo_marca
+msgid "Escribí VOLVE en la pared del pasillo."
+msgstr ""
+
+#. parte / control_pizarra
+msgid "Escribí un 0 en la pizarra del cierre."
+msgstr ""
+
+#. parte / esclusa_marca
+msgid "Escribí un 3 en la puerta de la esclusa."
 msgstr ""
 
 #. noche 5 / bitácora
@@ -333,8 +509,24 @@ msgstr ""
 msgid "Fijate la fecha de esta grabación antes de subir al vehículo."
 msgstr ""
 
+#. scripts/world/report_sheet.gd
+msgid "Firmado a las %s. Antes de que pasara nada de esto."
+msgstr ""
+
+#. noche 4 / tarea
+msgid "Firmar el parte del turno"
+msgstr ""
+
+#. noche 4 / beat parte
+msgid "Firmé el parte al entrar. Todo lo que anoté ahí pasó después."
+msgstr ""
+
 #. objeto foto
 msgid "Foto del equipo"
+msgstr ""
+
+#. parte / control_chair
+msgid "Giré la silla de la sala de control."
 msgstr ""
 
 #. registro rl_26
@@ -373,8 +565,20 @@ msgstr ""
 msgid "Hay una portadora en la banda 4. No figura en el registro."
 msgstr ""
 
+#. parte / dorm_cama_hecha
+msgid "Hice la cama."
+msgstr ""
+
+#. scripts/world/report_sheet.gd
+msgid "Hoja del parte del turno. En blanco."
+msgstr ""
+
 #. noche 4 / bitácora, noche 4 / beat inicio
 msgid "Hoy el B2 no está. El mapa dice que nunca estuvo."
+msgstr ""
+
+#. scripts/world/report_sheet.gd
+msgid "INVENTARIO DE CIERRE — CINCO NOCHES"
 msgstr ""
 
 #. noche 3 / bitácora
@@ -415,6 +619,10 @@ msgstr ""
 
 #. registro rl_03
 msgid "La grabación figura hecha hoy, a las 23:47."
+msgstr ""
+
+#. scripts/world/report_sheet.gd
+msgid "La hoja está firmada y no dice nada más."
 msgstr ""
 
 #. registro rl_25
@@ -465,6 +673,26 @@ msgstr ""
 msgid "Los que corrieron tardaron más en volver."
 msgstr ""
 
+#. parte / gen_marca
+msgid "Marqué once rayas en la pared del generador."
+msgstr ""
+
+#. parte / pasillo_camilla_falta
+msgid "Me llevé la camilla del pasillo."
+msgstr ""
+
+#. parte / control_silla_falta
+msgid "Me llevé la silla de la sala de control."
+msgstr ""
+
+#. parte / dorm_bed
+msgid "Moví la cucheta de lugar."
+msgstr ""
+
+#. scripts/world/report_sheet.gd
+msgid "NOCHE %d"
+msgstr ""
+
 #. noche 1
 msgid "NOCHE 1"
 msgstr ""
@@ -509,6 +737,10 @@ msgstr ""
 msgid "No hay B2 en los planos."
 msgstr ""
 
+#. scripts/world/report_sheet.gd
+msgid "No hay anotaciones todavía. La firma sí está."
+msgstr ""
+
 #. registro rl_05
 msgid "No la hagas de nuevo."
 msgstr ""
@@ -537,12 +769,20 @@ msgstr ""
 msgid "Orientar la antena para el retiro"
 msgstr ""
 
+#. scripts/world/report_sheet.gd
+msgid "PARTE DEL TURNO — NOCHE %d"
+msgstr ""
+
 #. scripts/ui/menu.gd
 msgid "PARTIDAS"
 msgstr ""
 
 #. registro rl_21
 msgid "Parte de las veintidós. Viento del sudeste, treinta y ocho nudos."
+msgstr ""
+
+#. parte / patio_figura
+msgid "Paré algo del tamaño de una persona en el fondo del patio."
 msgstr ""
 
 #. registro rl_09
@@ -575,6 +815,14 @@ msgstr ""
 
 #. noche 1 / tarea
 msgid "Purgar la válvula del almacén"
+msgstr ""
+
+#. parte / dorm_silla_mira_cama
+msgid "Puse la silla mirando la cama."
+msgstr ""
+
+#. parte / pasillo_silla
+msgid "Puse una silla en la mitad del pasillo."
 msgstr ""
 
 #. registro rl_25
@@ -753,6 +1001,10 @@ msgstr ""
 msgid "Revisé las tres firmas de la bitácora."
 msgstr ""
 
+#. parte / patio_tambor
+msgid "Rodé un tambor hasta el medio del patio."
+msgstr ""
+
 #. noche 1 / bitácora
 msgid "Ronda completa. Sin novedades que valga la pena anotar."
 msgstr ""
@@ -765,8 +1017,32 @@ msgstr ""
 msgid "Rutina de siempre: generadores, ronda, sensores, válvula."
 msgstr ""
 
+#. parte / patio_tambor_falta
+msgid "Saqué el tambor del patio."
+msgstr ""
+
+#. parte / control_silla_al_pasillo
+msgid "Saqué la silla de control hasta la puerta."
+msgstr ""
+
+#. parte / dorm_silla_falta
+msgid "Saqué la silla del dormitorio."
+msgstr ""
+
+#. parte / gen_traba_falta
+msgid "Saqué la traba del generador."
+msgstr ""
+
+#. parte / almacen_cajas_faltan
+msgid "Saqué las cajas del almacén."
+msgstr ""
+
 #. registro rl_29
 msgid "Se escuchan mis pasos saliendo a las dos y cuarto."
+msgstr ""
+
+#. scripts/world/report_sheet.gd
+msgid "Se firma al final de los cinco días."
 msgstr ""
 
 #. registro rl_23
@@ -821,6 +1097,10 @@ msgstr ""
 msgid "Son las 23:12."
 msgstr ""
 
+#. parte / dorm_silla_doble
+msgid "Subí una segunda silla al dormitorio."
+msgstr ""
+
 #. scripts/ui/hud.gd
 msgid "TAREAS DE LA NOCHE"
 msgstr ""
@@ -843,6 +1123,10 @@ msgstr ""
 
 #. objeto traba
 msgid "Traba del generador"
+msgstr ""
+
+#. parte / dorm_silla_puerta
+msgid "Trabé la puerta del dormitorio con la silla."
 msgstr ""
 
 #. registro rl_06
@@ -873,6 +1157,14 @@ msgstr ""
 msgid "Uno por cada vez que alguien se quedó a cerrar la estación."
 msgstr ""
 
+#. parte / gen_banco_vacio
+msgid "Vacié el banco de taller."
+msgstr ""
+
+#. parte / almacen_estante_vacio
+msgid "Vacié el segundo estante del almacén."
+msgstr ""
+
 #. objeto taza
 msgid "Vacía y limpia, como recién lavada."
 msgstr ""
@@ -889,6 +1181,10 @@ msgstr ""
 msgid "Volver al dormitorio y descansar"
 msgstr ""
 
+#. parte / patio_huellas_entran
+msgid "Volví al patio y entre por el costado."
+msgstr ""
+
 #. registro rl_16
 msgid "Vos hacés cosas y después no te acordás. Es distinto y es peor."
 msgstr ""
@@ -899,6 +1195,14 @@ msgstr ""
 
 #. noche 5 / bitácora
 msgid "Voy a salir igual. Sea lo que sea que salga conmigo."
+msgstr ""
+
+#. scripts/world/report_sheet.gd
+msgid "Y %d más. Las %d con la misma letra."
+msgstr ""
+
+#. scripts/world/report_sheet.gd
+msgid "Ya está completo. La letra es tuya."
 msgstr ""
 
 #. registro rl_28

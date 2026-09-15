@@ -90,6 +90,26 @@ func _run() -> void:
 	_check(signal_log.task_id == "radio_unknown", "la senal de la noche 2 es una tarea de escucha")
 	_check(signal_log.visible, "el registro desconocido aparece la noche 2")
 
+	# Noche 4: el parte del turno le devuelve al jugador, en su propia letra,
+	# lo que cambio mientras no miraba. El texto sale de esta partida.
+	await director.start_night(4)
+	await _wait(0.5)
+	_check(GameState.has_task("parte"), "la noche 4 pide firmar el parte del turno")
+	var antes := GameState.anomalies_of_night(4).size()
+	director._on_room_exited("dormitorio")
+	await _wait(0.3)
+	var pasadas := GameState.anomalies_of_night(4)
+	_check(pasadas.size() > antes, "lo que cambia fuera de camara queda anotado (%d)" % pasadas.size())
+	var hoja: ReportSheet = station.points["parte"]
+	var texto := hoja.description()
+	_check(texto.contains(AnomalyData.note(String(pasadas[0]))),
+		"el parte lista lo que de verdad paso en esta partida")
+	hoja.interact(player)
+	await _wait(0.4)
+	_check(GameState.is_task_done("parte"), "leer el parte cierra la tarea")
+	hoja._drop()
+	await _wait(0.2)
+
 	# Noche 5: el cierre corre entero y emite el final.
 	var finished := [false]
 	director.night_finished.connect(func(_n): finished[0] = true)
@@ -107,6 +127,17 @@ func _run() -> void:
 	station.points["antena"].interact(player)
 	await _wait(0.2)
 	_check(GameState.is_task_done("antena"), "orientar la antena")
+
+	# El inventario de cierre junta las cinco noches en una sola hoja.
+	var cierre: ReportSheet = station.points["parte"]
+	var inventario := cierre.description()
+	cierre.interact(player)
+	await _wait(0.4)
+	_check(GameState.is_task_done("inventario"), "cerrar el inventario del turno")
+	_check(inventario.contains("NOCHE 4") and inventario.contains(AnomalyData.note(String(pasadas[0]))),
+		"el inventario arrastra lo de las noches anteriores")
+	cierre._drop()
+	await _wait(0.2)
 
 	# "Dejar todas las puertas cerradas" no se resuelve con [E]: se resuelve
 	# dejando la estacion como tiene que quedar.

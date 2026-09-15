@@ -315,7 +315,10 @@ func _on_room_exited(room_id: String) -> void:
 
 
 func _apply_anomaly(id: String) -> void:
-	anomalies.apply(id)
+	# Queda anotada para el parte del turno: lo que el jugador va a leer en la
+	# Noche 4 es lo que de verdad paso en su partida, no una lista guionada.
+	if anomalies.apply(id):
+		GameState.record_anomaly(id)
 
 
 func _on_route_swapped(times: int, route_id: String) -> void:

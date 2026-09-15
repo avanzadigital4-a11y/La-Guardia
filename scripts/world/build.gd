@@ -185,8 +185,11 @@ static func set_active(node: Node, active: bool) -> void:
 	_set_collisions(node, active)
 
 
+## Las anomalias se aplican desde la senal de un Area3D, o sea en mitad del
+## paso de fisica, y ahi Godot rechaza el cambio y lo ignora en silencio: el
+## objeto desaparecia pero se le seguia chocando. Por eso va diferido.
 static func _set_collisions(node: Node, active: bool) -> void:
 	for child in node.get_children():
 		if child is CollisionShape3D:
-			(child as CollisionShape3D).disabled = not active
+			(child as CollisionShape3D).set_deferred("disabled", not active)
 		_set_collisions(child, active)

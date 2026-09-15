@@ -9,11 +9,13 @@ El documento de diseno completo esta en [`docs/diseno.md`](docs/diseno.md).
 ## Estado actual
 
 Las cinco noches se juegan de punta a punta, cada una con sus propias tareas,
-beats y variaciones de la estacion, y con dos finales. La Noche 1 es la que
-esta mas pulida; las demas ya no son un esqueleto, pero les falta densidad de
-props y detalle ambiental.
+beats y variaciones de la estacion, y con dos finales. El giro central del
+diseno — que las anomalias las causo el propio protagonista — ya no vive solo
+en el texto de la bitacora: el parte del turno se lo muestra al jugador con
+lo que paso en su partida. La Noche 1 es la que esta mas pulida; las demas ya
+no son un esqueleto, pero les falta densidad de props y detalle ambiental.
 
-Cada noche tiene cuatro o cinco tareas y ninguna se resuelve toda de la misma
+Cada noche tiene cuatro, cinco o seis tareas y ninguna se resuelve toda de la misma
 forma: apretar `[E]`, recorrer varios puntos, escuchar una senal entera,
 llegar caminando a un lugar que se mueve, contar objetos, releer la bitacora,
 dejar la estacion en cierto estado, y decidir.
@@ -38,6 +40,13 @@ Lo que ya funciona:
 - **32 registros de radio** (98 lineas, unos 7 minutos de audio) repartidos
   por la estacion, el subnivel y el patio, con su noche de aparicion escrita
   en la misma tabla.
+- **El parte del turno**: la hoja sobre la mesa de control. Las tres primeras
+  noches esta en blanco. La Noche 4 la levantas y ya esta escrita, con tu
+  letra, y lo que lista es lo que de verdad cambio en **esta** partida
+  (incluidas las anomalias que salieron al azar), con la hora del pie
+  anterior a que pasara nada. La Noche 5 la cierra juntando las cinco noches.
+  Es el unico lugar donde el juego dice en limpio que las anomalias las
+  causaste vos, y no es texto guionado: sale de lo que jugaste.
 - **Objetos para mirar de cerca**: se levantan, se giran con el mouse, y lo
   que dicen cambia noche a noche (la chapa con tu numero de turno, la foto del
   equipo a la que le van faltando personas). Verificado por la suite: al
@@ -126,16 +135,20 @@ O todas juntas, con el runner que usa tambien el CI:
 ./tools/test.sh playthrough  # una sola
 ```
 
-Busca el binario en `$GODOT`, en `~/godot` o en el `PATH`, y falla si alguna
-suite devuelve error o imprime `FALLA`. Cada push las corre en GitHub Actions
+Busca el binario en `$GODOT`, en `~/godot` o en el `PATH`, reimporta el
+proyecto antes de empezar (sin eso una clase nueva no existe todavia para el
+parser) y falla si alguna suite devuelve error o imprime `FALLA`. Cada suite
+corre con limite de tiempo (`TIMEOUT`, 420 s por defecto): si una escena no
+compila, el `quit()` de la prueba nunca se ejecuta y Godot headless se
+quedaria esperando para siempre. Cada push las corre en GitHub Actions
 (`.github/workflows/pruebas.yml`).
 
 Las tres primeras salen con codigo 0 si todo pasa. `content` es la red de
 seguridad para seguir agregando contenido: verifica que cada anomalia apunte
 a un objeto, puerta o luz que exista, que las cinco noches no nombren nada
 que no este, que toda tarea tenga como resolverse, que los registros esten
-colocados, y que aplicar las 61 anomalias juntas y revertirlas deje la
-estacion como estaba.
+colocados, que cada anomalia tenga su linea para el parte del turno, y que
+aplicar las 61 anomalias juntas y revertirlas deje la estacion como estaba.
 
 ## Ritmo medido
 
@@ -204,7 +217,7 @@ normal. La plantilla se genera con:
 godot --headless --path . res://tools/exportar_traduccion.tscn
 ```
 
-Eso escribe `localizacion/la-guardia.pot` con los 238 textos del juego (los de
+Eso escribe `localizacion/la-guardia.pot` con los 314 textos del juego (los de
 las tablas y los de la interfaz, cada uno con una nota de donde sale). Para
 agregar un idioma: copiar el `.pot` a `localizacion/en.po`, completar los
 `msgstr` y registrarlo en Proyecto > Configuracion > Localizacion.
