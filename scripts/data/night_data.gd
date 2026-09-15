@@ -68,7 +68,17 @@ const NIGHTS := {
 				{"esperar": 1.0},
 				{"subtitulo": "Es mi letra.", "tiempo": 2.8},
 				{"sonido": "creak", "db": -8.0},
-				{"bitacora": "La planilla de GEN-A estaba firmada por adelantado. Con mi letra.", "hora": "23:31"},
+				# La linea que cierra la lectura. Sin ella, "es mi letra" deja
+				# abiertas dos interpretaciones en un momento donde solo una
+				# sirve: la Noche 1 necesita que el jugador piense que la
+				# estacion esta mal, no que el protagonista lo esta. Que el
+				# personaje concluya "alguien estuvo aca" ancla la lectura de
+				# falsificacion y deja intacta la reinterpretacion de la
+				# Noche 4, cuando el jugador ya tenga su propia letra con que
+				# comparar. El mismo hecho, dos lecturas, en el orden correcto.
+				{"esperar": 0.8},
+				{"subtitulo": "Alguien estuvo acá antes que yo.", "tiempo": 3.2},
+				{"bitacora": "Alguien firmó la planilla de GEN-A por adelantado, imitando mi letra.", "hora": "23:31"},
 			],
 			# La ronda: las huellas. El terror esta en la tarea misma —contar
 			# las balizas— y no en un ruido al costado.
@@ -137,6 +147,10 @@ const NIGHTS := {
 			"pasillo_locker_abierto",
 			"control_reloj",
 			"dorm_cama_hecha",
+			# La primera anomalia que no se mira. Va en la Noche 2 a proposito:
+			# antes de que el jugador termine de aprender que el juego consiste
+			# en buscar el objeto distinto.
+			"snd_goteo_dorm",
 		],
 		"anomalias_extra": 2,
 		"beats": {
@@ -228,6 +242,12 @@ const NIGHTS := {
 			"pasillo_silla",
 			"control_bandeja",
 			"almacen_bolsa",
+			# "El espacio interfiere" es el titulo de esta noche y hasta ahora
+			# lo unico que interferia era el pasillo sur. Ahora una sala tiene
+			# otras proporciones: todo esta en su lugar y la sala no es la de
+			# ayer.
+			"esp_control_hondo",
+			"snd_motor_b2",
 		],
 		"anomalias_extra": 3,
 		"beats": {
@@ -325,6 +345,11 @@ const NIGHTS := {
 			"esclusa_marca",
 			"pasillo_camilla_falta",
 			"gen_traba_falta",
+			# La noche en que el jugador deja de confiar en si mismo es la
+			# noche del reloj: la unica anomalia que no se puede atribuir a la
+			# estacion mirando un objeto, porque el objeto es la hora.
+			"time_salto",
+			"esp_dorm_angosto",
 		],
 		"anomalias_extra": 3,
 		"beats": {
@@ -436,6 +461,9 @@ const NIGHTS := {
 			"dorm_linterna",
 			"pasillo_oscuro",
 			"patio_bandera",
+			"time_parado",
+			"snd_goteo_esclusa",
+			"esp_pasillo_ancho",
 		],
 		"anomalias_extra": 4,
 		"beats": {

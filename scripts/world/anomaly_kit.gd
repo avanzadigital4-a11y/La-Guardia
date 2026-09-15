@@ -3,6 +3,22 @@ class_name AnomalyKit
 extends RefCounted
 ## Aplica y revierte las anomalias del catalogo. Guarda el estado original de
 ## lo que toca, asi la estacion arranca "normal" cada noche.
+##
+## Los tipos. Durante mucho tiempo fueron cinco —mover, faltar, aparecer,
+## puerta, luz— y los cinco son la misma cosa: un objeto cambio de estado. Con
+## setenta y un anomalias todas de esa familia, el jugador aprende rapido que
+## el juego consiste en buscar el objeto distinto, y el terror se convierte en
+## un juego de las siete diferencias.
+##
+## Los tres de abajo no se miran, y por eso valen:
+##
+##   sonido   algo quedo andando donde no hay nada que pueda andar
+##   espacio  una pared se corrio: la sala tiene otras proporciones
+##   reloj    la hora del turno no es la que era
+##
+## El de espacio es el que el documento de diseno pedia desde el principio
+## ("proporciones que ya no coinciden del todo") y nunca habia tenido con que
+## hacerse.
 
 var station: StationBuilder
 var _applied := {}
@@ -78,6 +94,38 @@ func apply(id: String) -> bool:
 			var light: OmniLight3D = station.room_lights[room]
 			_applied[id] = {"tipo": "luz", "light": light, "energy": light.light_energy}
 			light.light_energy = 0.0
+		"sonido":
+			# Una fuente en bucle en una sala donde no hay nada que suene.
+			# No hay objeto que mirar: el jugador tiene que darse cuenta de
+			# que algo se escucha, y eso es mas dificil de descartar que una
+			# silla movida.
+			var donde: Vector3 = entry.get("pos", Vector3.ZERO)
+			var player := AudioDirector.loop_at(
+				String(entry.get("cue", "goteo")), donde, float(entry.get("db", -14.0)))
+			if player == null:
+				return false
+			_applied[id] = {"tipo": "sonido", "player": player}
+		"espacio":
+			# Correr una pared entera. La sala sigue siendo la misma sala y
+			# todo esta en su lugar; lo que cambio son las proporciones, que
+			# es justo lo que cuesta poner en palabras.
+			var sala := String(entry.get("sala_nodo", ""))
+			if not station.room_nodes.has(sala):
+				return false
+			var holder: Node3D = station.room_nodes[sala]
+			var prefijo := "pared_%s" % String(entry.get("pared", "n"))
+			var corrimiento: Vector3 = entry.get("corrimiento", Vector3.ZERO)
+			var movidas: Array[Node3D] = []
+			for c in holder.get_children():
+				if c is Node3D and String(c.name).begins_with(prefijo):
+					(c as Node3D).position += corrimiento
+					movidas.append(c as Node3D)
+			if movidas.is_empty():
+				return false
+			_applied[id] = {"tipo": "espacio", "nodos": movidas, "corrimiento": corrimiento}
+		"reloj":
+			_applied[id] = {"tipo": "reloj", "antes": GameState.clock_override}
+			GameState.set_clock_override(String(entry.get("hora", "")))
 		_:
 			return false
 	return true
@@ -108,6 +156,19 @@ func reset_all() -> void:
 				var light: OmniLight3D = data["light"]
 				if is_instance_valid(light):
 					light.light_energy = data["energy"]
+			"sonido":
+				var player: AudioStreamPlayer3D = data["player"]
+				if is_instance_valid(player):
+					player.stop()
+					player.queue_free()
+			"espacio":
+				var corrimiento: Vector3 = data["corrimiento"]
+				for n in data["nodos"]:
+					var nodo: Node3D = n
+					if is_instance_valid(nodo):
+						nodo.position -= corrimiento
+			"reloj":
+				GameState.set_clock_override(String(data["antes"]))
 	_applied.clear()
 
 

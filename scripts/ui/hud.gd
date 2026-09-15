@@ -105,13 +105,22 @@ func _ready() -> void:
 	GameState.notice.connect(show_notice)
 	GameState.battery_changed.connect(_on_battery)
 	GameState.night_started.connect(_on_night_started)
+	GameState.clock_changed.connect(_on_clock_changed)
 	_refresh_tasks()
 	_on_battery(GameState.battery)
 
 
 func _on_night_started(night: int) -> void:
-	var data := NightData.get_night(night)
-	_clock.text = "%s   %s" % [data["title"], data["clock"]]
+	_on_clock_changed(GameState.clock_override)
+
+
+## El reloj muestra la hora de la noche, salvo que una anomalia la haya
+## corrido. No avisa nada ni cambia de color: si el jugador no venia mirando
+## la hora, no se entera, y esa es la idea.
+func _on_clock_changed(override: String) -> void:
+	var data := NightData.get_night(GameState.current_night)
+	var hora: String = override if override != "" else String(data["clock"])
+	_clock.text = "%s   %s" % [data["title"], hora]
 
 
 func _refresh_tasks() -> void:

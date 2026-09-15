@@ -442,6 +442,66 @@ func _ending_leave() -> void:
 			GameState.get_flag("horas_perdidas", 0)))
 		lines.append("Las anotó alguien igual.")
 	await _speak(lines)
+	await _reinterpretacion()
+
+
+## El remate no es la linea de la radio: es lo que el jugador hace con ella.
+##
+## "No hay personal asignado desde hace once meses" es un buen dato y un mal
+## final, porque se agota en si mismo. El final bueno es el que obliga a
+## releer las cinco noches: cada cosa que el jugador le atribuyo a la estacion
+## tenia otra explicacion, y la tuvo desde el principio.
+##
+## Esto no es texto escrito de antemano. Sale de `GameState.anomalies_seen`,
+## que es el historial real de ESTA partida, asi que nombra las cosas que este
+## jugador efectivamente vio y en las noches en que las vio. Dos partidas dan
+## dos remates distintos, y ninguno menciona nada que no haya pasado.
+func _reinterpretacion() -> void:
+	var elegidas := _momentos_para_releer()
+	if elegidas.is_empty():
+		return
+
+	await get_tree().create_timer(1.4).timeout
+	await fade.show_card("EL TURNO", "Cinco noches.", 2.6)
+
+	for m in elegidas:
+		Subtitles.show_line("Noche %d.   %s" % [int(m["night"]), String(m["texto"])], 3.4)
+		await get_tree().create_timer(3.6).timeout
+	Subtitles.clear()
+	await get_tree().create_timer(1.0).timeout
+
+	await _speak([
+		"Nada de eso lo hizo la estación.",
+		"Y la planilla del generador ya estaba firmada la primera noche.",
+	])
+
+
+## Tres momentos repartidos a lo largo del turno: uno temprano, uno del medio y
+## uno del final. Repartirlos importa mas que cuales sean — lo que tiene que
+## quedar claro es que esto viene pasando desde la Noche 1.
+func _momentos_para_releer() -> Array:
+	var por_noche := {}
+	for n in range(1, GameState.MAX_NIGHT + 1):
+		var ids := GameState.anomalies_of_night(n)
+		if not ids.is_empty():
+			por_noche[n] = ids
+
+	var noches: Array = por_noche.keys()
+	noches.sort()
+	if noches.is_empty():
+		return []
+
+	var elegir: Array = []
+	if noches.size() <= 3:
+		elegir = noches
+	else:
+		elegir = [noches[0], noches[noches.size() / 2], noches[noches.size() - 1]]
+
+	var out: Array = []
+	for n in elegir:
+		var ids: Array = por_noche[n]
+		out.append({"night": n, "texto": AnomalyData.note(String(ids[0]))})
+	return out
 
 
 ## Variante menor: el jugador decide no salir.

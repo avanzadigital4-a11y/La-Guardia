@@ -13,6 +13,15 @@ extends RefCounted
 ##   aparecer  -> aparece algo que no estaba (definido en EXTRAS)
 ##   puerta    -> una puerta queda abierta o cerrada
 ##   luz       -> una sala se queda a oscuras
+##   sonido    -> algo quedo andando donde no hay nada que pueda andar
+##   espacio   -> una pared se corrio: la sala tiene otras proporciones
+##   reloj     -> la hora del turno no es la que era
+##
+## Los tres ultimos no se miran. Los cinco primeros son todos la misma cosa
+## —un objeto cambio de estado— y con setenta y pico de anomalias de esa sola
+## familia el jugador aprende que el juego consiste en buscar el objeto
+## distinto. Ahi el terror se vuelve un juego de las siete diferencias, que es
+## el riesgo mas concreto que tiene este sistema.
 ##
 ## "sala" es donde tiene que dejar de estar el jugador para que pase.
 
@@ -114,6 +123,39 @@ const ANOMALIES := {
 	"b2_lata_falta": {"sala": "b2 fondo", "tipo": "faltar", "objeto": "b2_lata"},
 	"b2_fondo_oscuro": {"sala": "b2 fondo", "tipo": "luz", "sala_luz": "b2 fondo"},
 	"b2_pasillo_oscuro": {"sala": "subnivel", "tipo": "luz", "sala_luz": "b2 pasillo"},
+
+	# --- Las que no se miran -------------------------------------------------
+	#
+	# Sonoras: no hay objeto que buscar. El jugador tiene que notar que algo
+	# se escucha, y eso es mucho mas dificil de descartar como "me parecio"
+	# que una silla movida.
+	"snd_goteo_dorm": {"sala": "dormitorio", "tipo": "sonido", "cue": "goteo",
+		"pos": Vector3(-8.6, 1.4, -3.4), "db": -16.0},
+	"snd_motor_almacen": {"sala": "almacen", "tipo": "sonido", "cue": "motor",
+		"pos": Vector3(7.8, 1.2, -3.0), "db": -18.0},
+	"snd_goteo_esclusa": {"sala": "esclusa", "tipo": "sonido", "cue": "goteo",
+		"pos": Vector3(-2.2, 1.6, 8.4), "db": -15.0},
+	"snd_motor_b2": {"sala": "b2 bombas", "tipo": "sonido", "cue": "motor",
+		"pos": Vector3(-7.0, 0.8, -38.0), "db": -13.0},
+
+	# Espaciales: la sala es la misma sala, todo esta en su lugar, y las
+	# proporciones no son las de ayer. Es lo que mas cuesta poner en palabras
+	# y por eso es lo que mejor funciona.
+	"esp_dorm_angosto": {"sala": "dormitorio", "tipo": "espacio",
+		"sala_nodo": "Dormitorio", "pared": "n", "corrimiento": Vector3(0.0, 0.0, 0.55)},
+	"esp_control_hondo": {"sala": "sala de control", "tipo": "espacio",
+		"sala_nodo": "SalaDeControl", "pared": "o", "corrimiento": Vector3(-0.7, 0.0, 0.0)},
+	"esp_almacen_corto": {"sala": "almacen", "tipo": "espacio",
+		"sala_nodo": "Almacen", "pared": "e", "corrimiento": Vector3(-0.8, 0.0, 0.0)},
+	"esp_pasillo_ancho": {"sala": "pasillo", "tipo": "espacio",
+		"sala_nodo": "Pasillo", "pared": "o", "corrimiento": Vector3(-0.45, 0.0, 0.0)},
+
+	# Temporales: el reloj del turno. La unica anomalia que el jugador no
+	# puede atribuir a la estacion mirando un objeto, porque el objeto es la
+	# hora.
+	"time_salto": {"sala": "sala de control", "tipo": "reloj", "hora": "03:12"},
+	"time_atras": {"sala": "pasillo", "tipo": "reloj", "hora": "22:40"},
+	"time_parado": {"sala": "sala de generador", "tipo": "reloj", "hora": "00:00"},
 }
 
 ## Como lo anota el parte del turno: cada anomalia en primera persona y en
@@ -192,6 +234,17 @@ const NOTES := {
 	"b2_lata_falta": "Me llevé la lata del fondo del B2.",
 	"b2_fondo_oscuro": "Apagué la luz del fondo del B2.",
 	"b2_pasillo_oscuro": "Apagué la luz del pasillo del B2.",
+	"snd_goteo_dorm": "Dejé algo goteando en el dormitorio.",
+	"snd_motor_almacen": "Dejé un motor andando en el almacén.",
+	"snd_goteo_esclusa": "Dejé algo goteando en la esclusa.",
+	"snd_motor_b2": "Dejé las bombas andando abajo.",
+	"esp_dorm_angosto": "Corrí la pared del dormitorio.",
+	"esp_control_hondo": "Corrí la pared de la sala de control.",
+	"esp_almacen_corto": "Corrí la pared del almacén.",
+	"esp_pasillo_ancho": "Corrí la pared del pasillo.",
+	"time_salto": "Adelanté el reloj del turno.",
+	"time_atras": "Atrasé el reloj del turno.",
+	"time_parado": "Paré el reloj del turno.",
 }
 
 ## Objetos que solo existen cuando una anomalia los enciende. Se construyen

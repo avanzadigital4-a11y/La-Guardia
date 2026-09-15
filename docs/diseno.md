@@ -23,11 +23,35 @@ de esta noche firmada a una hora que todavía no pasó, cuando contás tres
 balizas cuatro veces — ahí el trabajo **es** el terror. Toda tarea de toda
 noche tiene su beat, y `tests/content.tscn` falla si alguna queda sin uno.
 
-**Mirar es un verbo, y se enseña temprano.** Las 97 anomalías solo pagan si el
+**Mirar es un verbo, y se enseña temprano.** Las 82 anomalías solo pagan si el
 jugador compara una sala con su recuerdo de la sala, y eso no se aprende solo:
 hay que pedirlo. La tarea de recuento aparece en la Noche 2 con dos salas, en
 la 3 con tres y en la 4 con cuatro. La de la Noche 4 ya existía; las otras dos
 son la lección que faltaba.
+
+**Y no todas se miran.** Es el riesgo que tiene pedirle al jugador que compare
+salas: si todas las anomalías son un objeto que cambió de estado, aprende que
+el juego consiste en buscar el objeto distinto y el terror se vuelve un juego
+de las siete diferencias. Durante mucho tiempo los cinco tipos que había
+—mover, faltar, aparecer, puerta, luz— eran exactamente eso.
+
+Ahora hay tres que no se miran:
+
+- **sonido** — algo quedó andando donde no hay nada que pueda andar: un goteo
+  en el dormitorio, un motor en el almacén, las bombas del B2 en marcha con el
+  equipo apagado. No hay objeto que buscar; hay que notar que algo se escucha,
+  y eso es mucho más difícil de descartar como "me pareció".
+- **espacio** — una pared se corrió. La sala es la misma sala y todo está en
+  su lugar; lo que cambió son las proporciones. Es lo que este documento pedía
+  desde el primer día ("proporciones que ya no coinciden del todo") y nunca
+  había tenido con qué hacerse.
+- **reloj** — la hora del turno no es la que era. Es la única anomalía que el
+  jugador no puede atribuir a la estación mirando un objeto, porque el objeto
+  es la hora.
+
+Están repartidas a propósito: la primera sonora en la Noche 2, la espacial en
+la Noche 3 (que se llama "el espacio interfiere"), y el reloj en la Noche 4,
+que es la noche de no confiar en uno mismo.
 
 Simple y repetible, pero **debe evolucionar noche a noche** — nunca debe sentirse como la misma secuencia ejecutada cinco veces, o el jugador cae en piloto automático.
 
@@ -168,7 +192,19 @@ No todo lo raro ocurre frente al jugador. Algunos cambios pasan mientras no est�
 
 ## Final (el más fuerte narrativamente)
 
-El jugador descubre que algunas de las anomalías las causó él mismo, en estados que no recuerda. Al llegar el vehículo de evacuación, una transmisión de radio revela: *"No hay personal asignado a esa estación desde hace 11 meses."* No se explica qué fue exactamente lo que pasó — la ambigüedad final es intencional y es el gancho memorable del juego. **Decidido: dos finales, y no más.** El principal (salir al patio y esperar el
+El jugador descubre que algunas de las anomalías las causó él mismo, en estados que no recuerda. Al llegar el vehículo de evacuación, una transmisión de radio revela: *"No hay personal asignado a esa estación desde hace 11 meses."*
+
+**Pero esa línea no es el remate: es el permiso para releer.** Un dato que se
+agota en sí mismo es un giro; lo que hace memorable a un final de este tipo es
+que obligue a repasar las cinco noches y descubrir que cada cosa que el jugador
+le atribuyó a la estación tenía otra explicación, y la tuvo desde el principio.
+
+Por eso, después de la radio, el juego nombra tres momentos de **esta** partida
+—uno temprano, uno del medio y uno del final— en primera persona y en pasado, y
+cierra con *"nada de eso lo hizo la estación"* y con la planilla de la Noche 1.
+No es texto escrito de antemano: sale de `GameState.anomalies_seen`, el
+historial real, así que dos partidas dan dos remates distintos y ninguno
+menciona nada que no haya pasado. No se explica qué fue exactamente lo que pasó — la ambigüedad final es intencional y es el gancho memorable del juego. **Decidido: dos finales, y no más.** El principal (salir al patio y esperar el
 vehículo) y una variante (cerrar la escotilla del B2 desde adentro y quedarse).
 Los dos están construidos. No se agregan más: la ambigüedad del final principal
 es el gancho, y cada final extra la diluye además de competir por el contenido
@@ -350,8 +386,15 @@ sentada**, que es exactamente lo que dice el objetivo de 60-90 minutos.
   publicar, y una tipografía propia sería *peor* que IBM Plex salvo que la
   dibuje alguien que sepa diseñar tipos.
 - **Contenido.** Medido hoy: 32 a 48 minutos explorando más 9.4 de audio,
-  contra un objetivo de 60 a 90. Falta, pero menos que antes, y la curva ya
-  es la correcta. Medir con `tests/pacing.tscn` en cada paso.
+  contra un objetivo de 60 a 90. Medir con `tests/pacing.tscn` en cada paso.
+
+  **Los 60-90 son un piso, no una cuota.** El objetivo existe para que el
+  juego no se sienta una demo, no para que haya que rellenarlo. Cincuenta
+  minutos densos le ganan a noventa de caminar por pasillos, y el riesgo real
+  de un número es que empuje a alargar en vez de a profundizar. La regla: no
+  agregar salas ni tareas para llenar minutos. Agregar significado a lo que ya
+  existe — más registros de radio, más lecturas de los mismos objetos, más
+  beats adentro de las tareas que ya están.
 - **Playtest con personas.** Todo lo que se sabe del ritmo sale de un bot que
   camina derecho a cada tarea.
 - **Medir en la máquina objetivo.** Nunca se corrió en un equipo de gama baja
