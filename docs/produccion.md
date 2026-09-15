@@ -163,14 +163,50 @@ o comunidades donde hay gente haciendo voces gratis por portfolio
 esperar. Acordate de que tiene que ser **una sola** persona para los 35
 registros.
 
-### La recomendación
+### El estado actual: las 107 ya están, con espeak
 
-Generá las 107 con TTS **ahora**. Con eso podés jugar el juego completo con
-audio y hacer un playtest de verdad, que es lo que más falta.
+**Ya hay audio para las 107 líneas**, generado con espeak-ng. Se regenera con:
 
-Después grabá encima las que más pesan. El juego levanta cada línea por
-separado, así que reemplazar de a una no rompe nada ni obliga a rehacer el
-resto. Diez líneas bien grabadas sobre 97 sintéticas ya cambia el juego.
+```bash
+export TTS_CMD='./tools/voz_espeak.sh {texto} {salida}'
+./tools/generar_voces_tts.sh
+```
+
+Tarda veintidós segundos. Son 4.7 MB y 9.4 minutos de audio.
+
+**Por qué espeak y no una voz mejor:** es la única opción gratis cuya licencia
+permite vender el juego con el audio adentro. Las voces de mbrola suenan
+bastante mejor, pero su licencia dice textualmente que la base *"may not be
+sold or incorporated into any product which is sold"*. Mientras no esté
+decidido si La Guardia se vende, meter mbrola sería cerrar esa puerta sin
+avisar. Piper sería mejor que las dos, pero hay que bajar el modelo a mano y
+revisar la licencia de la voz puntual.
+
+**Suena a máquina, y hay que asumirlo.** Esto es un piso: sirve para jugar el
+juego entero con audio y poder hacer un playtest de verdad, que es lo que más
+falta. No es el audio final.
+
+Tres detalles de cómo quedó hecho:
+
+- **La voz no cambia entre registros, el estado sí.** El final dice que las
+  grabaciones son todas de la misma voz, así que la voz es una sola. Lo que
+  varía por registro es la velocidad (128-147 ppm) y el tono (28-43),
+  derivados del id — misma garganta, distintos momentos. Al derivarse del id,
+  regenerar da exactamente lo mismo.
+- **Tres líneas son acotaciones, no diálogo** (`[ruido de portadora, doce
+  segundos]`). Un TTS las leería en voz alta, lo cual sería absurdo. Van como
+  un lecho de ruido muy bajo, del largo que les corresponde, y el subtitulo
+  las muestra igual.
+- **El audio real es un 38 % más largo que la estimación** que usaba el
+  medidor de ritmo (9.4 min contra 6.8). `tests/pacing.tscn` ahora mide el
+  archivo cuando existe en vez de estimar.
+
+### Reemplazar de a una
+
+El juego levanta cada línea por separado, así que grabar encima no obliga a
+rehacer nada: dejás tu `audio/voz/rl_35_3.ogg` y esa línea pasa a ser tuya, el
+resto sigue sintético. **Diez líneas bien grabadas sobre 97 sintéticas ya
+cambian el juego.**
 
 ### Por dónde empezar
 

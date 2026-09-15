@@ -109,6 +109,26 @@ while IFS=$'\t' read -r archivo texto; do
 		continue
 	fi
 
+	# Hay lineas que son acotacion, no dialogo: "[ruido de portadora, doce
+	# segundos]". Leerlas en voz alta seria absurdo. Van como un lecho muy
+	# bajo de ruido, del largo que les corresponde, y el subtitulo las muestra
+	# igual. Tampoco pasan por la cadena: loudnorm le subiria el volumen a un
+	# silencio hasta hacerlo sonar.
+	if [[ "$texto" == \[* || "$texto" == \(* ]]; then
+		dur=$(awk -v n=${#texto} 'BEGIN { d = n / 14.0; print (d < 2.0 ? 2.0 : d) }')
+		if "$FFMPEG" -hide_banner -loglevel error -y \
+			-f lavfi -i "anoisesrc=d=$dur:c=pink:a=0.006" \
+			-af "highpass=f=300,lowpass=f=3000" \
+			-ac 1 -ar 44100 -c:a libvorbis -q:a 4 "$SALIDA/$nombre.ogg" 2>/dev/null; then
+			printf "  %-14s ok (acotacion: lecho de ruido, %.1fs)\n" "$nombre" "$dur"
+			hechos=$((hechos + 1))
+		else
+			printf "  %-14s FALLO (acotacion)\n" "$nombre"
+			fallados=$((fallados + 1))
+		fi
+		continue
+	fi
+
 	crudo="$TMP/$nombre.wav"
 	# {texto} y {salida} se reemplazan en el comando que configuro el usuario.
 	cmd="${TTS_CMD//\{salida\}/$crudo}"

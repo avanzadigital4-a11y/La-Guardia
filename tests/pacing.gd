@@ -19,7 +19,7 @@ const DOOR_COST := 1.2      # abrir una puerta
 const USE_COST := 2.0       # usar un objeto
 const PANEL_COST := 6.0     # leer el panel de sensores
 const READ_COST := 8.0      # leer la bitacora o el parte del turno
-const LINE_COST := 3.8      # cada linea de un registro de radio
+const LINE_COST := 3.8      # cada linea de un registro, si no hay audio grabado
 
 ## Como se entra a cada sala desde el pasillo. El pasillo es la columna x=0:
 ## dos caminos cualesquiera se pegan por ahi, asi que no hace falta un
@@ -181,8 +181,21 @@ func _logs_available(night: int) -> Dictionary:
 	for id in NightData.RADIO_LOGS.keys():
 		if int(NightData.RADIO_LOGS[id]["night"]) <= night:
 			n += 1
-			segundos += NightData.RADIO_LOGS[id]["lines"].size() * LINE_COST
+			segundos += _log_seconds(String(id))
 	return {"cuantos": n, "segundos": segundos}
+
+
+## Cuanto dura escuchar un registro entero. Si hay audio de verdad en
+## audio/voz/, se mide; si no, se estima. Importa: el audio generado resulto
+## un 38 % mas largo que la estimacion, y con 35 registros eso no es un
+## detalle.
+func _log_seconds(log_id: String) -> float:
+	var lines: Array = NightData.RADIO_LOGS.get(log_id, {}).get("lines", [])
+	var total := 0.0
+	for i in lines.size():
+		var clip := AudioDirector.voice_clip(log_id, i)
+		total += clip.get_length() if clip != null else LINE_COST
+	return total
 
 
 ## Camina hasta un punto pasando por el pasillo, y cobra el costo de cruzar
