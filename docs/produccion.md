@@ -42,34 +42,65 @@ Lo que sí conviene variar entre registros es el *estado*: distancia al
 micrófono, cansancio, si está leyendo un parte o hablando solo. Que se note
 que es la misma garganta en momentos distintos es exactamente el efecto.
 
-### Equipo mínimo
+### Equipo: el teléfono alcanza, y no es un parche
 
-- Un micrófono USB de condensador (rango de 60 a 100 dólares alcanza y sobra;
-  el procesamiento de radio se come la diferencia con un micro caro).
-- **El cuarto importa más que el micrófono.** Grabá dentro de un placard con
-  ropa, o armá una carpa con frazadas sobre una mesa. Buscás que no haya eco:
-  la portadora de radio perdona el ruido de fondo, no perdona la reverberación
-  de una habitación vacía.
-- [Audacity](https://www.audacityteam.org/) (gratis) o Reaper (barato y sin
-  límite de tiempo para evaluarlo). Cualquiera de los dos alcanza.
+**No hace falta comprar nada.** Grabás con el teléfono.
 
-### Proceso
+No es una solución de emergencia, hay una razón técnica: el paso que hace que
+esto suene a radio es el **pasa-banda de 300 Hz a 3 kHz**, que tira todo lo que
+está por debajo y por encima. El cuerpo grave de la voz y el aire de los
+agudos — todo lo que justifica un micrófono caro — se borra justo después.
+Un micrófono de teléfono está *más cerca* de un micrófono de radio que un
+condensador de estudio.
 
-1. Grabá **todo de corrido en una o dos sesiones**, en el orden del documento.
-   Leé cada línea tres veces seguidas y seguí. No edites mientras grabás.
-2. Recién después, cortá y quedate con la mejor de cada tres.
-3. Cadena de procesamiento por línea, en este orden:
-   - **Filtro pasa-altos** en 100 Hz (saca el retumbe del ambiente).
-   - **Compresión** fuerte (ratio 4:1). Las radios comprimen mucho.
-   - **Pasa-banda de 300 Hz a 3 kHz.** Esto es lo que hace que suene a radio,
-     más que ningún otro paso.
-   - **Saturación suave**, apenas. Que se ensucie, no que distorsione.
-   - **No agregues siseo ni ruido de portadora**: el juego ya le suma el suyo
-     encima y se duplica.
-4. Exportá **OGG Vorbis, mono, 44.1 kHz**, con el nombre que dice la tabla.
-5. Metelos en `audio/voz/` y jugá. Si la duración real se aleja mucho de la
-   objetivo, el subtítulo va a quedar desfasado: ahí conviene ajustar la
-   actuación, no el número.
+Lo que sí cambia el resultado, y es gratis:
+
+- **El cuarto, más que el micrófono.** Grabá adentro de un placard con ropa, o
+  armá una carpa con frazadas sobre una mesa. Un auto estacionado también sirve
+  muy bien: tapizado por todos lados y sin superficies duras paralelas. Lo que
+  buscás es que no haya eco. La radio perdona el ruido de fondo; no perdona la
+  reverberación de una habitación vacía.
+- **La distancia.** Unos 15 cm, y hablale *pasando por al lado* del teléfono,
+  no de frente. Así las "p" y las "t" no golpean el micrófono.
+- **La hora.** De madrugada. Es cuando no hay tránsito ni vecinos.
+- **Modo avión**, para que no entre una notificación en la mejor toma.
+- Si la app de grabación tiene opción de calidad, ponela en la más alta, y si
+  tiene "reducción de ruido" o "mejora de voz", **apagala**: esos algoritmos
+  hacen bombear la voz y se nota más después de comprimir.
+
+Software: [Audacity](https://www.audacityteam.org/) es gratis y alcanza para
+todo. Y si tenés `ffmpeg`, el procesamiento está automatizado (abajo).
+
+### El procesamiento, hecho por vos o automático
+
+**Automático** (recomendado). Copiá las grabaciones a una carpeta, con el
+nombre que dice [`lineas_de_voz.md`](lineas_de_voz.md), y:
+
+```bash
+./tools/procesar_voces.sh ~/grabaciones
+```
+
+Aplica la cadena entera, recorta los silencios de los extremos, deja todos los
+registros al mismo volumen y los exporta a `audio/voz/` en OGG mono 44.1 kHz,
+que es lo que el juego espera. Acepta `.m4a`, `.wav`, `.mp3` y lo que sea que
+grabe tu teléfono. Con `-s` procesa uno solo, para escuchar antes de largar
+todo.
+
+`ffmpeg` es gratis y está en los repositorios de cualquier distro
+(`sudo apt install ffmpeg`).
+
+**A mano en Audacity**, si preferís. El orden importa:
+
+1. **Filtro pasa-altos** en 100 Hz — saca el retumbe del cuarto.
+2. **Compresor**, ratio 4:1 — las radios comprimen mucho.
+3. **Pasa-altos en 300 Hz y pasa-bajos en 3 kHz.** Esto es lo que hace el
+   efecto, más que ningún otro paso.
+4. **Compresor otra vez**, suave.
+5. **Normalizar** todos los archivos al mismo volumen. Si falta este paso se
+   nota muchísimo: un registro más fuerte que otro rompe la ilusión.
+6. **No agregues siseo ni ruido de portadora.** El juego ya suma el suyo
+   encima y se duplica.
+7. Exportar **OGG Vorbis, mono, 44.1 kHz**.
 
 ### Por dónde empezar
 
