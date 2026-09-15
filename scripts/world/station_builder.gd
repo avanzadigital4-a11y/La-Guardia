@@ -14,7 +14,16 @@ const ROOMS := {
 	"patio": Rect2(-14.0, 11.0, 28.0, 16.0),
 	"pasillo sur": Rect2(-1.5, -24.0, 3.0, 8.0),
 	"subnivel": Rect2(-4.0, -31.0, 8.0, 7.0),
+	# El B2 de verdad: lo que hay mas abajo de la entrada. Solo existe las
+	# noches que la tabla de la noche lo enciende.
+	"b2 pasillo": Rect2(-1.5, -44.0, 3.0, 13.0),
+	"b2 bombas": Rect2(-10.0, -41.0, 8.5, 6.0),
+	"b2 archivo": Rect2(1.5, -41.0, 8.5, 6.0),
+	"b2 fondo": Rect2(-5.0, -50.0, 10.0, 6.0),
 }
+
+## Altura del piso del subnivel respecto de la estacion.
+const B2_Y := -0.6
 
 const SPAWN := Vector3(-6.0, 0.1, -2.5)
 
@@ -61,6 +70,7 @@ func build(tint: Color) -> void:
 	_build_extras()
 	_build_radio_logs()
 	_build_inspectables()
+	_build_recuento()
 	_build_watchers()
 
 
@@ -359,39 +369,164 @@ func _build_south() -> void:
 	subnivel_section = Node3D.new()
 	subnivel_section.name = "SubnivelB2"
 	south_section.add_child(subnivel_section)
-	var s: Rect2 = ROOMS["subnivel"]
-	Build.floor_slab(subnivel_section, s, -0.6, _mat_dark)
-	Build.ceiling_slab(subnivel_section, s, -0.6, _mat_dark)
-	Build.wall(subnivel_section, "b2_o", 2, s.position.x, s.position.y, s.end.y, _mat_dark)
-	Build.wall(subnivel_section, "b2_e", 2, s.end.x, s.position.y, s.end.y, _mat_dark)
-	Build.wall(subnivel_section, "b2_s", 0, s.position.y, s.position.x, s.end.x, _mat_dark)
-	Build.wall(subnivel_section, "b2_n", 0, s.end.y, s.position.x, s.end.x, _mat_dark, [Vector2(0.0, Build.DOOR_W)])
+	_build_b2()
+
+
+## El B2: cinco espacios encadenados hacia abajo. Todo cuelga de
+## `subnivel_section`, asi que existe o no existe segun la noche, sin agregar
+## una escena nueva.
+##
+##        entrada (rampa desde el pasillo sur)
+##           |
+##        pasillo ---- bombas (oeste)  /  archivo (este)
+##           |
+##        fondo (las marcas, y la decision de la ultima noche)
+func _build_b2() -> void:
+	var entrada: Rect2 = ROOMS["subnivel"]
+	var pasillo: Rect2 = ROOMS["b2 pasillo"]
+	var bombas: Rect2 = ROOMS["b2 bombas"]
+	var archivo: Rect2 = ROOMS["b2 archivo"]
+	var fondo: Rect2 = ROOMS["b2 fondo"]
+
+	# --- Entrada: la sala que ya existia, ahora con salida al fondo ---
+	_b2_slabs(entrada)
+	Build.wall(subnivel_section, "b2_o", 2, entrada.position.x, entrada.position.y, entrada.end.y, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2_e", 2, entrada.end.x, entrada.position.y, entrada.end.y, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2_n", 0, entrada.end.y, entrada.position.x, entrada.end.x, _mat_dark, [Vector2(0.0, Build.DOOR_W)], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2_s", 0, entrada.position.y, entrada.position.x, entrada.end.x, _mat_dark, [Vector2(0.0, Build.DOOR_W)], Build.WALL_H, B2_Y)
 	# Rampa corta desde el pasillo sur hasta el B2.
 	Build.box(subnivel_section, "Rampa", Vector3(3.0, 0.2, 2.0), Vector3(0.0, -0.3, -23.2), _mat_dark)
+	_b2_light("subnivel", Vector3(0.0, 1.0, -28.0), Color(0.35, 0.40, 0.45), 0.9, 6.0)
+	Build.label3d(subnivel_section, "B2  ---  ACCESO", Vector3(-3.9, 1.2, -28.0), PI * 0.5, 0.18, Color(0.5, 0.52, 0.5))
 
-	# La tarea del subnivel se completa llegando, no apretando un boton.
+	# La tarea de bajar se completa llegando, no apretando un boton.
 	var zone := TriggerZone.new()
 	zone.name = "ZonaSubnivel"
 	subnivel_section.add_child(zone)
-	zone.position = Vector3(0.0, -0.6, -28.0)
+	zone.position = Vector3(0.0, B2_Y, -28.0)
 	zone.task_id = "subnivel"
-	zone.notice = "Hay marcas en la pared."
+	zone.notice = "El aire de abajo está quieto."
 	zone.configure(Vector3(6.0, 2.4, 4.0))
 	points["subnivel"] = zone
 
-	Build.box(subnivel_section, "Marcas", Vector3(3.2, 1.2, 0.06), Vector3(0.0, 0.8, -30.9), Build.surface(Color(0.22, 0.20, 0.20)))
-	Build.label3d(subnivel_section, "|||| |||| |||| ||", Vector3(0.0, 0.9, -30.84), 0.0, 0.22, Color(0.55, 0.5, 0.45))
-	Build.light(subnivel_section, Vector3(0.0, 1.0, -28.0), Color(0.35, 0.4, 0.45), 0.9, 6.0)
+	# --- Pasillo: la columna que baja, con las dos salas a los costados ---
+	_b2_slabs(pasillo)
+	Build.wall(subnivel_section, "b2p_o", 2, pasillo.position.x, pasillo.position.y, pasillo.end.y, _mat_dark, [Vector2(-38.0, Build.DOOR_W)], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2p_e", 2, pasillo.end.x, pasillo.position.y, pasillo.end.y, _mat_dark, [Vector2(-38.0, Build.DOOR_W)], Build.WALL_H, B2_Y)
+	_b2_light("b2 pasillo", Vector3(0.0, 1.0, -37.5), Color(0.30, 0.34, 0.38), 0.7, 9.0)
+	Build.label3d(subnivel_section, "BOMBAS", Vector3(-1.4, 1.3, -36.4), PI * 0.5, 0.16, Color(0.48, 0.5, 0.48))
+	Build.label3d(subnivel_section, "ARCHIVO", Vector3(1.4, 1.3, -36.4), -PI * 0.5, 0.16, Color(0.48, 0.5, 0.48))
+
+	# --- Sala de bombas ---
+	_b2_slabs(bombas)
+	Build.wall(subnivel_section, "b2b_o", 2, bombas.position.x, bombas.position.y, bombas.end.y, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2b_n", 0, bombas.end.y, bombas.position.x, bombas.end.x, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2b_s", 0, bombas.position.y, bombas.position.x, bombas.end.x, _mat_dark, [], Build.WALL_H, B2_Y)
+	_b2_light("b2 bombas", Vector3(-6.0, 1.0, -38.0), Color(0.42, 0.34, 0.28), 0.8, 7.0)
+	_b2_task("bomba_a", "bombas", Vector3(-8.6, B2_Y, -36.6), Vector3(0.9, 1.4, 0.9),
+		"Purgar la bomba A", "La bomba A ya está purgada", true)
+	_b2_task("bomba_b", "bombas", Vector3(-8.6, B2_Y, -39.6), Vector3(0.9, 1.4, 0.9),
+		"Purgar la bomba B", "La bomba B ya está purgada", true)
+	_b2_prop("b2_tanque", Vector3(-4.0, B2_Y, -39.8), 0.0, Vector3(1.6, 1.8, 1.2))
+	_b2_prop("b2_banco", Vector3(-3.6, B2_Y, -36.2), 0.0, Vector3(1.8, 0.85, 0.7))
+	_add_battery("PilaBombas", Vector3(-3.6, B2_Y + 0.95, -36.2), subnivel_section)
+	_b2_task("llave_bombas", "cerrar_b2", Vector3(-6.2, B2_Y, -40.4), Vector3(0.7, 1.0, 0.5),
+		"Cerrar la llave de las bombas", "Esta llave ya está cerrada", true)
+
+	# --- Archivo ---
+	_b2_slabs(archivo)
+	Build.wall(subnivel_section, "b2a_e", 2, archivo.end.x, archivo.position.y, archivo.end.y, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2a_n", 0, archivo.end.y, archivo.position.x, archivo.end.x, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2a_s", 0, archivo.position.y, archivo.position.x, archivo.end.x, _mat_dark, [], Build.WALL_H, B2_Y)
+	_b2_light("b2 archivo", Vector3(6.0, 1.0, -38.0), Color(0.36, 0.40, 0.36), 0.7, 7.0)
+	_b2_prop("b2_estante_a", Vector3(9.3, B2_Y, -36.6), 0.0, Vector3(0.5, 2.0, 2.4))
+	_b2_prop("b2_estante_b", Vector3(9.3, B2_Y, -39.6), 0.0, Vector3(0.5, 2.0, 2.4))
+	_b2_prop("b2_fichero", Vector3(4.0, B2_Y, -40.2), 0.0, Vector3(1.0, 1.3, 0.6))
+	_b2_task("llave_archivo", "cerrar_b2", Vector3(7.4, B2_Y, -40.4), Vector3(0.7, 1.0, 0.5),
+		"Cerrar la llave del archivo", "Esta llave ya está cerrada", true)
+	_b2_task("legajo", "legajo", Vector3(4.2, B2_Y, -36.4), Vector3(1.1, 0.9, 0.8),
+		"Buscar tu legajo", "Ya lo buscaste", false,
+		"Tu legajo figura archivado. Con fecha de cierre.")
+
+	# --- Fondo: las marcas y la decision ---
+	_b2_slabs(fondo)
+	Build.wall(subnivel_section, "b2f_o", 2, fondo.position.x, fondo.position.y, fondo.end.y, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2f_e", 2, fondo.end.x, fondo.position.y, fondo.end.y, _mat_dark, [], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2f_n", 0, fondo.end.y, fondo.position.x, fondo.end.x, _mat_dark, [Vector2(0.0, Build.DOOR_W)], Build.WALL_H, B2_Y)
+	Build.wall(subnivel_section, "b2f_s", 0, fondo.position.y, fondo.position.x, fondo.end.x, _mat_dark, [], Build.WALL_H, B2_Y)
+	_b2_light("b2 fondo", Vector3(0.0, 1.0, -47.0), Color(0.30, 0.32, 0.38), 0.6, 8.0)
+
+	Build.box(subnivel_section, "Marcas", Vector3(3.2, 1.2, 0.06),
+		Vector3(0.0, B2_Y + 1.4, -49.9), Build.surface(Color(0.22, 0.20, 0.20)))
+	Build.label3d(subnivel_section, "|||| |||| |||| ||",
+		Vector3(0.0, B2_Y + 1.5, -49.84), 0.0, 0.22, Color(0.55, 0.5, 0.45))
+	_b2_prop("b2_camastro", Vector3(-3.4, B2_Y, -47.4), 0.0, Vector3(0.9, 0.45, 2.0))
+	_b2_prop("b2_lata", Vector3(3.2, B2_Y, -46.0), 0.0, Vector3(0.35, 0.4, 0.35))
+	_add_battery("PilaFondo", Vector3(4.2, B2_Y + 0.2, -48.2), subnivel_section)
+	_b2_task("llave_fondo", "cerrar_b2", Vector3(0.0, B2_Y, -45.4), Vector3(1.2, 1.0, 0.7),
+		"Cerrar la llave del fondo", "Esta llave ya está cerrada", true,
+		"Las tres llaves del B2 cerradas. El subnivel queda muerto.")
 
 	# Decision de la ultima noche: quedarse abajo.
 	var stay := ChoicePoint.new()
 	stay.name = "QuedarseAbajo"
 	subnivel_section.add_child(stay)
-	stay.position = Vector3(0.0, -0.6, -30.0)
+	stay.position = Vector3(0.0, B2_Y, -48.6)
 	stay.ending_id = "quedarse"
 	stay.choice_prompt = "Cerrar la escotilla desde adentro"
 	stay.setup_box(Vector3(1.4, 0.9, 0.6), _mat_dark, Vector3(0.0, 0.45, 0.0))
 	points["quedarse"] = stay
+
+	for id in ["subnivel", "b2 bombas", "b2 archivo", "b2 fondo"]:
+		var w := RoomWatcher.new()
+		w.name = "Watcher_%s" % id
+		subnivel_section.add_child(w)
+		w.configure(id, ROOMS[id], Build.WALL_H, B2_Y)
+		watchers[id] = w
+
+
+func _b2_slabs(rect: Rect2) -> void:
+	Build.floor_slab(subnivel_section, rect, B2_Y, _mat_dark)
+	Build.ceiling_slab(subnivel_section, rect, B2_Y, _mat_dark)
+
+
+func _b2_light(room: String, pos: Vector3, color: Color, energy: float, range_m: float) -> void:
+	var l := Build.light(subnivel_section, pos, color, energy, range_m)
+	room_lights[room] = l
+	lights.append(l)
+
+
+## Un punto de tarea del B2. `multi` marca los que son un paso de una tarea de
+## varios (las dos bombas, los tres cierres).
+func _b2_task(name: String, task_id: String, pos: Vector3, size: Vector3,
+		prompt: String, done: String, multi: bool, log_text := "") -> TaskPoint:
+	var t := TaskPoint.new()
+	t.name = "Punto_%s" % name
+	subnivel_section.add_child(t)
+	t.position = pos
+	t.task_id = task_id
+	t.active_prompt = prompt
+	t.done_prompt = done
+	t.multi_step = multi
+	t.log_text = log_text
+	t.setup_box(size, _mat_metal, Vector3(0.0, size.y * 0.5, 0.0))
+	points[name] = t
+	return t
+
+
+func _b2_prop(id: String, pos: Vector3, rot_y: float, size: Vector3) -> Prop:
+	var p := Prop.new()
+	p.name = "Prop_%s" % id
+	subnivel_section.add_child(p)
+	p.position = pos
+	p.rotation.y = rot_y
+	Build.box(p, "Cuerpo", size, Vector3(0.0, size.y * 0.5, 0.0), _mat_metal)
+	# Pose alterada por defecto: corrido y girado apenas. Las anomalias que
+	# traen `pos`/`rot` propios igual pisan esto.
+	p.register(id, Vector3(0.45, 0.0, 0.35), 28.0)
+	props[id] = p
+	objects[id] = p
+	return p
 
 
 func _build_routes() -> void:
@@ -452,6 +587,39 @@ func _build_extras() -> void:
 		objects[id] = holder
 
 
+## Tarea de la Noche 4: recorrer la estacion anotando que cambio. Son cuatro
+## paradas, una por sala, sobre la superficie.
+func _build_recuento() -> void:
+	var donde := {
+		"recuento_dorm": Vector3(-8.8, 0.0, -1.2),
+		"recuento_control": Vector3(-8.8, 0.0, -9.2),
+		"recuento_gen": Vector3(8.8, 0.0, -9.2),
+		"recuento_almacen": Vector3(8.8, 0.0, -1.2),
+	}
+	for id in donde.keys():
+		var t := TaskPoint.new()
+		t.name = "Punto_%s" % id
+		add_child(t)
+		t.position = donde[id]
+		t.task_id = "recuento"
+		t.active_prompt = "Anotar lo que cambió acá"
+		t.done_prompt = "Ya lo anotaste"
+		t.multi_step = true
+		t.setup_box(Vector3(0.5, 1.1, 0.5), _mat_metal, Vector3(0.0, 0.55, 0.0))
+		points[id] = t
+	(points["recuento_almacen"] as TaskPoint).log_text = "Recorrí las cuatro salas anotando. La lista no me cierra."
+
+	# La Noche 4 apaga el B2: bajar y encontrar pared es la tarea.
+	var vacio := TriggerZone.new()
+	vacio.name = "ZonaSinB2"
+	south_section.add_child(vacio)
+	vacio.position = Vector3(0.0, 0.0, -22.0)
+	vacio.task_id = "sin_b2"
+	vacio.notice = "Acá bajaba la rampa. Ahora es pared."
+	vacio.configure(Vector3(3.0, 2.6, 3.0))
+	points["sin_b2"] = vacio
+
+
 func _build_watchers() -> void:
 	for id in ["dormitorio", "sala de control", "sala de generador", "almacen", "patio"]:
 		var w := RoomWatcher.new()
@@ -507,8 +675,16 @@ func _build_inspectables() -> void:
 		var spec: Dictionary = NightData.INSPECTABLES[id]
 		var item := Inspectable.new()
 		item.name = "Inspeccionable_%s" % id
-		add_child(item)
-		item.position = spec.get("pos", Vector3.ZERO)
+		var pos: Vector3 = spec.get("pos", Vector3.ZERO)
+		# Misma regla que los registros: lo que esta abajo cuelga del tramo que
+		# esa noche puede no existir.
+		var parent: Node3D = self
+		if pos.z <= -24.0:
+			parent = subnivel_section
+		elif pos.z <= -16.0:
+			parent = south_section
+		parent.add_child(item)
+		item.position = pos
 		item.inspect_id = String(id)
 		item.titulo = String(spec.get("titulo", "Objeto"))
 		item.setup_box(spec.get("size", Vector3(0.1, 0.1, 0.1)),
@@ -517,10 +693,10 @@ func _build_inspectables() -> void:
 		objects[String(id)] = item
 
 
-func _add_battery(name: String, pos: Vector3) -> BatteryPickup:
+func _add_battery(name: String, pos: Vector3, parent: Node3D = null) -> BatteryPickup:
 	var bat := BatteryPickup.new()
 	bat.name = name
-	add_child(bat)
+	(parent if parent != null else self).add_child(bat)
 	bat.position = pos
 	bat.setup_box(Vector3(0.18, 0.3, 0.18), Build.surface(Color(0.7, 0.66, 0.2)))
 	pickups.append(bat)

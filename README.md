@@ -32,12 +32,12 @@ Lo que ya funciona:
   esa misma noche admitiendo cosas que el jugador nunca hizo (marcadas en
   rojo).
 - Registros de radio con subtitulos y ruido de portadora.
-- **Catalogo de 61 anomalias** fuera de camara: el estado de un objeto cambia
+- **Catalogo de 71 anomalias** fuera de camara: el estado de un objeto cambia
   mientras el jugador no esta en la sala, sin animacion ni jumpscare. Objetos
   que se mueven, que faltan, que aparecen, puertas que quedan abiertas, salas
   que se apagan. Cada noche arma su propio lote, mas unas cuantas al azar del
   catalogo: dos partidas no traen exactamente los mismos cambios.
-- **32 registros de radio** (98 lineas, unos 7 minutos de audio) repartidos
+- **35 registros de radio** (107 lineas, unos 7 minutos de audio) repartidos
   por la estacion, el subnivel y el patio, con su noche de aparicion escrita
   en la misma tabla.
 - **El parte del turno**: la hoja sobre la mesa de control. Las tres primeras
@@ -47,6 +47,14 @@ Lo que ya funciona:
   anterior a que pasara nada. La Noche 5 la cierra juntando las cinco noches.
   Es el unico lugar donde el juego dice en limpio que las anomalias las
   causaste vos, y no es texto guionado: sale de lo que jugaste.
+- **El apagon**: quedarte sin luz no te mata ni corta la partida. Fundido a
+  negro, y despertas en la cucheta sin acordarte de haber vuelto, con horas
+  de menos. Lo que cuesta: las pilas de repuesto que llevabas encima no
+  estan, la linterna vuelve con poca carga, y **lo que paso mientras estabas
+  a oscuras queda anotado a tu nombre** -- o sea que aparece despues en el
+  parte del turno, con tu letra. Es la forma mas directa que tiene el juego
+  de convertirte en el autor de las anomalias sin que lo recuerdes. El final
+  cuenta cuantas horas del turno no figuran.
 - **Objetos para mirar de cerca**: se levantan, se giran con el mouse, y lo
   que dicen cambia noche a noche (la chapa con tu numero de turno, la foto del
   equipo a la que le van faltando personas). Verificado por la suite: al
@@ -152,30 +160,47 @@ aplicar las 61 anomalias juntas y revertirlas deje la estacion como estaba.
 
 ## Ritmo medido
 
-`tests/pacing.tscn` camina la Noche 1 como la caminaria alguien que va derecho
-a cada tarea, acelerado con `Engine.time_scale`, y reporta duracion,
-distancia y bateria. La ultima medicion:
+`tests/pacing.tscn` camina **las cinco noches** como las caminaria alguien que
+va derecho a cada tarea, acelerado con `Engine.time_scale`. No hay rutas
+escritas a mano: resuelve cada tarea buscando su punto en la estacion y arma
+el camino pasando por el pasillo, asi la medicion sigue valiendo cuando se
+agregan tareas nuevas (que es justamente para lo que se usa). Si una tarea
+queda sin punto en el mundo, lo dice.
 
 ```
-duracion        100 s  (1.7 min)
-distancia       172 m
-bateria usada    26 %
+  noche   duracion   distancia   bateria   tareas   registros   anomalias
+      1    106.6 s     175.9 m       27 %        4           6           2
+      2    114.4 s     158.5 m       29 %        5          13           7
+      3    192.0 s     327.0 m       48 %        7          20          11
+      4    205.5 s     300.3 m       51 %        8          26          14
+      5    221.2 s     390.5 m       55 %        6          32          18
+
+  total directo       839.3 s   (14.0 min)
+  distancia total    1352.3 m
+  bateria: la peor noche gasta 55 % de una carga; hay 6 cargas
+           alcanzan para 10.9 noches asi -> sobra demasiado, rebalancear
+  explorando (x2-x3)   28.0 a 42.0 min, mas 6.8 min de audio
+  objetivo del diseno   60 a 90 min
 ```
 
-A eso se le suma lo que hay para encontrar: 61 anomalias repartidas entre las
-cinco noches, 32 registros de radio (unos 7 minutos de audio) y objetos que
-cambian de texto noche a noche. Un jugador que explora tarda entre dos y tres
-veces el recorrido directo.
+**El objetivo dejo de ser 2-3 horas.** Para una persona sola, y sin arte ni
+audio todavia, 60 a 90 minutos es lo que se puede terminar; *Iron Lung*, una
+de las referencias, dura alrededor de una hora. Hoy estamos en 14 minutos de
+recorrido directo y entre 28 y 42 explorando, mas 6 de audio: **falta mas o
+menos la mitad otra vez.**
 
-Aun asi el total queda lejos: **alrededor de media hora de juego contra las
-2-3 horas que pide el diseno**. La diferencia es de contenido, no de ritmo, y
-el numero de arriba es la forma de medir si se esta acortando. Con la bateria pasa lo mismo: la autonomia
-alcanza de sobra porque las noches son cortas, asi que el balance actual
-(una carga por noche de exploracion, tres pilas repartidas) hay que
-recalcularlo cuando las noches crezcan.
+La curva ya es creciente, que es como tiene que ser: la rutina de la Noche 1
+se aprende rapido y aburre si dura, y la ultima noche tiene que pesar. De
+107 s a 221 s, sin pozos en el medio.
 
-Para revisar la estetica sin jugar, `godot --path . -- --capture` guarda una
-captura de cada ambiente en el directorio `user://` del proyecto.
+La bateria empezo a significar algo: la peor noche gasta un 55 % de una
+carga contra el 32 % de antes. Pero **sobra demasiado y hay que rebalancear**,
+y el medidor ahora lo dice solo. Al poner dos pilas en el B2 (sin ellas, el
+que explora la zona mas profunda y oscura se queda sin luz y sin forma de
+recuperarla) el total subio a seis cargas para una noche que gasta media:
+alcanza para once noches. La linterna no puede importar con ese margen. El
+numero correcto sale de un playtest, no de una cuenta, asi que queda anotado
+en vez de tocado a ojo.
 
 ## Medir el rendimiento
 
@@ -190,6 +215,25 @@ godot --path . res://tools/benchmark.tscn    # sin --headless: mide el render
 
 Recorre la estacion girando la camara todo el tiempo (el caso peor para el
 culling) e imprime FPS promedio, minimo y percentil 1%.
+
+Sin GPU a mano se puede medir por software. Los numeros absolutos no son los
+de la maquina objetivo, pero sirven para comparar un cambio contra si mismo:
+
+```bash
+xvfb-run -a -s "-screen 0 1152x648x24" env LIBGL_ALWAYS_SOFTWARE=1 \
+  godot --path . --rendering-driver opengl3 res://tools/benchmark.tscn
+```
+
+**Cuidado con una sola corrida.** La dispersion entre corridas identicas es de
+mas o menos 1.3 FPS sobre unos 26, asi que una diferencia de menos de eso no
+es una mejora, es ruido. Hay que medir varias veces y comparar medianas.
+
+Ya se probo una cosa que **no** funciono: apagar las luces lejanas para dejar
+como maximo cuatro prendidas a la vez. Tres corridas pareadas dieron 26.1
+contra 25.7 FPS de promedio, o sea nada frente al ruido. Godot ya descarta por
+alcance las luces que no tocan un objeto, asi que el cuello de botella esta en
+otro lado. Si alguien lo vuelve a intentar, que mida primero en la maquina
+objetivo.
 
 ## Exportar
 
@@ -217,7 +261,7 @@ normal. La plantilla se genera con:
 godot --headless --path . res://tools/exportar_traduccion.tscn
 ```
 
-Eso escribe `localizacion/la-guardia.pot` con los 314 textos del juego (los de
+Eso escribe `localizacion/la-guardia.pot` con los 353 textos del juego (los de
 las tablas y los de la interfaz, cada uno con una nota de donde sale). Para
 agregar un idioma: copiar el `.pot` a `localizacion/en.po`, completar los
 `msgstr` y registrarlo en Proyecto > Configuracion > Localizacion.

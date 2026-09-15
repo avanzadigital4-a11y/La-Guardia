@@ -12,7 +12,7 @@ signal player_exited(room_id: String)
 var player_inside := false
 
 
-func configure(id: String, rect: Rect2, height := Build.WALL_H) -> void:
+func configure(id: String, rect: Rect2, height := Build.WALL_H, base_y := 0.0) -> void:
 	room_id = id
 	monitoring = true
 	collision_layer = 0
@@ -23,7 +23,7 @@ func configure(id: String, rect: Rect2, height := Build.WALL_H) -> void:
 	col.shape = bs
 	add_child(col)
 	var c := rect.get_center()
-	position = Vector3(c.x, height * 0.5, c.y)
+	position = Vector3(c.x, base_y + height * 0.5, c.y)
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 

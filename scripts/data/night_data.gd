@@ -86,6 +86,7 @@ const NIGHTS := {
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 			{"id": "radio_unknown", "text": "Rastrear la señal que no figura en el registro"},
+			{"id": "round", "text": "Hacer la ronda exterior", "steps": 3},
 			{"id": "antena", "text": "Realinear la antena"},
 		],
 		"final_task": {"id": "sleep", "text": "Volver al dormitorio y descansar"},
@@ -154,6 +155,8 @@ const NIGHTS := {
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 			{"id": "subnivel", "text": "Bajar al nivel que apareció en el mapa"},
+			{"id": "bombas", "text": "Purgar las dos bombas del subnivel", "steps": 2},
+			{"id": "legajo", "text": "Buscar tu legajo en el archivo del B2"},
 			{"id": "trajes", "text": "Contar los trajes de la esclusa"},
 			{"id": "puertas", "text": "Dejar todas las puertas cerradas"},
 		],
@@ -204,9 +207,22 @@ const NIGHTS := {
 			],
 			"subnivel": [
 				{"parpadeo": 3.0},
-				{"subtitulo": "Hay marcas en la pared. Son de esta semana.", "tiempo": 3.6},
+				{"subtitulo": "Hay marcas en la pared del fondo. Son de esta semana.", "tiempo": 3.6},
 				{"subtitulo": "Es tu letra.", "tiempo": 3.0},
 				{"bitacora": "Las marcas del B2 son mías. No me acuerdo de haberlas hecho.", "hora": "03:07", "falsa": true},
+			],
+			"bombas": [
+				{"esperar": 1.2},
+				{"sonido": "creak", "db": -7.0},
+				{"subtitulo": "(las bombas quedan en silencio y el silencio es peor)", "tiempo": 3.2},
+				{"armar": "b2_tanque_corrido", "sala": "b2 bombas"},
+			],
+			"legajo": [
+				{"esperar": 0.8},
+				{"subtitulo": "Tu legajo está archivado con fecha de cierre.", "tiempo": 3.4},
+				{"subtitulo": "La fecha de cierre es de hace once meses.", "tiempo": 3.8},
+				{"bitacora": "Encontré mi legajo. Dice que el turno terminó hace once meses.", "hora": "03:41", "falsa": false},
+				{"armar": "b2_fichero_abierto", "sala": "b2 archivo"},
 			],
 		},
 		"logbook": [
@@ -226,6 +242,8 @@ const NIGHTS := {
 		"tasks": [
 			{"id": "logbook_check", "text": "Releer la bitácora de las noches anteriores"},
 			{"id": "parte", "text": "Firmar el parte del turno"},
+			{"id": "recuento", "text": "Recorrer las salas anotando lo que cambió", "steps": 4},
+			{"id": "sin_b2", "text": "Bajar al B2 a comprobar que no está"},
 			{"id": "generator", "text": "Revisar los generadores", "steps": 2},
 			{"id": "sensors", "text": "Verificar sensores del nivel 1"},
 			{"id": "trajes", "text": "Contar los trajes de la esclusa"},
@@ -284,6 +302,17 @@ const NIGHTS := {
 				{"esperar": 1.0},
 				{"bitacora": "Conté los trajes otra vez. El número no coincide con ayer.", "hora": "02:14", "falsa": true},
 			],
+			"recuento": [
+				{"esperar": 1.0},
+				{"subtitulo": "Cuatro salas, catorce cosas cambiadas de lugar.", "tiempo": 3.4},
+				{"bitacora": "Anoté catorce cambios. Ayer anoté los mismos catorce.", "hora": "02:38", "falsa": true},
+			],
+			"sin_b2": [
+				{"esperar": 0.8},
+				{"subtitulo": "La rampa bajaba acá. Es pared, y la pintura es vieja.", "tiempo": 3.8},
+				{"parpadeo": 2.2},
+				{"bitacora": "Bajé al B2. No hay B2. Bajé igual.", "hora": "03:05", "falsa": true},
+			],
 			"parte": [
 				{"esperar": 0.8},
 				{"subtitulo": "El parte ya está completo.", "tiempo": 2.6},
@@ -315,6 +344,7 @@ const NIGHTS := {
 		"tasks": [
 			{"id": "generator", "text": "Dejar los generadores en modo de cierre", "steps": 2},
 			{"id": "subnivel", "text": "Bajar al subnivel por última vez"},
+			{"id": "cerrar_b2", "text": "Cerrar las llaves de paso del B2", "steps": 3},
 			{"id": "antena", "text": "Orientar la antena para el retiro"},
 			{"id": "inventario", "text": "Cerrar el inventario del turno"},
 			{"id": "puertas", "text": "Dejar todas las puertas cerradas"},
@@ -708,11 +738,56 @@ const RADIO_LOGS := {
 			"Si la chapa dice otro número, no la muestres.",
 		],
 	},
+
+	# --- El B2 de adentro: lo que quedo en las salas del fondo ---
+	"rl_33": {
+		"label": "REG-054 / Sala de bombas",
+		"night": 3,
+		"pos": Vector3(-8.2, -0.5, -37.4),
+		"lines": [
+			"Las bombas las purgamos cada doce horas. Es la única tarea que no se puede saltear.",
+			"Si se detienen, lo de abajo sube. No sé decirlo mejor que así.",
+			"El turno anterior dejó de purgarlas cuatro días. No preguntamos por qué.",
+		],
+	},
+	"rl_34": {
+		"label": "REG-055 / Archivo",
+		"night": 3,
+		"pos": Vector3(6.6, -0.5, -39.0),
+		"lines": [
+			"Archivamos los legajos del personal saliente en el estante de abajo.",
+			"Están todos. Incluido el de la persona que va a quedar de guardia.",
+			"Eso no debería poder archivarse todavía.",
+		],
+	},
+	"rl_35": {
+		"label": "REG-056 / Sin firmar",
+		"night": 5,
+		"pos": Vector3(-2.6, -0.5, -47.8),
+		"lines": [
+			"Bajé otra vez. Ya no cuento los días en la pared, cuento las veces que bajo.",
+			"Las rayas no son días.",
+			"Son yo.",
+		],
+	},
 }
 
 ## Objetos que se pueden levantar y mirar de cerca. El texto cambia con las
 ## noches: el objeto es el mismo, lo que dice no.
 const INSPECTABLES := {
+	# En el fondo del B2: lo unico que hay sobre el camastro. Los que estan a
+	# z <= -24 se cuelgan del subnivel, asi que desaparecen con la zona.
+	"manta": {
+		"titulo": "Manta doblada",
+		"pos": Vector3(-3.4, -0.1, -47.4),
+		"size": Vector3(0.34, 0.10, 0.26),
+		"color": Color(0.30, 0.28, 0.25),
+		"textos": {
+			1: "Una manta de la estación, doblada en cuatro. Está usada.",
+			3: "Doblada en cuatro, como la dejás vos. Huele a vos.",
+			5: "Sigue tibia.",
+		},
+	},
 	"placa": {
 		"titulo": "Chapa de identificación",
 		"pos": Vector3(-3.7, 0.92, -0.6),

@@ -6,6 +6,12 @@ extends Node
 ##
 ## Uso:  godot --path . res://tools/benchmark.tscn
 ## (no lleva --headless: mide el renderizador de verdad)
+##
+## Sin GPU a mano se puede medir por software (los numeros absolutos no son
+## los de la maquina objetivo, pero el A/B sigue valiendo):
+##
+##   xvfb-run -a -s "-screen 0 1152x648x24" env LIBGL_ALWAYS_SOFTWARE=1 \
+##     godot --path . --rendering-driver opengl3 res://tools/benchmark.tscn
 
 const RUTA := [
 	Vector3(-6.0, 0.1, -2.5), Vector3(0.0, 0.1, -2.5), Vector3(0.0, 0.1, -11.0),

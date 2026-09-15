@@ -116,6 +116,12 @@ func _try_interact() -> void:
 			hud.set_prompt(_focus.get_prompt())
 
 
+## Prender o apagar la linterna desde afuera (lo usa el apagon).
+func set_flashlight(on: bool) -> void:
+	flashlight_on = on
+	_update_flashlight()
+
+
 func _toggle_flashlight() -> void:
 	if GameState.battery <= 0.0 and not flashlight_on:
 		if GameState.use_spare_battery():

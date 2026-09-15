@@ -33,6 +33,10 @@ msgstr ""
 msgid "(la portadora sigue sonando con el equipo apagado)"
 msgstr ""
 
+#. noche 3 / beat bombas
+msgid "(las bombas quedan en silencio y el silencio es peor)"
+msgstr ""
+
 #. noche 3 / beat puertas
 msgid "(una acaba de abrirse de nuevo)"
 msgstr ""
@@ -81,6 +85,10 @@ msgstr ""
 msgid "Anoto igual que el anemómetro marcó cero durante once minutos y nadie lo tocó."
 msgstr ""
 
+#. noche 4 / beat recuento
+msgid "Anoté catorce cambios. Ayer anoté los mismos catorce."
+msgstr ""
+
 #. registro rl_14
 msgid "Anoté todo lo que hice hoy, minuto por minuto."
 msgstr ""
@@ -97,12 +105,28 @@ msgstr ""
 msgid "Apagué la luz de la sala de generador."
 msgstr ""
 
+#. parte / b2_bombas_oscuro
+msgid "Apagué la luz de las bombas del B2."
+msgstr ""
+
 #. parte / almacen_oscuro
 msgid "Apagué la luz del almacén."
 msgstr ""
 
+#. parte / b2_archivo_oscuro
+msgid "Apagué la luz del archivo del B2."
+msgstr ""
+
 #. parte / dorm_oscuro
 msgid "Apagué la luz del dormitorio."
+msgstr ""
+
+#. parte / b2_fondo_oscuro
+msgid "Apagué la luz del fondo del B2."
+msgstr ""
+
+#. parte / b2_pasillo_oscuro
+msgid "Apagué la luz del pasillo del B2."
 msgstr ""
 
 #. parte / pasillo_oscuro
@@ -117,6 +141,10 @@ msgstr ""
 msgid "Apilé cajas nuevas contra la pared del almacén."
 msgstr ""
 
+#. registro rl_34
+msgid "Archivamos los legajos del personal saliente en el estante de abajo."
+msgstr ""
+
 #. registro rl_27
 msgid "Arriba, cada uno se acuerda de una persona distinta que no vino."
 msgstr ""
@@ -127,6 +155,10 @@ msgstr ""
 
 #. scripts/ui/logbook_ui.gd
 msgid "BITÁCORA DE GUARDIA"
+msgstr ""
+
+#. noche 4 / tarea
+msgid "Bajar al B2 a comprobar que no está"
 msgstr ""
 
 #. noche 3 / tarea
@@ -141,8 +173,20 @@ msgstr ""
 msgid "Bajé al B2."
 msgstr ""
 
+#. noche 4 / beat sin_b2
+msgid "Bajé al B2. No hay B2. Bajé igual."
+msgstr ""
+
 #. parte / almacen_pila_falta
 msgid "Bajé la pila de cajas del almacén."
+msgstr ""
+
+#. registro rl_35
+msgid "Bajé otra vez. Ya no cuento los días en la pared, cuento las veces que bajo."
+msgstr ""
+
+#. noche 3 / tarea
+msgid "Buscar tu legajo en el archivo del B2"
 msgstr ""
 
 #. scripts/ui/menu.gd
@@ -163,6 +207,10 @@ msgstr ""
 
 #. noche 5 / tarea
 msgid "Cerrar el inventario del turno"
+msgstr ""
+
+#. noche 5 / tarea
+msgid "Cerrar las llaves de paso del B2"
 msgstr ""
 
 #. parte / almacen_puerta_cerrada
@@ -221,6 +269,14 @@ msgstr ""
 msgid "Conté los trajes: dos. Ayer había tres y no salió nadie."
 msgstr ""
 
+#. parte / b2_camastro_corrido
+msgid "Corrí el camastro del fondo del B2."
+msgstr ""
+
+#. parte / b2_tanque_corrido
+msgid "Corrí el tanque de la sala de bombas."
+msgstr ""
+
 #. parte / dorm_chair
 msgid "Corrí la silla del dormitorio."
 msgstr ""
@@ -247,6 +303,10 @@ msgstr ""
 
 #. objeto foto
 msgid "Cuatro personas. Alguien recortó el borde derecho con tijera."
+msgstr ""
+
+#. noche 4 / beat recuento
+msgid "Cuatro salas, catorce cosas cambiadas de lugar."
 msgstr ""
 
 #. noche 5 / tarea final
@@ -287,6 +347,10 @@ msgstr ""
 
 #. registro rl_15
 msgid "Dejé de trabarla. Prefiero verla abierta que encontrarla así."
+msgstr ""
+
+#. parte / b2_fichero_abierto
+msgid "Dejé el fichero del archivo abierto."
 msgstr ""
 
 #. noche 5 / bitácora
@@ -359,6 +423,10 @@ msgstr ""
 
 #. parte / control_silla_girada
 msgid "Di vuelta la silla de control hacia la puerta."
+msgstr ""
+
+#. objeto manta
+msgid "Doblada en cuatro, como la dejás vos. Huele a vos."
 msgstr ""
 
 #. noche 1 / bitácora
@@ -441,6 +509,10 @@ msgstr ""
 msgid "El segundo plato aparece usado. Eso no es costumbre."
 msgstr ""
 
+#. registro rl_33
+msgid "El turno anterior dejó de purgarlas cuatro días. No preguntamos por qué."
+msgstr ""
+
 #. noche 5 / beat subnivel
 msgid "El vehículo llega al amanecer. Hay que decidir."
 msgstr ""
@@ -451,6 +523,10 @@ msgstr ""
 
 #. registro rl_22
 msgid "En serio."
+msgstr ""
+
+#. noche 3 / beat legajo
+msgid "Encontré mi legajo. Dice que el turno terminó hace once meses."
 msgstr ""
 
 #. parte / dorm_pisadas
@@ -493,6 +569,10 @@ msgstr ""
 msgid "Escucho el motor."
 msgstr ""
 
+#. registro rl_34
+msgid "Eso no debería poder archivarse todavía."
+msgstr ""
+
 #. scripts/ui/menu.gd
 msgid "Estación Cabo Hueso  ---  cinco noches"
 msgstr ""
@@ -503,6 +583,10 @@ msgstr ""
 
 #. objeto traba
 msgid "Está en tu mano otra vez. En la bitácora figura que la dejaste puesta."
+msgstr ""
+
+#. registro rl_34
+msgid "Están todos. Incluido el de la persona que va a quedar de guardia."
 msgstr ""
 
 #. registro rl_19
@@ -533,7 +617,7 @@ msgstr ""
 msgid "Grabé la portadora de la banda cuatro y la pasé lenta."
 msgstr ""
 
-#. noche 1 / tarea
+#. noche 1 / tarea, noche 2 / tarea
 msgid "Hacer la ronda exterior"
 msgstr ""
 
@@ -546,7 +630,7 @@ msgid "Hay cuarenta minutos que escribí yo y no viví yo."
 msgstr ""
 
 #. noche 3 / beat subnivel
-msgid "Hay marcas en la pared. Son de esta semana."
+msgid "Hay marcas en la pared del fondo. Son de esta semana."
 msgstr ""
 
 #. registro rl_09
@@ -617,6 +701,10 @@ msgstr ""
 msgid "La estación está dentro de parámetros. Todo normal."
 msgstr ""
 
+#. noche 3 / beat legajo
+msgid "La fecha de cierre es de hace once meses."
+msgstr ""
+
 #. registro rl_03
 msgid "La grabación figura hecha hoy, a las 23:47."
 msgstr ""
@@ -627,6 +715,10 @@ msgstr ""
 
 #. registro rl_25
 msgid "La puerta del generador no cierra sola. Alguien la abre."
+msgstr ""
+
+#. noche 4 / beat sin_b2
+msgid "La rampa bajaba acá. Es pared, y la pintura es vieja."
 msgstr ""
 
 #. noche 2 / beat radio_unknown
@@ -641,6 +733,10 @@ msgstr ""
 msgid "La última es la de mañana."
 msgstr ""
 
+#. registro rl_33
+msgid "Las bombas las purgamos cada doce horas. Es la única tarea que no se puede saltear."
+msgstr ""
+
 #. noche 5 / beat subnivel
 msgid "Las marcas de la pared ahora son una lista de fechas."
 msgstr ""
@@ -651,6 +747,10 @@ msgstr ""
 
 #. noche 3 / beat subnivel
 msgid "Las marcas del B2 son mías. No me acuerdo de haberlas hecho."
+msgstr ""
+
+#. registro rl_35
+msgid "Las rayas no son días."
 msgstr ""
 
 #. noche 4 / bitácora
@@ -673,12 +773,20 @@ msgstr ""
 msgid "Los que corrieron tardaron más en volver."
 msgstr ""
 
+#. objeto manta
+msgid "Manta doblada"
+msgstr ""
+
 #. parte / gen_marca
 msgid "Marqué once rayas en la pared del generador."
 msgstr ""
 
 #. parte / pasillo_camilla_falta
 msgid "Me llevé la camilla del pasillo."
+msgstr ""
+
+#. parte / b2_lata_falta
+msgid "Me llevé la lata del fondo del B2."
 msgstr ""
 
 #. parte / control_silla_falta
@@ -815,6 +923,10 @@ msgstr ""
 
 #. noche 1 / tarea
 msgid "Purgar la válvula del almacén"
+msgstr ""
+
+#. noche 3 / tarea
+msgid "Purgar las dos bombas del subnivel"
 msgstr ""
 
 #. parte / dorm_silla_mira_cama
@@ -965,6 +1077,18 @@ msgstr ""
 msgid "REG-053 / Sin firmar"
 msgstr ""
 
+#. registro rl_33
+msgid "REG-054 / Sala de bombas"
+msgstr ""
+
+#. registro rl_34
+msgid "REG-055 / Archivo"
+msgstr ""
+
+#. registro rl_35
+msgid "REG-056 / Sin firmar"
+msgstr ""
+
 #. registro rl_03
 msgid "REG-??? / DESCONOCIDO"
 msgstr ""
@@ -979,6 +1103,10 @@ msgstr ""
 
 #. noche 2 / tarea
 msgid "Realinear la antena"
+msgstr ""
+
+#. noche 4 / tarea
+msgid "Recorrer las salas anotando lo que cambió"
 msgstr ""
 
 #. registro rl_01
@@ -1015,6 +1143,10 @@ msgstr ""
 
 #. noche 1 / bitácora
 msgid "Rutina de siempre: generadores, ronda, sensores, válvula."
+msgstr ""
+
+#. parte / b2_banco_falta
+msgid "Saqué el banco de la sala de bombas."
 msgstr ""
 
 #. parte / patio_tambor_falta
@@ -1085,6 +1217,10 @@ msgstr ""
 msgid "Si la chapa dice otro número, no la muestres."
 msgstr ""
 
+#. registro rl_33
+msgid "Si se detienen, lo de abajo sube. No sé decirlo mejor que así."
+msgstr ""
+
 #. registro rl_20
 msgid "Si te vas, no mires el patio por la ventanilla."
 msgstr ""
@@ -1093,8 +1229,16 @@ msgstr ""
 msgid "Sigo poniendo dos platos. Es costumbre, supongo."
 msgstr ""
 
+#. objeto manta
+msgid "Sigue tibia."
+msgstr ""
+
 #. registro rl_03
 msgid "Son las 23:12."
+msgstr ""
+
+#. registro rl_35
+msgid "Son yo."
 msgstr ""
 
 #. parte / dorm_silla_doble
@@ -1141,12 +1285,20 @@ msgstr ""
 msgid "Tres. El recorte es más nuevo que la foto."
 msgstr ""
 
+#. noche 3 / beat legajo
+msgid "Tu legajo está archivado con fecha de cierre."
+msgstr ""
+
 #. objeto placa
 msgid "Tu nombre está bien. El número de turno ahora dice 15."
 msgstr ""
 
 #. objeto placa
 msgid "Tu nombre y el número de turno: 14. La cadena está gastada de darle vueltas."
+msgstr ""
+
+#. objeto manta
+msgid "Una manta de la estación, doblada en cuatro. Está usada."
 msgstr ""
 
 #. objeto foto
@@ -1163,6 +1315,10 @@ msgstr ""
 
 #. parte / almacen_estante_vacio
 msgid "Vacié el segundo estante del almacén."
+msgstr ""
+
+#. parte / b2_estante_falta
+msgid "Vacié un estante del archivo del B2."
 msgstr ""
 
 #. objeto taza
