@@ -30,6 +30,9 @@ const REBINDABLE := [
 
 
 func _ready() -> void:
+	# La fuente por defecto tiene que quedar puesta antes de que se construya
+	# cualquier pantalla, si no el menu arranca con la sans de Godot.
+	UIUtils.install_theme()
 	load_settings()
 	apply()
 

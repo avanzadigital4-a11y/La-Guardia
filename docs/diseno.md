@@ -223,13 +223,24 @@ sentada**, que es exactamente lo que dice el objetivo de 60-90 minutos.
 
 ## Lo que falta producir (no es diseño, es trabajo)
 
-- **Las voces de los registros de radio.** 35 registros escritos, ninguno
-  grabado; hoy son subtítulos sobre una portadora sintetizada. El documento
-  dice que el audio pesa más que lo visual y que los registros son el
-  principal vehículo de historia, así que este es el rubro más grande que
-  falta.
-- **Arte.** Texturas, props modelados, tipografía propia. Hoy la estación son
-  cajas de color plano.
+- **Las voces de los registros de radio.** Hay 107 líneas generadas con
+  espeak-ng y pasadas por la cadena de radio (pasabanda 300-3000 Hz), o sea
+  que el juego ya se escucha entero. Pero son un provisorio: una voz
+  sintetizada no actúa, y el documento dice que el audio pesa más que lo
+  visual y que los registros son el principal vehículo de historia. Grabarlas
+  con voz humana sigue siendo la mejora más grande disponible, y el giro
+  ayuda: son todas la misma voz, así que alcanza con una persona.
+- ~~**Arte.**~~ Cerrado en lo que se puede cerrar sin dibujar a mano. Las
+  cuatro capas están: texturas procedurales (paredes, pisos, props y pantallas
+  de tubo), luz y sombra con presupuesto, silueta (caños, bandejas, rejillas) y
+  mapeo afín. La tipografía es IBM Plex Mono y Sans Condensed (OFL, uso
+  comercial permitido), sin suavizado para que no flote por encima del mundo.
+  Los documentos —el parte del turno y la bitácora— se dibujan en papel, no en
+  verde fósforo: son objetos, no menús.
+
+  Lo que sigue abierto es arte **dibujado a mano**, que no se puede generar por
+  código: props modelados de verdad en vez de cajas, y una tipografía propia si
+  alguna vez la hay. Ninguna de las dos es necesaria para publicar.
 - **Contenido.** Falta aproximadamente la mitad otra vez para llegar a los
   60-90 minutos. Medir con `tests/pacing.tscn` en cada paso.
 - **Playtest con personas.** Todo lo que se sabe del ritmo sale de un bot que

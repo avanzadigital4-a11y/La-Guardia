@@ -30,7 +30,7 @@ func _ready() -> void:
 	add_child(bg)
 
 	_main_col = _panel()
-	var title := UIUtils.label(tr("LA GUARDIA"), 40, UIUtils.FG)
+	var title := UIUtils.title(tr("LA GUARDIA"), 52, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_main_col.add_child(title)
 	var sub := UIUtils.label(tr("Estación Cabo Hueso  ---  cinco noches"), 14, UIUtils.DIM)
@@ -94,7 +94,7 @@ func _button(parent: Node, text: String, on_press: Callable, width := 320) -> Bu
 func _refresh_slots() -> void:
 	for c in _slots_col.get_children():
 		c.queue_free()
-	var title := UIUtils.label(tr("PARTIDAS"), 20, UIUtils.FG)
+	var title := UIUtils.title(tr("PARTIDAS"), 20, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_slots_col.add_child(title)
 
@@ -143,7 +143,7 @@ func _play(slot: int, used: bool) -> void:
 
 
 func _build_credits() -> void:
-	var title := UIUtils.label(tr("CRÉDITOS"), 20, UIUtils.FG)
+	var title := UIUtils.title(tr("CRÉDITOS"), 20, UIUtils.FG)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_credits.add_child(title)
 	_credits.add_child(UIUtils.label("", 10, UIUtils.DIM))

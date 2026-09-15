@@ -172,6 +172,11 @@ func _capture_debug() -> void:
 		[Vector3(5.0, 0.1, -9.0), PI * 0.5, "generador"],
 		[Vector3(0.0, 0.1, 13.0), PI, "patio"],
 		[Vector3(0.0, 0.1, 9.8), PI, "esclusa"],
+		# Vistas que encuadran props, no paredes: sin estas no hay forma de
+		# revisar el material de los objetos, que es la mitad del arte.
+		[Vector3(-5.5, 0.1, -11.0), PI * 0.5, "consola"],
+		[Vector3(3.0, 0.1, -1.4), -PI * 0.5, "almacen_cajas"],
+		[Vector3(-6.0, 0.1, -2.5), PI * 0.5, "dorm_cucheta"],
 	]
 	var views_n3 := [
 		[Vector3(0.0, 0.1, -17.0), 0.0, "n3_pasillo_sur"],
@@ -198,6 +203,33 @@ func _capture_debug() -> void:
 			await RenderingServer.frame_post_draw
 		var img := get_viewport().get_texture().get_image()
 		img.save_png("user://shot_%s.png" % v[2])
+	await _capture_ui()
 	print("Capturas guardadas en %s" % ProjectSettings.globalize_path("user://"))
 	# Es una herramienta, no una sesion de juego: termina cuando termino.
 	get_tree().quit()
+
+
+## Las pantallas tambien son arte, y son donde vive la tipografia. Sin esto
+## solo se podian revisar los ambientes, que es la mitad de lo que se ve.
+func _capture_ui() -> void:
+	var libreta := get_tree().get_first_node_in_group("logbook_ui")
+	var inspeccion := get_tree().get_first_node_in_group("inspect_ui")
+
+	if libreta != null:
+		libreta.open()
+		await _shot("ui_bitacora")
+		libreta.close()
+
+	# El parte del turno de la Noche 4: la hoja que sostiene el giro del final.
+	var parte = station.props.get("parte", station.objects.get("parte", null))
+	if inspeccion != null and parte != null and parte.has_method("text_for"):
+		inspeccion.open("Parte del turno", parte.text_for(4))
+		await _shot("ui_parte")
+		inspeccion.close()
+
+
+func _shot(nombre: String) -> void:
+	await get_tree().create_timer(0.3).timeout
+	for i in 3:
+		await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png("user://shot_%s.png" % nombre)

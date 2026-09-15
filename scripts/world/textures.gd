@@ -122,6 +122,24 @@ static func hormigon() -> Texture2D:
 	)
 
 
+## Pantalla de tubo: lineas horizontales y una mascara vertical de fosforos.
+## El post-proceso ya dibuja scanlines sobre TODA la imagen; esto es distinto,
+## va sobre la pantalla misma, que es lo que hace que se lea como un monitor
+## encendido y no como una chapa que brilla.
+static func crt() -> Texture2D:
+	return _crear("crt", func(img: Image) -> void:
+		_fill(img, 1.0)
+		# Una linea oscura cada cuatro pixeles: el barrido.
+		for y in range(0, SIZE, 4):
+			_line_h(img, y, 0.45)
+			_line_h(img, y + 1, 0.75)
+		# Mascara vertical, mas suave: la triada de fosforos.
+		for x in range(0, SIZE, 3):
+			_line_v(img, x, 0.9)
+		_grain(img, 0.05, 37)
+	)
+
+
 ## Despacha por nombre, para que quien pide una textura no tenga que conocer
 ## la funcion. Si el nombre no existe devuelve null y el material queda sin
 ## textura, que es un color plano: se degrada, no rompe.
@@ -134,6 +152,7 @@ static func por_nombre(nombre: String) -> Texture2D:
 		"oxido": return oxido()
 		"nieve": return nieve()
 		"hormigon": return hormigon()
+		"crt": return crt()
 	return null
 
 

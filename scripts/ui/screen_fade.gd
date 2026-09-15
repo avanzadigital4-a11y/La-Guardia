@@ -20,7 +20,7 @@ func _ready() -> void:
 	_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(_rect)
 
-	_title = UIUtils.label("", 30, UIUtils.FG)
+	_title = UIUtils.title("", 38, UIUtils.FG)
 	_title.set_anchors_preset(Control.PRESET_CENTER)
 	_title.offset_left = -400.0
 	_title.offset_right = 400.0

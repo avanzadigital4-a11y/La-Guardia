@@ -11,7 +11,7 @@ var _listening_button: Button = null
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 10)
-	add_child(UIUtils.label(tr("OPCIONES"), 20, UIUtils.FG))
+	add_child(UIUtils.title(tr("OPCIONES"), 20, UIUtils.FG))
 
 	var cols := HBoxContainer.new()
 	cols.add_theme_constant_override("separation", 60)

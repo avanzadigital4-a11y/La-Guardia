@@ -58,7 +58,7 @@ func build(tint: Color) -> void:
 	_mat_metal = Build.surface(Color(0.22, 0.24, 0.26), 0.0, 0.8, "metal")
 	_mat_dark = Build.surface(Color(0.08, 0.08, 0.09), 0.0, 0.8, "hormigon")
 	_mat_snow = Build.surface(Color(0.62, 0.66, 0.70), 0.0, 0.8, "nieve")
-	_mat_screen = Build.surface(Color(0.35, 0.72, 0.58), 1.6)
+	_mat_screen = Build.surface(Color(0.35, 0.72, 0.58), 1.05, 0.8, "crt")
 
 	_build_corridor()
 	_build_control()
@@ -114,7 +114,7 @@ func _build_corridor() -> void:
 	# Lockers contra la pared.
 	Build.box(self, "Lockers", Vector3(0.45, 1.9, 2.4), Vector3(-1.2, 0.95, -7.0), _mat_metal)
 	objects["camilla"] = Build.box(self, "Camilla", Vector3(0.7, 0.7, 2.0), Vector3(1.1, 0.35, 0.5), _mat_metal)
-	objects["extintor"] = Build.box(self, "Extintor", Vector3(0.22, 0.6, 0.22), Vector3(1.28, 1.1, -9.0), Build.surface(Color(0.45, 0.16, 0.12)))
+	objects["extintor"] = Build.box(self, "Extintor", Vector3(0.22, 0.6, 0.22), Vector3(1.28, 1.1, -9.0), Build.surface(Color(0.45, 0.16, 0.12), 0.0, 0.8, "metal", 6.0))
 	Build.label3d(self, "NIVEL 1  ->  ESCLUSA", Vector3(-1.35, 2.3, -6.0), PI * 0.5, 0.22)
 	Build.label3d(self, "<-  B2", Vector3(1.35, 2.3, -14.5), -PI * 0.5, 0.22, Color(0.5, 0.52, 0.55))
 
@@ -137,7 +137,7 @@ func _build_control() -> void:
 	Build.light(console, Vector3(0.9, 1.5, 0.0), Color(0.35, 0.8, 0.6), 0.8, 3.5)
 	points["sensores"] = console
 
-	Build.box(self, "Pizarra", Vector3(2.0, 1.2, 0.06), Vector3(-5.5, 1.7, -13.9), Build.surface(Color(0.18, 0.20, 0.19)))
+	Build.box(self, "Pizarra", Vector3(2.0, 1.2, 0.06), Vector3(-5.5, 1.7, -13.9), Build.surface(Color(0.18, 0.20, 0.19), 0.0, 0.8, "hormigon", 1.6))
 	Build.label3d(self, "DÍAS PARA EL CIERRE", Vector3(-5.5, 2.05, -13.85), 0.0, 0.18, Color(0.7, 0.72, 0.68))
 	Build.label3d(self, "|||||", Vector3(-5.5, 1.55, -13.85), 0.0, 0.32, Color(0.75, 0.7, 0.55))
 
@@ -218,7 +218,7 @@ func _build_dorm() -> void:
 	var bed := Bed.new()
 	bed.name = "Cucheta"
 	bed_prop.add_child(bed)
-	bed.setup_box(Vector3(1.0, 0.55, 2.1), Build.surface(Color(0.30, 0.28, 0.26)), Vector3(0.0, 0.28, 0.0))
+	bed.setup_box(Vector3(1.0, 0.55, 2.1), Build.surface(Color(0.30, 0.28, 0.26), 0.0, 0.8, "oxido", 1.2), Vector3(0.0, 0.28, 0.0))
 	points["cama"] = bed
 
 	var chair := _add_prop("dorm_chair", Vector3(-4.0, 0.0, -1.2), 0.0, Vector3(0.55, 0.9, 0.55))
@@ -244,14 +244,14 @@ func _build_storage() -> void:
 
 	Build.box(self, "Estante1", Vector3(0.6, 2.2, 3.0), Vector3(8.8, 1.1, -3.0), _mat_metal)
 	objects["estante_2"] = Build.box(self, "Estante2", Vector3(2.6, 2.0, 0.5), Vector3(5.0, 1.0, -4.6), _mat_metal)
-	objects["cajas"] = Build.box(self, "Cajas", Vector3(1.2, 1.2, 1.2), Vector3(6.5, 0.6, -1.4), Build.surface(Color(0.35, 0.30, 0.22)))
+	objects["cajas"] = Build.box(self, "Cajas", Vector3(1.2, 1.2, 1.2), Vector3(6.5, 0.6, -1.4), Build.surface(Color(0.35, 0.30, 0.22), 0.0, 0.8, "hormigon", 1.8))
 	_add_battery("PilaAlmacen", Vector3(5.0, 2.1, -4.6))
 
 	var valve := TaskPoint.new()
 	valve.name = "Valvula"
 	add_child(valve)
 	valve.position = Vector3(8.7, 0.0, -0.6)
-	valve.setup_box(Vector3(0.5, 0.7, 0.7), Build.surface(Color(0.40, 0.42, 0.30)), Vector3(0.0, 1.0, 0.0))
+	valve.setup_box(Vector3(0.5, 0.7, 0.7), Build.surface(Color(0.40, 0.42, 0.30), 0.0, 0.8, "oxido", 4.0), Vector3(0.0, 1.0, 0.0))
 	valve.task_id = "valvula"
 	valve.active_prompt = "Purgar la válvula"
 	valve.done_prompt = "Válvula purgada"
@@ -271,7 +271,7 @@ func _build_airlock() -> void:
 
 	# Tres trajes colgados. Las ultimas noches falta alguno.
 	Build.box(self, "Perchero", Vector3(4.0, 0.08, 0.08), Vector3(0.0, 2.05, 7.5), _mat_metal)
-	var suit_mat := Build.surface(Color(0.55, 0.38, 0.14))
+	var suit_mat := Build.surface(Color(0.55, 0.38, 0.14), 0.0, 0.8, "oxido", 2.2)
 	for i in 3:
 		var suit := Node3D.new()
 		suit.name = "Traje%d" % (i + 1)
@@ -303,7 +303,7 @@ func _build_exterior() -> void:
 
 	Build.box(self, "Mastil", Vector3(0.3, 7.0, 0.3), Vector3(-8.0, 3.5, 20.0), _mat_metal)
 	Build.box(self, "Antena", Vector3(3.0, 0.2, 0.2), Vector3(-8.0, 6.6, 20.0), _mat_metal)
-	Build.box(self, "Contenedor", Vector3(5.0, 2.4, 2.4), Vector3(8.0, 1.2, 18.0), Build.surface(Color(0.32, 0.26, 0.24)))
+	Build.box(self, "Contenedor", Vector3(5.0, 2.4, 2.4), Vector3(8.0, 1.2, 18.0), Build.surface(Color(0.32, 0.26, 0.24), 0.0, 0.8, "oxido", 0.8))
 	room_lights["patio"] = Build.light(self, Vector3(0.0, 4.0, 13.0), Color(0.55, 0.62, 0.75), 1.1, 12.0)
 	lights.append(room_lights["patio"])
 
@@ -318,7 +318,7 @@ func _build_exterior() -> void:
 		marker.name = "Marca_%s" % spot["key"]
 		add_child(marker)
 		marker.position = spot["pos"]
-		marker.setup_box(Vector3(0.7, 1.2, 0.7), Build.surface(Color(0.75, 0.55, 0.15)), Vector3(0.0, 0.6, 0.0))
+		marker.setup_box(Vector3(0.7, 1.2, 0.7), Build.surface(Color(0.75, 0.55, 0.15), 0.0, 0.8, "metal", 3.0), Vector3(0.0, 0.6, 0.0))
 		marker.task_id = "round"
 		marker.multi_step = true
 		marker.active_prompt = "Marcar %s" % spot["label"]
@@ -335,7 +335,7 @@ func _build_exterior() -> void:
 	antenna.name = "ControlAntena"
 	add_child(antenna)
 	antenna.position = Vector3(-9.6, 0.0, 22.0)
-	antenna.setup_box(Vector3(0.6, 1.3, 0.5), Build.surface(Color(0.35, 0.38, 0.40)), Vector3(0.0, 0.65, 0.0))
+	antenna.setup_box(Vector3(0.6, 1.3, 0.5), Build.surface(Color(0.35, 0.38, 0.40), 0.0, 0.8, "metal", 3.0), Vector3(0.0, 0.65, 0.0))
 	antenna.task_id = "antena"
 	antenna.active_prompt = "Realinear la antena"
 	antenna.done_prompt = "Antena alineada"
@@ -351,7 +351,7 @@ func _build_exterior() -> void:
 	leave.position = Vector3(0.0, 0.0, 25.0)
 	leave.ending_id = "salir"
 	leave.choice_prompt = "Esperar el vehículo acá"
-	leave.setup_box(Vector3(1.2, 1.0, 1.2), Build.surface(Color(0.5, 0.45, 0.2)), Vector3(0.0, 0.5, 0.0))
+	leave.setup_box(Vector3(1.2, 1.0, 1.2), Build.surface(Color(0.5, 0.45, 0.2), 0.0, 0.8, "oxido", 2.0), Vector3(0.0, 0.5, 0.0))
 	points["salir"] = leave
 	Build.label3d(self, "PUNTO DE RETIRO", Vector3(0.0, 1.5, 24.4), PI, 0.2, Color(0.8, 0.7, 0.4))
 
@@ -462,7 +462,7 @@ func _build_b2() -> void:
 	_b2_light("b2 fondo", Vector3(0.0, 1.0, -47.0), Color(0.30, 0.32, 0.38), 0.6, 8.0)
 
 	Build.box(subnivel_section, "Marcas", Vector3(3.2, 1.2, 0.06),
-		Vector3(0.0, B2_Y + 1.4, -49.9), Build.surface(Color(0.22, 0.20, 0.20)))
+		Vector3(0.0, B2_Y + 1.4, -49.9), Build.surface(Color(0.22, 0.20, 0.20), 0.0, 0.8, "hormigon", 1.0))
 	Build.label3d(subnivel_section, "|||| |||| |||| ||",
 		Vector3(0.0, B2_Y + 1.5, -49.84), 0.0, 0.22, Color(0.55, 0.5, 0.45))
 	_b2_prop("b2_camastro", Vector3(-3.4, B2_Y, -47.4), 0.0, Vector3(0.9, 0.45, 2.0))
@@ -759,7 +759,7 @@ func _add_battery(name: String, pos: Vector3, parent: Node3D = null) -> BatteryP
 	bat.name = name
 	(parent if parent != null else self).add_child(bat)
 	bat.position = pos
-	bat.setup_box(Vector3(0.18, 0.3, 0.18), Build.surface(Color(0.7, 0.66, 0.2)))
+	bat.setup_box(Vector3(0.18, 0.3, 0.18), Build.surface(Color(0.7, 0.66, 0.2), 0.0, 0.8, "metal", 8.0))
 	pickups.append(bat)
 	return bat
 
@@ -770,7 +770,7 @@ func _add_radio_log(id: String, pos: Vector3, from_night: int, parent: Node3D = 
 	(parent if parent != null else self).add_child(rl)
 	rl.position = pos
 	rl.log_id = id
-	rl.setup_box(Vector3(0.28, 0.1, 0.18), Build.surface(Color(0.45, 0.42, 0.38)))
+	rl.setup_box(Vector3(0.28, 0.1, 0.18), Build.surface(Color(0.45, 0.42, 0.38), 0.0, 0.8, "metal", 7.0))
 	rl.set_meta("from_night", from_night)
 	points["log_%s" % id] = rl
 	return rl
