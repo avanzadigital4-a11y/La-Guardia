@@ -47,6 +47,17 @@ de radio (300 Hz a 3 kHz) tira justo todo lo que un microfono caro captura de
 mas. Lo que cambia el resultado es el cuarto (un placard con ropa, no una
 habitacion vacia) y la distancia.
 
+Si no vas a grabar ahora, se pueden generar las 107 lineas con voz sintetica:
+
+```bash
+export TTS_CMD='echo {texto} | piper -m ~/voces/es_AR-daniela-high.onnx -f {salida}'
+./tools/generar_voces_tts.sh
+```
+
+Sirve para jugar el juego entero con audio y poder hacer un playtest. No
+reemplaza grabar: un TTS no actua. Las advertencias de licencia estan en
+[`docs/produccion.md`](../docs/produccion.md).
+
 Para convertir las grabaciones crudas en archivos listos para el juego:
 
 ```bash

@@ -102,6 +102,76 @@ todo.
    encima y se duplica.
 7. Exportar **OGG Vorbis, mono, 44.1 kHz**.
 
+### ¿Se puede sacar de algún lado en vez de grabarlo?
+
+Hay tres caminos, y conviene saber qué da cada uno.
+
+**1. Bancos de sonido (freesound, etc.): no sirve para esto.** No existe una
+biblioteca que tenga *estas* 107 líneas: son diálogo escrito para este juego.
+De un banco podés sacar estática, tono de cuarto o pitidos de radio, y eso el
+juego ya se lo sintetiza solo. Para el contenido hablado no hay de dónde
+sacarlo.
+
+**2. Voz sintética (TTS): tenés las 107 líneas hoy.** Es el camino realista si
+no vas a grabar ahora. Hay motores gratis y offline, y hay una herramienta en
+el repo que hace todo el trabajo:
+
+```bash
+export TTS_CMD='echo {texto} | piper -m ~/voces/es_AR-daniela-high.onnx -f {salida}'
+./tools/generar_voces_tts.sh -d          # ver qué haría
+./tools/generar_voces_tts.sh -f rl_03    # probar con un registro
+./tools/generar_voces_tts.sh             # las 107
+```
+
+Lee el texto de la misma tabla que usarías para grabar, así que los nombres y
+el orden salen bien solos, y le aplica la misma cadena de radio que a una
+grabación real — una línea sintética y una grabada suenan igual de procesadas.
+
+Motores, todos gratis:
+
+- **Piper** (`pip install piper-tts`), offline, con voces en `es_AR`, `es_ES` y
+  `es_MX` en [huggingface.co/rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices).
+  Bajás el `.onnx` y su `.onnx.json`.
+- **macOS**: ya lo tenés. `export TTS_CMD='say -v Monica -o {salida} --data-format=LEF32@22050 {texto}'`
+- **Windows**: ya lo tenés, con PowerShell. Guardá esto como `tts.ps1` y usá
+  `export TTS_CMD='powershell -File tts.ps1 {texto} {salida}'`:
+
+  ```powershell
+  param($texto, $salida)
+  Add-Type -AssemblyName System.Speech
+  $v = New-Object System.Speech.Synthesis.SpeechSynthesizer
+  $v.SelectVoice((($v.GetInstalledVoices() | Where-Object {
+      $_.VoiceInfo.Culture.Name -like "es-*" })[0]).VoiceInfo.Name)
+  $v.SetOutputToWaveFile($salida); $v.Speak($texto); $v.Dispose()
+  ```
+
+**Dos advertencias sobre el TTS, y son importantes:**
+
+- **Licencias.** Las voces de Piper vienen de datasets distintos y **no todas
+  permiten uso comercial**. Si el juego se vende, revisá el MODEL_CARD de la
+  voz puntual antes de publicar. Las voces del sistema en Windows y macOS
+  tampoco son libres de redistribuir como archivos de audio dentro de un
+  producto: para publicar conviene una voz con licencia clara.
+- **Un TTS no actúa.** No se cansa, no duda, no se le quiebra la voz. Este
+  juego se apoya justamente en eso: el terror de los registros está en que se
+  escucha a alguien deteriorándose. Una voz sintética plana los convierte en
+  información.
+
+**3. Otra persona, gratis.** Si no querés poner tu voz: un amigo, un familiar,
+o comunidades donde hay gente haciendo voces gratis por portfolio
+(r/RecordThisForFree, Casting Call Club). No cuesta plata, cuesta pedirlo y
+esperar. Acordate de que tiene que ser **una sola** persona para los 35
+registros.
+
+### La recomendación
+
+Generá las 107 con TTS **ahora**. Con eso podés jugar el juego completo con
+audio y hacer un playtest de verdad, que es lo que más falta.
+
+Después grabá encima las que más pesan. El juego levanta cada línea por
+separado, así que reemplazar de a una no rompe nada ni obliga a rehacer el
+resto. Diez líneas bien grabadas sobre 97 sintéticas ya cambia el juego.
+
 ### Por dónde empezar
 
 No empieces por `rl_01`. Grabá primero **`rl_03`** (la señal desconocida de la
