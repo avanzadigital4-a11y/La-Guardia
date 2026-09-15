@@ -8,7 +8,7 @@ Sos el último cuidador nocturno de una estación de investigación remota en la
 
 Terror psicológico, exploración en primera persona, sin combate. Estética visual low-poly tipo PS1 (referencias: *Crow Country*, *Iron Lung*, *Amnesia: The Dark Descent*, *SOMA*).
 
-**Duración objetivo: 60-90 minutos.** (Revisado. El objetivo original era 2-3 horas; para un desarrollador solo, y con el arte y el audio todavía por hacer, 60-90 minutos es lo que se termina. *Iron Lung*, una de las referencias, dura cerca de una hora.) El estado medido está en el README, sección "Ritmo medido": `tests/pacing.tscn` camina las cinco noches y da el número real.
+**Duración objetivo: 60-90 minutos.** (Revisado. El objetivo original era 2-3 horas; para un desarrollador solo eso no se termina. *Iron Lung*, una de las referencias, dura cerca de una hora.) El estado medido está en el README, sección "Ritmo medido": `tests/pacing.tscn` camina las cinco noches y da el número real. Hoy: 15.9 minutos de recorrido directo, 32 a 48 explorando, más 9.4 de audio.
 
 ## Loop central
 
@@ -23,11 +23,35 @@ de esta noche firmada a una hora que todavía no pasó, cuando contás tres
 balizas cuatro veces — ahí el trabajo **es** el terror. Toda tarea de toda
 noche tiene su beat, y `tests/content.tscn` falla si alguna queda sin uno.
 
-**Mirar es un verbo, y se enseña temprano.** Las 97 anomalías solo pagan si el
+**Mirar es un verbo, y se enseña temprano.** Las 82 anomalías solo pagan si el
 jugador compara una sala con su recuerdo de la sala, y eso no se aprende solo:
 hay que pedirlo. La tarea de recuento aparece en la Noche 2 con dos salas, en
 la 3 con tres y en la 4 con cuatro. La de la Noche 4 ya existía; las otras dos
 son la lección que faltaba.
+
+**Y no todas se miran.** Es el riesgo que tiene pedirle al jugador que compare
+salas: si todas las anomalías son un objeto que cambió de estado, aprende que
+el juego consiste en buscar el objeto distinto y el terror se vuelve un juego
+de las siete diferencias. Durante mucho tiempo los cinco tipos que había
+—mover, faltar, aparecer, puerta, luz— eran exactamente eso.
+
+Ahora hay tres que no se miran:
+
+- **sonido** — algo quedó andando donde no hay nada que pueda andar: un goteo
+  en el dormitorio, un motor en el almacén, las bombas del B2 en marcha con el
+  equipo apagado. No hay objeto que buscar; hay que notar que algo se escucha,
+  y eso es mucho más difícil de descartar como "me pareció".
+- **espacio** — una pared se corrió. La sala es la misma sala y todo está en
+  su lugar; lo que cambió son las proporciones. Es lo que este documento pedía
+  desde el primer día ("proporciones que ya no coinciden del todo") y nunca
+  había tenido con qué hacerse.
+- **reloj** — la hora del turno no es la que era. Es la única anomalía que el
+  jugador no puede atribuir a la estación mirando un objeto, porque el objeto
+  es la hora.
+
+Están repartidas a propósito: la primera sonora en la Noche 2, la espacial en
+la Noche 3 (que se llama "el espacio interfiere"), y el reloj en la Noche 4,
+que es la noche de no confiar en uno mismo.
 
 Simple y repetible, pero **debe evolucionar noche a noche** — nunca debe sentirse como la misma secuencia ejecutada cinco veces, o el jugador cae en piloto automático.
 
@@ -57,6 +81,32 @@ Esto tiene una consecuencia concreta para escribir: **las noches 1 a 3 no
 pueden insinuar que el protagonista es poco confiable.** Todo lo raro de esas
 noches tiene que poder leerse como que la estación es la que está mal, no él.
 El golpe de la Noche 4 solo existe si antes hubo identificación sin reservas.
+
+### La tensión con la planilla de la Noche 1
+
+La Noche 1 termina en *"es mi letra"*, y eso roza la regla de arriba. Queda
+anotado acá en vez de disimulado, porque es una decisión discutible y el autor
+puede querer revertirla.
+
+**Por qué se cree que funciona igual.** En la Noche 1 el jugador no tiene
+todavía ninguna base de comparación: no vio nunca su propia letra en el juego,
+no escribió ninguna entrada, no firmó nada. Sin esa base, *"es mi letra"* se
+lee como **alguien me está falsificando** — o sea, la estación está mal —, que
+es exactamente la lectura que las noches 1 a 3 necesitan. La lectura de "el
+poco confiable soy yo" solo se vuelve disponible en la Noche 4, cuando el
+jugador ya tiene tres noches de bitácora propia contra las cuales comparar y
+el parte del turno ya está firmado.
+
+O sea: el mismo hecho se lee de dos maneras distintas según cuándo, y la
+segunda lectura llega justo cuando tiene que llegar. Si eso no se sostiene en
+un playtest, el arreglo es chico: sacar la línea *"Es mi letra"* del beat de
+`generator` en la Noche 1 y dejar solo la hora imposible.
+
+**Por qué se puso igual, aun sabiendo el riesgo.** La Noche 1 estaba diseñada
+como "todo normal" y tenía dos anomalías en ocho minutos. Los primeros diez
+minutos son los que deciden si alguien sigue jugando o si un streamer sigue
+grabando. Un documento de diseño puede permitirse una primera noche tranquila;
+un juego publicado sin nombre, no.
 
 **Se llama Olmedo. El jugador no lo lee nunca.**
 
@@ -103,7 +153,7 @@ diga.
 - **Noche 4 — Pérdida de confianza.** Objetivo → recuerdos contradictorios (bitácora) → investigar → el jugador ya no sabe si puede confiar en lo que ve o recuerda.
 - **Noche 5 — Cierre.** Decisión → exploración final → desenlace. No debe sentirse como "otra ronda más", sino como la noche que rompe todo.
 
-**Las noches crecen.** No duran lo mismo: la rutina de la Noche 1 se aprende rápido y aburre si se estira, y la última tiene que pesar. La curva medida hoy va de 107 s a 221 s de recorrido directo, sin pozos en el medio. El B2 es el que hace crecer las noches 3 y 5; la Noche 4 crece en superficie, porque esa noche el subnivel no está.
+**Las noches crecen.** No duran lo mismo: la rutina de la Noche 1 se aprende rápido y aburre si se estira, y la última tiene que pesar. La curva medida hoy va de 107 s (Noche 1) a 248 s (Noche 3) de recorrido directo, con la 4 y la 5 sostenidas arriba de 200, sin pozos en el medio. El B2 es el que hace crecer las noches 3 y 5; la Noche 4 crece en superficie, porque esa noche el subnivel no está.
 
 ## Técnica de producción: mismo espacio, variaciones sutiles
 
@@ -142,7 +192,19 @@ No todo lo raro ocurre frente al jugador. Algunos cambios pasan mientras no est�
 
 ## Final (el más fuerte narrativamente)
 
-El jugador descubre que algunas de las anomalías las causó él mismo, en estados que no recuerda. Al llegar el vehículo de evacuación, una transmisión de radio revela: *"No hay personal asignado a esa estación desde hace 11 meses."* No se explica qué fue exactamente lo que pasó — la ambigüedad final es intencional y es el gancho memorable del juego. **Decidido: dos finales, y no más.** El principal (salir al patio y esperar el
+El jugador descubre que algunas de las anomalías las causó él mismo, en estados que no recuerda. Al llegar el vehículo de evacuación, una transmisión de radio revela: *"No hay personal asignado a esa estación desde hace 11 meses."*
+
+**Pero esa línea no es el remate: es el permiso para releer.** Un dato que se
+agota en sí mismo es un giro; lo que hace memorable a un final de este tipo es
+que obligue a repasar las cinco noches y descubrir que cada cosa que el jugador
+le atribuyó a la estación tenía otra explicación, y la tuvo desde el principio.
+
+Por eso, después de la radio, el juego nombra tres momentos de **esta** partida
+—uno temprano, uno del medio y uno del final— en primera persona y en pasado, y
+cierra con *"nada de eso lo hizo la estación"* y con la planilla de la Noche 1.
+No es texto escrito de antemano: sale de `GameState.anomalies_seen`, el
+historial real, así que dos partidas dan dos remates distintos y ninguno
+menciona nada que no haya pasado. No se explica qué fue exactamente lo que pasó — la ambigüedad final es intencional y es el gancho memorable del juego. **Decidido: dos finales, y no más.** El principal (salir al patio y esperar el
 vehículo) y una variante (cerrar la escotilla del B2 desde adentro y quedarse).
 Los dos están construidos. No se agregan más: la ambigüedad del final principal
 es el gancho, y cada final extra la diluye además de competir por el contenido
@@ -150,7 +212,44 @@ que falta para llegar a los 60-90 minutos.
 
 ## Estética visual
 
-Low-poly estilo PS1: geometría simple (pocas caras, sin suavizado), una sola fuente de luz dura por escena, niebla espesa para limitar la distancia de dibujado, shader de post-proceso con grano tipo VHS/scanlines y viñeta en los bordes. Máximo 2-3 props únicos por habitación para mantener el alcance realista para un desarrollador solo.
+Low-poly estilo PS1: geometría simple (pocas caras, sin suavizado), niebla espesa para limitar la distancia de dibujado, shader de post-proceso con grano tipo VHS/scanlines y viñeta en los bordes.
+
+**Lo que se construyó, que es más de lo que este párrafo pedía.** Cuatro capas,
+todas por código y sin un solo archivo de imagen:
+
+- **Textura.** Ocho texturas procedurales de 64 px (chapa, piso, rejilla,
+  metal, óxido, nieve, hormigón, tubo de rayos catódicos), mapeadas triplanar
+  por coordenada de mundo para no tener que desplegar UV sobre geometría
+  generada. Son grises y multiplican al color, así que el teñido por noche
+  sigue funcionando sin regenerar nada.
+- **Luz y sombra.** El documento pedía "una sola fuente de luz dura por
+  escena". Lo que hay es mejor y cuesta parecido: catorce luces, de las
+  cuales **las tres más cercanas al jugador proyectan sombra** y el resto solo
+  ilumina (`shadow_budget.gd`). Ambiente en 0.10 y atenuación en 1.6, así que
+  la luz forma charcos en vez de bañar. Se apaga entero desde Opciones,
+  porque es lo más caro del cuadro.
+- **Silueta.** Caños, bandejas de cable, abrazaderas y rejillas de
+  ventilación: arquitectura, no props. Una sala que es una caja vacía se lee
+  como una caja vacía por buena que sea la textura.
+- **Mapeo afín.** La otra mitad de la firma PS1, la que hace que las texturas
+  se retuerzan al mirar en diagonal. El temblor de vértices ya estaba.
+
+**Sobre "máximo 2-3 props únicos por habitación":** esa restricción existía
+para acotar el trabajo de modelado a mano, y dejó de aplicar. Los props se
+arman con primitivas compuestas (`modelos.gd`) y lo que los hace legibles es
+la silueta, que se escribe. Un matafuego es cilindro, cuello, manguera y
+boquilla; una válvula tiene volante. La restricción real hoy es el
+presupuesto de polígonos, no el de horas.
+
+**Tipografía:** IBM Plex Mono para documentos y HUD, Sans Condensed para
+títulos (OFL, uso comercial permitido). Sin suavizado y sin posicionamiento
+subpixel: el mundo se filtra con NEAREST y corre al 55 % de resolución, así
+que un texto suavizado flotaría por encima como si fuera de otro juego.
+
+**Documentos en papel.** El parte del turno y la bitácora no se dibujan en
+verde fósforo como el resto de la interfaz: son hojas con tinta oscura. Son
+objetos del mundo, no menús. En la bitácora, las entradas que el protagonista
+escribió sin que el jugador las viviera van en lapicera roja.
 
 ## Audio
 
@@ -160,7 +259,13 @@ Tiene más peso narrativo que lo visual: viento constante, crujidos estructurale
 
 El documento pedía "iluminación mayormente horneada". **No es compatible con la decisión de producción que sostiene todo el proyecto:** la estación se genera por código en tiempo de ejecución, y hornear lightmaps necesita UV2 desplegadas y un bake hecho en el editor sobre geometría que existe de antemano. Una de las dos cosas tiene que ceder:
 
-- **Dejar la iluminación dinámica** (lo que hay hoy) y aceptar que el objetivo de gama baja se sostiene por otro lado: resolución interna al 55 %, sin sombras, niebla espesa y pocas luces. Se midió que limitar las luces dinámicas a cuatro **no** mejora nada (ver README, "Medir el rendimiento").
+- **Dejar la iluminación dinámica** (lo que hay hoy) y aceptar que el objetivo de gama baja se sostiene por otro lado: resolución interna al 55 %, niebla espesa, y un presupuesto de sombras de tres luces con interruptor en Opciones. Se midió que limitar las luces dinámicas a cuatro **no** mejora nada (ver README, "Medir el rendimiento").
+
+  Desde que hay sombras esta decisión pesa más, no menos: medidas en llvmpipe
+  cuestan entre 6 y 9 FPS, aunque llvmpipe rasteriza en CPU y casi seguro las
+  penaliza mucho más que una GPU real. Cuál de las dos cosas es cierta no se
+  sabe hasta medir en la máquina objetivo, y es la razón más concreta que hay
+  hoy para hacer esa medición.
 - **Hornear**, y para eso construir la estación como escena guardada en vez de por código — lo que anula "no se modela nada nuevo por noche" como técnica de producción.
 
 Sin haber medido nunca en la máquina objetivo (CPU dual-core, 2 GB de VRAM), no hay dato para elegir. **Decisión del autor, después de medir.**
@@ -195,7 +300,8 @@ las escriba las está inventando.
   restricción de alcance, pero no hay horas estimadas ni fechas.
 - **Accesibilidad.** No hay sección, aunque el juego ya tiene más de lo que
   el documento pide: remapeo de teclas, tamaño de subtítulos, invertir el eje
-  Y, quitar el cabeceo, campo de visión ajustable.
+  Y, quitar el cabeceo, campo de visión ajustable, y ahora también apagar las
+  sombras y los efectos PS1. Falta escribir qué se promete y qué no.
 
 ## Publicación: decidido
 
@@ -279,8 +385,16 @@ sentada**, que es exactamente lo que dice el objetivo de 60-90 minutos.
   Blender, texturas pintadas, una tipografía propia. Ninguna hace falta para
   publicar, y una tipografía propia sería *peor* que IBM Plex salvo que la
   dibuje alguien que sepa diseñar tipos.
-- **Contenido.** Falta aproximadamente la mitad otra vez para llegar a los
-  60-90 minutos. Medir con `tests/pacing.tscn` en cada paso.
+- **Contenido.** Medido hoy: 32 a 48 minutos explorando más 9.4 de audio,
+  contra un objetivo de 60 a 90. Medir con `tests/pacing.tscn` en cada paso.
+
+  **Los 60-90 son un piso, no una cuota.** El objetivo existe para que el
+  juego no se sienta una demo, no para que haya que rellenarlo. Cincuenta
+  minutos densos le ganan a noventa de caminar por pasillos, y el riesgo real
+  de un número es que empuje a alargar en vez de a profundizar. La regla: no
+  agregar salas ni tareas para llenar minutos. Agregar significado a lo que ya
+  existe — más registros de radio, más lecturas de los mismos objetos, más
+  beats adentro de las tareas que ya están.
 - **Playtest con personas.** Todo lo que se sabe del ritmo sale de un bot que
   camina derecho a cada tarea.
 - **Medir en la máquina objetivo.** Nunca se corrió en un equipo de gama baja

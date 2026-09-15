@@ -37,6 +37,17 @@ func _run() -> void:
 			"luz":
 				if not station.room_lights.has(String(a.get("sala_luz", ""))):
 					broken.append("%s: luz '%s'" % [id, a.get("sala_luz", "")])
+			"sonido":
+				if not ["goteo", "motor"].has(String(a.get("cue", ""))):
+					broken.append("%s: cue '%s'" % [id, a.get("cue", "")])
+			"espacio":
+				if not station.room_nodes.has(String(a.get("sala_nodo", ""))):
+					broken.append("%s: sala_nodo '%s'" % [id, a.get("sala_nodo", "")])
+				elif (a.get("corrimiento", Vector3.ZERO) as Vector3).is_zero_approx():
+					broken.append("%s: corrimiento en cero" % id)
+			"reloj":
+				if String(a.get("hora", "")) == "":
+					broken.append("%s: sin hora" % id)
 			_:
 				broken.append("%s: tipo desconocido" % id)
 	_check(broken.is_empty(), "las %d anomalias apuntan a cosas que existen%s" % [

@@ -36,6 +36,7 @@ var variants := {}
 var pickups: Array[BatteryPickup] = []
 var objects := {}        # nodos que una anomalia puede mover u ocultar
 var room_lights := {}    # sala -> luz de techo
+var room_nodes := {}     # sala -> nodo que contiene sus paredes, piso y techo
 var lights: Array[OmniLight3D] = []        # las de sala: su energia la maneja la noche
 var all_lights: Array[OmniLight3D] = []    # todas, para el presupuesto de sombras
 var wall_meshes: Array[MeshInstance3D] = []
@@ -90,6 +91,10 @@ func _mesh_room(name: String, rect: Rect2, openings: Dictionary, ceiling := true
 	for c in holder.get_children():
 		if c is MeshInstance3D and String(c.name).begins_with("pared"):
 			wall_meshes.append(c)
+	# Guardado por nombre para que una anomalia pueda correr una pared. El
+	# documento de diseno pedia "proporciones que ya no coinciden del todo"
+	# desde el primer dia y no habia con que hacerlo.
+	room_nodes[name] = holder
 	return holder
 
 

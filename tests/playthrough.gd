@@ -174,7 +174,25 @@ func _run() -> void:
 	await _wait(0.3)
 	_check(GameState.pending_tasks() == 0, "las tareas de la noche 5 se completan")
 	_check(GameState.get_flag("ending", "") == "salir", "la decision queda registrada")
-	await _wait(32.0)
+	# El final crecio: ademas de la radio ahora hay una relectura de las cinco
+	# noches, y entre fundidos y lineas pasa del minuto. Esperarlo en tiempo
+	# real haria la suite un minuto mas lenta por un solo check, asi que este
+	# tramo corre acelerado. Los timers de SceneTree respetan time_scale.
+	# El final crecio: ademas de la radio ahora hay una relectura de las cinco
+	# noches, y entre fundidos y lineas dura unos cincuenta segundos. Esperarlo
+	# en tiempo real haria la suite casi un minuto mas lenta por un solo check,
+	# asi que este tramo corre acelerado.
+	#
+	# Ojo con la cuenta: los timers de SceneTree cuentan tiempo ESCALADO, asi
+	# que a 8x hay que esperar los mismos ~50 segundos de juego, no 50/8. Lo
+	# que se acorta es cuanto tarda en reloj de pared. Espera acotada en vez de
+	# un numero fijo: corta apenas el final termina y nunca cuelga la suite.
+	Engine.time_scale = 8.0
+	for i in 90:
+		if finished[0]:
+			break
+		await _wait(1.0)
+	Engine.time_scale = 1.0
 	_check(finished[0], "el final se reproduce hasta el cierre")
 
 	await _wait(0.3)

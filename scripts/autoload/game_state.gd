@@ -11,6 +11,10 @@ signal all_tasks_done()
 signal logbook_changed()
 signal notice(text: String)
 signal battery_changed(value: float)
+## El reloj del HUD dejo de ser un dato fijo de la noche: una anomalia puede
+## correrlo. Es la unica anomalia que el jugador no puede atribuir a la
+## estacion mirando un objeto, porque el objeto es la hora.
+signal clock_changed(text: String)
 
 const MAX_NIGHT := 5
 const SAVE_PATH := "user://la_guardia_save.json"   # partida vieja, se migra sola
@@ -24,6 +28,8 @@ var anomalies_seen: Array = []     # [{night, id}] lo que cambio de verdad en es
 var radio_logs_found: Array = []
 var battery := 1.0
 var spare_batteries := 0   # las de repuesto se buscan en la estacion
+## Vacio = el reloj muestra la hora de la noche. Con texto = lo muestra a el.
+var clock_override := ""
 var night_active := false
 var pending_world := {}   # estado del mundo a restaurar al continuar
 var slot := 1
@@ -181,6 +187,12 @@ func drain_battery(amount: float) -> void:
 		battery_changed.emit(battery)
 
 
+## La pone una anomalia de tipo "reloj" y la saca el reset de la noche.
+func set_clock_override(text: String) -> void:
+	clock_override = text
+	clock_changed.emit(text)
+
+
 func use_spare_battery() -> bool:
 	if spare_batteries <= 0:
 		return false
@@ -199,6 +211,7 @@ func reset() -> void:
 	radio_logs_found.clear()
 	battery = 1.0
 	spare_batteries = 0
+	clock_override = ""
 	pending_world = {}
 
 

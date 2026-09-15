@@ -68,6 +68,11 @@ func _build_cues() -> void:
 	_cues["creak"] = _wav(_creak_sound(1.8, 55.0, 95.0))
 	_cues["radio_on"] = _wav(_noise_hit(0.35, 0.4, 0.9))
 	_cues["step_snow"] = _wav(_noise_hit(0.22, 0.12, 0.2))
+	# Bucles, para las anomalias sonoras: algo que quedo andando donde no
+	# tendria que haber nada andando. A diferencia de los cues de arriba, no
+	# se disparan y terminan: se prenden y quedan.
+	_cues["goteo"] = _wav(_goteo(3.2), true)
+	_cues["motor"] = _wav(_motor(2.0), true)
 	_cues["hiss"] = _wav(_noise_loop(1.0), true)
 
 
@@ -248,6 +253,52 @@ func play_cue(id: String, pos: Vector3, volume_db := -6.0) -> void:
 	add_child(p)
 	p.play()
 	p.finished.connect(p.queue_free)
+
+
+## Fuente sonora que queda prendida hasta que alguien la apaga. La usan las
+## anomalias de tipo "sonido": una canilla que gotea en una sala donde no hay
+## canilla, un motor andando con el equipo apagado. El que la prende se queda
+## con el nodo y es el responsable de liberarlo.
+func loop_at(id: String, pos: Vector3, volume_db := -14.0) -> AudioStreamPlayer3D:
+	if not _cues.has(id) and not _external.has(id):
+		return null
+	var p := AudioStreamPlayer3D.new()
+	p.stream = _external.get(id, _cues.get(id))
+	p.unit_size = 5.0
+	p.max_distance = 22.0
+	p.volume_db = volume_db
+	p.position = pos
+	add_child(p)
+	p.play()
+	return p
+
+
+## Goteo: golpes espaciados sobre silencio. Lo que lo hace inquietante es que
+## el intervalo no es exacto.
+func _goteo(dur: float) -> PackedFloat32Array:
+	var n := int(RATE * dur)
+	var out := PackedFloat32Array()
+	out.resize(n)
+	var pos := int(RATE * 0.25)
+	while pos < n:
+		var largo := mini(int(RATE * 0.07), n - pos)
+		for i in largo:
+			var t := float(i) / float(largo)
+			out[pos + i] = sin(TAU * 1400.0 * float(i) / RATE) * exp(-9.0 * t) * 0.5
+		pos += int(RATE * _rng.randf_range(0.55, 0.95))
+	return out
+
+
+## Motor: un zumbido grave con su armonico, apenas desafinado para que lata.
+func _motor(dur: float) -> PackedFloat32Array:
+	var n := int(RATE * dur)
+	var out := PackedFloat32Array()
+	out.resize(n)
+	for i in n:
+		var t := float(i) / RATE
+		out[i] = (sin(TAU * 46.0 * t) * 0.6 + sin(TAU * 92.7 * t) * 0.25
+			+ sin(TAU * 139.0 * t) * 0.1) * 0.35
+	return out
 
 
 ## Voz de radio: no es habla, es la cadencia del habla. Silabas de ruido
