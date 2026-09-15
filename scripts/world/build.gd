@@ -15,9 +15,26 @@ const LAYER_INTERACT := 4
 static var _mat_cache := {}
 static var _shader: Shader = null
 
+## Repeticiones por metro. Cada superficie pide la suya: el piso necesita
+## placas de medio metro, la nieve no puede repetirse tan seguido o se nota
+## el patron.
+const TEX_SCALE := {
+	"chapa": 0.5,
+	"piso": 0.5,
+	"rejilla": 0.7,
+	"metal": 0.9,
+	"oxido": 0.35,
+	"nieve": 0.18,
+	"hormigon": 0.4,
+}
 
-static func surface(color: Color, emission := 0.0, snap := 0.8) -> Material:
-	var key := "%s|%.2f|%.2f" % [color.to_html(false), emission, snap]
+
+## `textura`: nombre de una de las texturas generadas por codigo (ver
+## textures.gd). El color sigue siendo el que manda: la textura es gris y
+## multiplica, asi que `recolor_walls` puede seguir tiniendo la estacion por
+## noche sin regenerar nada.
+static func surface(color: Color, emission := 0.0, snap := 0.8, textura := "") -> Material:
+	var key := "%s|%.2f|%.2f|%s" % [color.to_html(false), emission, snap, textura]
 	if _mat_cache.has(key):
 		return _mat_cache[key]
 	var mat: Material
@@ -29,6 +46,12 @@ static func surface(color: Color, emission := 0.0, snap := 0.8) -> Material:
 		sm.set_shader_parameter("albedo_color", Vector3(color.r, color.g, color.b))
 		sm.set_shader_parameter("emission_amount", emission)
 		sm.set_shader_parameter("snap_strength", snap)
+		if textura != "":
+			var tex := Textures.por_nombre(textura)
+			if tex != null:
+				sm.set_shader_parameter("albedo_tex", tex)
+				sm.set_shader_parameter("use_tex", true)
+				sm.set_shader_parameter("tex_scale", TEX_SCALE.get(textura, 0.5))
 		mat = sm
 	else:
 		var std := StandardMaterial3D.new()

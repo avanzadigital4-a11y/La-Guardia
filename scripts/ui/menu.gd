@@ -10,6 +10,16 @@ var _pending_delete := 0
 
 
 func _ready() -> void:
+	# Las capturas de depuracion no pasan por el menu. El juego arranca en
+	# menu.tscn, asi que la bandera que mira main.gd nunca se ejecutaba: la
+	# herramienta documentada en el README no funcionaba desde que existe el
+	# menu. Se acepta en singular y en plural porque el README decia una cosa
+	# y el codigo otra.
+	var args := OS.get_cmdline_user_args()
+	if "--capturas" in args or "--capture" in args:
+		call_deferred("_play", 1, false)
+		return
+
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 

@@ -35,7 +35,8 @@ func _ready() -> void:
 	blackout.setup(station, player, fade, director)
 
 	director.start_night(GameState.current_night)
-	if "--capturas" in OS.get_cmdline_user_args():
+	var args := OS.get_cmdline_user_args()
+	if "--capturas" in args or "--capture" in args:
 		_capture_debug()
 
 
@@ -189,3 +190,5 @@ func _capture_debug() -> void:
 		var img := get_viewport().get_texture().get_image()
 		img.save_png("user://shot_%s.png" % v[2])
 	print("Capturas guardadas en %s" % ProjectSettings.globalize_path("user://"))
+	# Es una herramienta, no una sesion de juego: termina cuando termino.
+	get_tree().quit()
