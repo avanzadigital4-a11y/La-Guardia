@@ -175,7 +175,47 @@ func _run() -> void:
 	_check(director.anomalies.applied_count() == 0, "reset_all las revierte todas")
 	_check(chair.transform != moved and not chair.altered, "los objetos vuelven a su lugar")
 
+	_check_beats()
 	_report()
+
+
+## Toda tarea tiene que tener su beat.
+##
+## Es el punto flojo estructural que tenia el juego: las tareas eran neutras
+## (purgar una valvula, alinear una antena) y el terror pasaba ENTRE las
+## tareas, no adentro. Una tarea sin beat es una tarea que el jugador hace y
+## no pasa nada, o sea trabajo administrativo en un juego de terror.
+##
+## La tarea final de cada noche queda afuera: la cierra el fin de noche.
+func _check_beats() -> void:
+	var sin_beat: Array[String] = []
+	for n in range(1, GameState.MAX_NIGHT + 1):
+		var data := NightData.get_night(n)
+		for t in data.get("tasks", []):
+			var id := String((t as Dictionary)["id"])
+			if NightData.beats_for(n, id).is_empty():
+				sin_beat.append("noche %d: %s" % [n, id])
+	_check(sin_beat.is_empty(), "todas las tareas tienen beat%s" % [
+		"" if sin_beat.is_empty() else " -> faltan " + ", ".join(sin_beat)])
+
+	# Cuantos beats arman una anomalia despues de una espera. Escritos asi, el
+	# jugador que sale rapido de la sala se la llevaria puesta y el cambio
+	# fuera de camara no pasaria nunca. El interprete los adelanta
+	# (night_director.gd, _run_actions), asi que no es un error: es un dato
+	# de cuanto depende el guion de ese adelanto.
+	var tarde: Array[String] = []
+	for n in range(1, GameState.MAX_NIGHT + 1):
+		var beats: Dictionary = NightData.get_night(n).get("beats", {})
+		for key in beats.keys():
+			var demora := 0.0
+			for a in beats[key]:
+				var accion: Dictionary = a
+				if accion.has("armar") and demora > 0.0:
+					tarde.append("noche %d / %s: %s" % [n, key, accion["armar"]])
+				demora += float(accion.get("esperar", 0.0))
+				demora += float(accion.get("tiempo", 0.0))
+				demora += float(accion.get("parpadeo", 0.0))
+	print("  ---   %d beats arman despues de una espera; el interprete los adelanta" % tarde.size())
 
 
 func _check(condition: bool, label: String) -> void:

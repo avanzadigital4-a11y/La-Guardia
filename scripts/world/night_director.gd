@@ -61,8 +61,21 @@ func start_night(night: int) -> void:
 		var node: Node = station.points[key]
 		if node is TriggerZone:
 			(node as TriggerZone).active = true
-	for bat in station.pickups:
-		bat.restock()
+	# Las pilas NO se reponen cada noche. Esto era lo que vaciaba de sentido a
+	# la linterna: con las cinco pilas de vuelta en su lugar cada noche habia
+	# seis cargas por turno contra una noche que gasta media, y la oscuridad
+	# no podia significar nada.
+	#
+	# Ahora las cinco son para las cinco noches. El turno entero es un solo
+	# presupuesto de luz, y apagar la linterna en un pasillo que ya conoces
+	# pasa a ser una decision.
+	#
+	# No puede trabar la partida: quedarse sin luz lleva al apagon, y el
+	# apagon devuelve 0.35 de carga (blackout.gd). El piso existe, y cuesta
+	# horas del turno y dos anomalias con tu firma.
+	if night == 1:
+		for bat in station.pickups:
+			bat.restock()
 	for key in station.points.keys():
 		var pt: Node = station.points[key]
 		if pt is TaskPoint:
@@ -263,6 +276,25 @@ func _on_task_completed(id: String) -> void:
 ## Interprete de beats. El contenido esta en night_data.gd; aca solo se
 ## ejecuta, para que agregar una noche no implique tocar codigo.
 func _run_actions(actions: Array) -> void:
+	# Los "armar" se adelantan a todo lo demas.
+	#
+	# Armar no es un beat dramatico: el jugador no ve nada cuando pasa. Solo
+	# anota que tal objeto tiene que cambiar la proxima vez que salga de tal
+	# sala. Pero como el interprete corre en orden y hay beats que esperan
+	# varios segundos antes de armar, un jugador que salia de la sala rapido
+	# se llevaba la anomalia puesta: el armado corria despues y el cambio no
+	# pasaba nunca.
+	#
+	# Habia once beats con ese patron y la falla era silenciosa: la anomalia
+	# simplemente no ocurria y nadie se enteraba. Adelantarlos lo arregla de
+	# raiz, sin tener que reordenar a mano el guion de cada noche.
+	for a in actions:
+		var action: Dictionary = a
+		if action.has("armar"):
+			var early := String(action["armar"])
+			var early_room := String(action.get("sala", AnomalyData.get_anomaly(early).get("sala", "")))
+			_armed.append({"id": early, "room": early_room})
+
 	for a in actions:
 		var action: Dictionary = a
 		if action.has("esperar"):
@@ -280,10 +312,6 @@ func _run_actions(actions: Array) -> void:
 			GameState.add_log(String(action.get("hora", "")), String(action["bitacora"]), bool(action.get("falsa", false)))
 		if action.has("anomalia"):
 			_apply_anomaly(String(action["anomalia"]))
-		if action.has("armar"):
-			var aid := String(action["armar"])
-			var room := String(action.get("sala", AnomalyData.get_anomaly(aid).get("sala", "")))
-			_armed.append({"id": aid, "room": room})
 		if action.has("ruta") and station.routes.has(action["ruta"]):
 			var r: RouteSwap = station.routes[action["ruta"]]
 			r.active = bool(action.get("activa", true))
