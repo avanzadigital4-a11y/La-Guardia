@@ -107,6 +107,14 @@ Lo que ya funciona:
   concreta, siempre lejos de donde esta el jugador, y los pasos cambian
   adentro (chapa) y afuera (nieve).
 
+## Licencia
+
+Todos los derechos reservados. Ver [`LICENSE`](LICENSE). Es la opcion
+reversible mientras no este publicado: se puede abrir mas adelante, no se
+puede cerrar lo ya abierto. El plan de publicacion (itch.io con pago
+voluntario, Steam despues si hay traccion) esta en
+[`docs/diseno.md`](docs/diseno.md).
+
 ## Correr el juego
 
 Con Godot 4.3 o posterior:

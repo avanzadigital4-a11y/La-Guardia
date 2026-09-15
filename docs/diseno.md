@@ -139,12 +139,11 @@ las escriba las está inventando.
   `station_builder.gd`. Debería estar dibujado acá.
 - **Presupuesto y cronograma.** "Un desarrollador solo" aparece como
   restricción de alcance, pero no hay horas estimadas ni fechas.
-- **Publicación y licencia.** Hay una recomendación abajo, falta confirmarla.
 - **Accesibilidad.** No hay sección, aunque el juego ya tiene más de lo que
   el documento pide: remapeo de teclas, tamaño de subtítulos, invertir el eje
   Y, quitar el cabeceo, campo de visión ajustable.
 
-## Publicación: la recomendación
+## Publicación: decidido
 
 El objetivo declarado del autor es que el juego tenga éxito **y** que deje
 dinero. "Gratis" y "vender" parecen las dos únicas opciones y no lo son:
@@ -169,11 +168,12 @@ mínimo cero: el jugador descarga gratis y puede dejar plata si quiere.
 Eso resuelve la tensión: **alcance de juego gratis, con la puerta abierta a que
 entre dinero, y sin costo de entrada.**
 
-### La recomendación
+### Lo decidido
 
-1. **`LICENSE` con todos los derechos reservados, ahora.** Es la opción
-   reversible: siempre se puede abrir más adelante, nunca se puede cerrar lo
-   que ya se abrió. Cinco minutos de trabajo y desbloquea todo lo demás.
+1. **`LICENSE` con todos los derechos reservados.** Hecho, está en la raíz
+   del repositorio. Es la opción
+   Es la opción reversible: siempre se puede abrir más adelante, nunca se
+   puede cerrar lo que ya se abrió.
 2. **itch.io, "pagá lo que quieras", mínimo cero.** Gratis para publicar,
    gratis para descargar, con donación opcional.
 3. **Steam después**, si consigue tracción. Para entonces los 100 dólares
